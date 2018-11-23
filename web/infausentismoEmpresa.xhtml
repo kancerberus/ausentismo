@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"     
+      xmlns:f="http://java.sun.com/jsf/core"      
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    
+    <h:body>
+        <ui:composition>
+            <h:form id="infausentismoEmpresa">
+               <p:growl id="aviso" showDetail="true" life="50000" />
+                <p:panel header="INFORME AUSENTIMO" id="pnlInformeausentismoEmpresa"  
+                         style="width:auto;">
+                    <table>
+                        <tr><td>
+                            <p:fieldset legend="DATOS AUSENTISMOS" style="margin-bottom:10px; margin-top:10px; width:auto; font-size: 90%; " >
+                                <table cellpadding="5">
+                                    <tr>
+                                        <td align="center">
+                                            <p:panelGrid id="tblInformeausentismosEmpresa" columns="4" style="width:1030px; font-size: 90%;">
+                                                <f:facet name="header">
+                                                    <h:outputText value="" />
+                                                </f:facet>
+                                                Empresa:<p:selectOneMenu value="#{listasBean.empresa.nitempresa}" id="empresas">}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
+                                                <f:selectItems   value="#{listasBean.itemsEmpresas}"/>  
+                                                <p:ajax update="subempresas"/>
+                                                </p:selectOneMenu>
+                                                
+                                                SubEmpresa:<p:selectOneMenu value="#{listasBean.subempresa.nitsubempresa}" id="subempresas">}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                  	
+                                                <f:selectItems   value="#{listasBean.itemsSubEmpresas}"/>
+                                                </p:selectOneMenu>                                                
+
+                                                
+                                                Mes Desde:<p:selectOneMenu value="#{ausentismoBean.mes.desde}" id="mesd">}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
+                                                <f:selectItems   value="#{listasBean.itemsMeses}"/>
+                                                </p:selectOneMenu>
+                                                
+                                                Mes Hasta:<p:selectOneMenu value="#{ausentismoBean.mes.hasta}" id="mesh">}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
+                                                <f:selectItems   value="#{listasBean.itemsMeses}"/>
+                                                </p:selectOneMenu>
+                                                
+                                                Año:<p:selectOneMenu value="#{ausentismoBean.ano.año}" id="año">}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
+                                                <f:selectItems   value="#{listasBean.itemsAños}"/>                                                   
+                                                </p:selectOneMenu>  
+                                                
+                                                <h:outputText value="Anual: " />
+                                                <p:selectBooleanButton id="value2" value="#{ausentismoBean.todos}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">                                                    
+                                                </p:selectBooleanButton>  
+                                                
+                                                Motivo:<p:selectOneMenu value="#{ausentismoBean.ausentismo.motivoausentismo}" id="motivos">}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
+                                                <f:selectItems   value="#{ausentismoBean.itemsMotivos}"/>
+                                                </p:selectOneMenu>
+                                            </p:panelGrid>                                            
+                                        </td>
+                                    </tr>
+                                </table>
+                            </p:fieldset>
+                            <p:fieldset style= "margin-top:10px;" >                                    
+                                <p:commandButton icon="ui-icon-newwin" update="aviso, tblausentismoEmpresa, chartAusentismo" type="submit" id="BtnInf" value="Generar" 
+                                                 actionListener="#{ausentismoBean.ausentismoAnomesEmpresa()}"/>                                                           
+                                
+                                <h:commandButton value="CSV Export" image="resources/imagenes/csv.png" style="float:right;">
+                                    <p:dataExporter type="csv" target="tblausentismoEmpresa" fileName="EmpresasAusentismos" />
+                                </h:commandButton>
+                                
+                                <h:commandButton value="PDF Export" image="resources/imagenes/pdf.png" style="float:right;">
+                                    <p:dataExporter type="pdf" target="tblausentismoEmpresa" fileName="EmpresasAusentismos" />
+                                </h:commandButton>                    
+                                
+                            </p:fieldset>
+                            <p:fieldset style= "margin-top:10px;" > 
+                                <p:dataTable id="tblausentismoEmpresa" var="informeausentismoEmpresa" value="#{ausentismoBean.listaausentismoEmpresa}" style ="font-size: 80%" paginator="true" rows="20">  
+                                    
+                                    <p:column headerText="SubEmpresa">
+                                        <h:outputText value="#{informeausentismoEmpresa.subempresa.nombre}" />
+                                    </p:column>
+                                    
+                                    <p:column headerText="Mes">
+                                        <h:outputText value="#{informeausentismoEmpresa.mes}" />
+                                    </p:column>                                     
+
+                                    
+                                    <p:column headerText=" Total Horas">
+                                        <h:outputText value="#{informeausentismoEmpresa.tiempo_horas}" />
+                                    </p:column>
+                                    
+                                    <p:column headerText="Total Eps" footerText="$#{ausentismoBean.totaleps}">                                        
+                                        <h:outputText value="#{informeausentismoEmpresa.eps}" >
+                                            <f:convertNumber type="currency" currencySymbol="$"/>
+                                        </h:outputText>    
+                                    </p:column>
+                                    
+                                    <p:column headerText="Total Empleador" footerText="$#{ausentismoBean.totalem}">
+                                        <h:outputText value="#{informeausentismoEmpresa.empleador}" >
+                                            <f:convertNumber type="currency" currencySymbol="$"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    
+                                    <p:column headerText="Total Arl" footerText="$#{ausentismoBean.totalarl}">
+                                        <h:outputText value="#{informeausentismoEmpresa.arl}" >
+                                            <f:convertNumber type="currency" currencySymbol="$"/>
+                                        </h:outputText>    
+                                    </p:column>
+                                    
+                                    <p:column headerText="Total Trabajador" footerText="$#{ausentismoBean.totaltrabajador}">
+                                        <h:outputText value="#{informeausentismoEmpresa.trabajador}" >
+                                            <f:convertNumber type="currency" currencySymbol="$"/>
+                                        </h:outputText>    
+                                    </p:column>
+
+                                    <p:column headerText="SubTotales" footerText="$#{ausentismoBean.totalsubt}">
+                                        <h:outputText value="#{informeausentismoEmpresa.totalsube}" >
+                                            <f:convertNumber type="currency" currencySymbol="$"/>
+                                        </h:outputText>    
+                                    </p:column>               
+
+                                </p:dataTable>                              
+                            </p:fieldset>
+                            <h:panelGroup id="chartAusentismo" layout="block" >
+                                <p:fieldset style= "margin-top:5px;" >
+                                    <p:chart type="pie" model="#{ausentismoBean.pieausentismoanomesEmpresa}" style="width:500px;height:400px;" />  
+                                    <p:chart type="pie" model="#{ausentismoBean.pieSubempresa}" style="width:800px;height:500px;" />    
+                                </p:fieldset>
+                            </h:panelGroup> 
+                            </td>
+                        </tr>                        
+                    </table>                   
+                </p:panel>                                                
+            </h:form>
+        </ui:composition>
+    </h:body>
+</html>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:body>
+        <ui:composition>
+            <h:form id="moverEmpleado">
+               <p:growl id="aviso" showDetail="true" life="5000" />
+                <p:panel header="MODIFICAR DEPENDENCIA DE EMPLEADO" id="pnlMoverEmpleado"  
+                         style="width:1100px;">
+                    <table>
+                        <tr><td>
+                            <p:fieldset legend="Datos de Inicio de Sesión" style="margin-bottom:10px; margin-top:10px;" >
+                                <table cellpadding="5">                        
+                                    <tr>
+                                        <td align="center">
+                                            <p:panelGrid id="tblDatosSesion" columns="4" style="width:1000px; font-size: 90%;">
+                                                <f:facet name="header">
+                                                    <h:outputText value="" />
+                                                </f:facet>
+                                                <h:outputText value="Nombre de la empresa" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.subEmpresa.nombre}" />                                                
+                                                <h:outputText value="Fecha" style="font-weight: bold;"/>
+                                                <h:outputText value="#{currentDate}">
+                                                    <f:convertDateTime pattern="MM/dd/yyyy" type="date"/> 
+                                                </h:outputText>                                                
+                                                <h:outputText value="Usuario de sesion" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.nomusuario}"/>
+                                                <h:outputText value="Nombre" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.nombre}"/>
+                                            </p:panelGrid>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </p:fieldset>
+                            <p:fieldset legend="Datos Empleado" style="margin-bottom:10px; margin-top:10px; width:auto" >                                       
+                                <h:panelGrid columns="4" cellpadding="5" style="width:auto; font-size: 90%;">                                    
+                                    <p:outputLabel value="Cedula:" for="cedula" />
+                                    <p:inputText id="cedula" value="#{empleadoBean.empleado.cedula}" required="true" label="cedula">
+                                        <p:ajax event="blur" listener="#{empleadoBean.buscarempleadoAdmin}" update="pnlMoverEmpleado"></p:ajax>
+                                    </p:inputText> 
+                                    <p:growl id="growl" life="3000"/>
+                                    <p:commandButton icon="ui-icon-search" value="Consultar" actionListener="#{empleadoBean.buscarempleadoAdmin}" update="pnlMoverEmpleado"/>                                       
+                                </h:panelGrid>                     
+                                <p:panelGrid id="panelcambioEmpleado" columns="8" style="width:1000px; font-size: 90%;">
+                                         <f:facet name="header">
+                                            <h:outputText value="" />
+                                        </f:facet>
+                                    <h:outputText value="Nombres: " style="font-weight: bold;" /><h:outputText value="#{empleadoBean.empleado.nombres}"/>                                                                                            
+                                    <h:outputText id="apellidos" value="Apellidos: " style="font-weight: bold;" /><h:outputText value="#{empleadoBean.empleado.apellidos}" /> 
+                                    <h:outputText value="Edad: " style="font-weight: bold;" /><h:outputText value="#{empleadoBean.empleado.edad}" /> 
+                                    <h:outputText value="Cargo: " style="font-weight: bold;" /><h:outputText value="#{empleadoBean.empleado.cargo.nombre}" /> 
+                                    <h:outputText value="Estado Civil: " style="font-weight: bold;" /><h:outputText value="#{empleadoBean.empleado.ecivil.nombre}" /> 
+                                    <h:outputText value="Genero: " style="font-weight: bold;" /><h:outputText value="#{empleadoBean.empleado.sexo.nombre}" />                                                 
+                                    <h:outputText value="Subempresa: " style="font-weight: bold;" /><h:outputText value="#{empleadoBean.empleado.nitsubempresa}" />                                                 
+                                        <h:outputText value=" Cambiar a subempresa: " style="font-weight: bold;" />                                                
+                                        <p:selectOneMenu value="#{empleadoBean.empleado.nitsubempresa}" id="epss" style=" width: 150px  ">}
+                                        <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                                        <f:selectItems   value="#{listasBean.itemsSubEmpresas}"/>
+                                        </p:selectOneMenu>
+                                </p:panelGrid>
+                            </p:fieldset>
+                            <p:fieldset>
+                            <p:panelGrid style="width:auto; font-size: 90%;">
+                                <p:commandButton style="margin-right: 20px;" icon="ui-icon-disk" update="pnlMoverEmpleado, aviso, panelcambioEmpleado" type="submit" id="modificarEmpleado" value="Guardar Cambios" actionListener="#{empleadoBean.modificarSubempresaempleado()}"/>
+                                <p:commandButton icon="ui-icon-refresh" value="Limpiar" update="pnlMoverEmpleado, aviso" actionListener="#{empleadoBean.limpiarEmpleado()}" />
+                            </p:panelGrid>
+                            </p:fieldset>
+                           </td>
+                        </tr>
+                    </table>                   
+                </p:panel>                                                
+            </h:form>
+        </ui:composition>
+    </h:body>
+</html>
+                                
+                                

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"     
+      xmlns:f="http://java.sun.com/jsf/core"      
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    
+    <h:body>
+        <ui:composition>
+            <h:form id="informeAusentismo">
+               <p:growl id="aviso" showDetail="true" life="5000" />
+                <p:panel header="INFORME AUSENTIMO" id="pnlInformeAusentismo"  
+                         style="width:auto;">
+                    <table>
+                        <tr><td>
+                            <p:fieldset legend="DATOS AUSENTISMOS" style="margin-bottom:10px; margin-top:10px;" >
+                                <table cellpadding="5">                        
+                                    <tr>
+                                        <td align="center">
+                                            <p:panelGrid id="tblInformeAusentismos" columns="10" style="width:1030px; font-size: 90%;">
+                                                <f:facet name="header">
+                                                    <h:outputText value="" />
+                                                </f:facet>     
+                                                <h:outputText value="Empresa:" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.subEmpresa.nombre}" />                                                         
+                                                <h:outputLabel value="Reporte: " />
+                                                                                               
+                                                <h:outputText value="Anual: " />
+                                                <p:selectBooleanButton id="value2" value="#{ausentismoBean.todos}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">                                                    
+                                                </p:selectBooleanButton>                                      
+                                                Mes:<p:selectOneMenu value="#{ausentismoBean.mes.codigo}" id="mes">}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                                                <f:selectItems   value="#{listasBean.itemsMeses}"/>
+                                                </p:selectOneMenu>
+                                                
+                                                Año:<p:selectOneMenu value="#{ausentismoBean.ano.año}" id="año">}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                                                <f:selectItems   value="#{listasBean.itemsAños}"/>
+                                                </p:selectOneMenu>  
+                                            </p:panelGrid>
+                                            
+                                        </td>
+                                    </tr>
+                                </table>
+                            </p:fieldset>                               
+                            <p:fieldset style= "margin-top:10px;" >    
+                                <p:dataTable id="tblausentismo" var="informeAusentismo" value="#{ausentismoBean.listaAusentismoanomes}" style ="font-size: 80%;"                                              
+                                             paginator="true" rows="10">                       
+                                    <p:column headerText="Mes">
+                                        <h:outputText value="#{informeAusentismo.mes}" />
+                                    </p:column>
+                                    <p:column headerText="Fecha Permiso">
+                                        <h:outputText value="#{informeAusentismo.fecha_permiso}" />
+                                    </p:column>
+                                    <p:column headerText="Nombres">
+                                        <h:outputText value="#{informeAusentismo.empleado.nombres}" />
+                                    </p:column>
+                                    <p:column headerText="Apellidos">
+                                        <h:outputText value="#{informeAusentismo.empleado.apellidos}" />
+                                    </p:column>
+                                    <p:column headerText="Salario">
+                                        <h:outputText value="#{informeAusentismo.empleado.sueldo_mes}" >
+                                            <f:convertNumber type="currency" currencySymbol="$"/>
+                                        </h:outputText>    
+                                    </p:column>
+                                    <p:column headerText="Tiempo horas">
+                                        <h:outputText value="#{informeAusentismo.tiempo_horas}" />
+                                    </p:column>  
+                                    <p:column headerText="Motivo">
+                                        <h:outputText value="#{informeAusentismo.motivo.nombrem}" />
+                                    </p:column>
+                    
+                                    <p:column headerText="Total Eps" footerText="$#{ausentismoBean.toteps}">
+                                        <h:outputText value="#{informeAusentismo.eps}" >
+                                            <f:convertNumber type="currency" currencySymbol="$"/>
+                                        </h:outputText>    
+                                    </p:column>
+                                    <p:column headerText="Total Arl" footerText="$#{ausentismoBean.totarl}">
+                                        <h:outputText value="#{informeAusentismo.arl}" >
+                                            <f:convertNumber type="currency" currencySymbol="$"/>
+                                        </h:outputText>    
+                                    </p:column>
+                                    <p:column id="tote" headerText="Total Empleador"  footerText="$#{ausentismoBean.totempleador} " >
+                                        <h:outputText value="#{informeAusentismo.empleador}" >                                            
+                                            <f:convertNumber type="currency" maxFractionDigits="2" currencySymbol="$"/>
+                                            
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="Total Trabajador" footerText="$#{ausentismoBean.tottrabajador}">
+                                        <h:outputText value="#{informeAusentismo.trabajador}" >
+                                            <f:convertNumber type="currency" maxFractionDigits="2" currencySymbol="$"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column headerText="SubTotal" footerText="$#{ausentismoBean.total}">
+                                        <h:outputText value="#{informeAusentismo.total}" >
+                                            <f:convertNumber type="currency" currencySymbol="$"/>
+                                        </h:outputText>    
+                                    </p:column> 
+                                </p:dataTable>                              
+                            </p:fieldset>
+                            <p:fieldset style= "margin-top:10px;" >                                    
+                                <p:commandButton icon="ui-icon-newwin" update="aviso, tblausentismo" type="submit" id="BtnInf" value="Generar" 
+                                                 actionListener="#{ausentismoBean.ausentismoAnomes}"/>
+                                
+                                <h:commandButton value="CSV Export" image="resources/imagenes/csv.png" style="float:right;">
+                                    <p:dataExporter type="csv" target="tblausentismo" fileName="Ausentismos" />
+                                </h:commandButton>
+                                
+                                <h:commandButton value="PDF Export" image="resources/imagenes/pdf.png" style="float:right;">
+                                    <p:dataExporter type="pdf" target="tblausentismo" fileName="Ausentismos" />
+                                </h:commandButton>                    
+                                
+                            </p:fieldset>
+                           </td>
+                        </tr>
+                        
+                            <tr> 
+                                <td> 
+                                    
+                                </td>                                
+                            </tr>    
+                    </table>                   
+                </p:panel>                                                
+            </h:form>
+        </ui:composition>
+    </h:body>
+
+
+</html>

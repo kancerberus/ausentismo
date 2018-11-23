@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:body>
+        <ui:composition>
+            <h:form id="nuevoEmpleado">
+               <p:growl id="aviso" showDetail="true" life="5000" />
+                <p:panel header="CREAR EMPLEADO" id="pnlNuevoEmpleado"  
+                         style="width:1100px;">
+                    <table>
+                        <tr><td>
+                            <p:fieldset legend="Datos Empleado" style="margin-bottom:10px; margin-top:10px;" >
+                                <table cellpadding="5">                        
+                                    <tr>
+                                        <td align="center">
+                                            <p:panelGrid id="tblDatosSesion" columns="6" style="width:1000px; font-size: 90%;">
+                                                <f:facet name="header">
+                                                    <h:outputText value="" />
+                                                </f:facet>
+                                                <h:outputText value="Nombre de la empresa" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.subEmpresa.nombre}" />
+                                                <p:outputLabel value="Cedula:" for="ced"/>
+                                                <h:inputText style="color: #000000; background-color:white; width:155px " id="ced"  value="#{empleadoBean.empleado.cedula}" required="true" label="ced"> 
+                                                </h:inputText>                                     
+                                                
+                                                
+                                                
+                                                <p:outputLabel value="Nombres:" for="nEmpleado" />
+                                                <p:inputText id="nEmpleado" value="#{empleadoBean.empleado.nombres}" required="true" label="nEmpleado"></p:inputText>
+                                                
+                                                <p:outputLabel value="Apellidos:" for="apell" />
+                                                <p:inputText id="apell" value="#{empleadoBean.empleado.apellidos}" required="true" label="apell"></p:inputText>
+                                                
+                                                <p:outputLabel value="Sueldo_mes" for="sueldo" />
+                                                <p:inputText id="sueldo" value="#{empleadoBean.empleado.sueldo_mes}" required="true" label="sueldo"></p:inputText>
+                                                
+                                                <p:outputLabel value="Auxilio Transporte" for="auxtrans" />
+                                                <p:inputText id="auxtrans" value="#{empleadoBean.empleado.aux_transporte}" required="true" label="auxtrans"></p:inputText>
+                                                
+                                                <p:outputLabel for="fecN" value="Fecha de Nacimiento:" />
+                                                <p:calendar id="fecN" value="#{empleadoBean.empleado.fecha_nac}" pattern="dd-MM-yyyy" mask="true" /> 
+                                                
+                                                <h:outputLabel value="* Ciudad Residencia:" />
+                                                <p:autoComplete id="residencia" dropdown="true" value="#{empleadoBean.empleado.residencia.nombre}" 
+                                                                
+                                                                completeMethod="#{listasBean.listarMunicipiosPatron}"  scrollHeight="200"
+                                                                forceSelection="true" />                                                                                                 
+
+                                                EPS:<p:selectOneMenu value="#{empleadoBean.empleado.eps.codigo}" id="epss">}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                                                
+                                                <f:selectItems   value="#{listasBean.itemsEpss}"/>
+                                                </p:selectOneMenu>
+
+                                                Cargo:<p:selectOneMenu value="#{empleadoBean.empleado.cargo.codigo}" id="cargos">}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                                                
+                                                <f:selectItems   value="#{listasBean.itemsCargos}"/>
+                                                </p:selectOneMenu>
+
+                                                Estado Civil:<p:selectOneMenu value="#{empleadoBean.empleado.ecivil.codigo}" id="eciviles">}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                                                
+                                                <f:selectItems   value="#{listasBean.itemsEciviles}"/>
+                                                </p:selectOneMenu>
+
+                                                Genero:<p:selectOneMenu value="#{empleadoBean.empleado.sexo.codigo}" id="sexos">
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                                                
+                                                <f:selectItems   value="#{listasBean.itemsSexos}"/>
+                                                </p:selectOneMenu>                                        
+                                            </p:panelGrid>
+                                            <p:keyFilter for="ced" mask="int" /> 
+                                            
+                                        </td>
+                                    </tr>
+                                </table>
+                            </p:fieldset>
+                            <p:fieldset style= "margin-top:10px;" >                                    
+                                <p:commandButton icon="ui-icon-plus" update="pnlNuevoEmpleado, aviso" type="submit" id="nuevoEmpleado" value="Guardar" actionListener="#{empleadoBean.guardarEmpleado}"/>          
+                            </p:fieldset>
+                           </td>
+                        </tr>
+                    </table>                   
+                </p:panel>                                                
+            </h:form>
+        </ui:composition>
+    </h:body>
+
+
+</html>

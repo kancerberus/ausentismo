@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"     
+      xmlns:f="http://java.sun.com/jsf/core"      
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    
+    <h:body>
+        <ui:composition>
+            <h:form id="nuevaSubEmpresa">
+               <p:growl id="aviso" showDetail="true" life="5000" />
+                <p:panel header="CREAR SUBEMPRESA" id="pnlNuevaSubEmpresa"  
+                         style="width:1100px;">
+                    <table>
+                        <tr><td>
+                            <p:fieldset legend="Datos SubEmpresa" style="margin-bottom:10px; margin-top:10px;" >
+                                <table cellpadding="5">                        
+                                    <tr>
+                                        <td align="center">
+                                            <p:panelGrid id="tblDatosSubEmpresa" columns="6" style="width:1000px; font-size: 90%;">
+                                                <f:facet name="header">
+                                                    <h:outputText value="" />
+                                                </f:facet> 
+                                                
+                                                <p:outputLabel value="NitSubEmpresa:" for="nit" />
+                                                <p:inputText id="nit" value="#{subempresaBean.subEmpresa.nitsubempresa}" required="true" label="nit"></p:inputText>
+                                                <p:outputLabel value="Nombre:" for="nom" />
+                                                <p:inputText id="nom" value="#{subempresaBean.subEmpresa.nombre}" required="true" label="nom"></p:inputText>
+                                                <p:outputLabel value="Direccion:" for="dir" />
+                                                <p:inputText id="dir" value="#{subempresaBean.subEmpresa.direccion}" required="true" label="dir"></p:inputText>
+                                                <p:outputLabel value="Telefono:" for="tel" />
+                                                <p:inputText id="tel" value="#{subempresaBean.subEmpresa.telefono}" required="true" label="tel"></p:inputText>
+                                                <h:outputLabel value="Municipio:" />
+                                                <p:autoComplete id="municipio" dropdown="true" value="#{subempresaBean.subEmpresa.municipio.nombre}" 
+                                                                completeMethod="#{listasBean.listarMunicipiosPatron}"  scrollHeight="200" 
+                                                                forceSelection="true" />                          
+                                                Empresa:<p:selectOneMenu value="#{subempresaBean.subEmpresa.empresa.nitempresa}" id="empresa">
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                                                <f:selectItems   value="#{listasBean.itemsEmpresas}"/>
+                                                </p:selectOneMenu>
+                                                
+                                            </p:panelGrid>
+                                            
+                                        </td>
+                                    </tr>
+                                </table>
+                            </p:fieldset>                               
+                                <p:fieldset style= "margin-top:10px;" >                                    
+                                    <p:commandButton icon="ui-icon-plus" update="aviso, pnlNuevaSubEmpresa" type="submit" id="BtnNvaSempresa" value="Guardar" actionListener="#{subempresaBean.guardarSubEmpresa}"/>          
+                                </p:fieldset>
+                           </td>
+                        </tr>
+                        
+                            <tr> 
+                                <td> 
+                                    
+                                </td>                                
+                            </tr>    
+                    </table>                   
+                </p:panel>                                                
+            </h:form>
+        </ui:composition>
+    </h:body>
+
+
+</html>

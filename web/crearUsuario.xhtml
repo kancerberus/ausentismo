@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"     
+      xmlns:f="http://java.sun.com/jsf/core"      
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    
+    <h:body>
+        <ui:composition>
+            <h:form id="nuevoUsuario">
+               <p:growl id="aviso" showDetail="true" life="5000" />
+                <p:panel header="CREAR USUARIO" id="pnlNuevoUsuario"  
+                         style="width:1100px;">
+                    <table>
+                        <tr><td>
+                            <p:fieldset legend="Datos Usuario" style="margin-bottom:10px; margin-top:10px;" >
+                                <table cellpadding="5">                        
+                                    <tr>
+                                        <td align="center">
+                                            <p:panelGrid id="tblDatosEmpresa" columns="6" style="width:1000px; font-size: 90%;">
+                                                <f:facet name="header">
+                                                    <h:outputText value="" />
+                                                </f:facet>     
+                                                <p:outputLabel value="Nombre Completo:" for="nom" />
+                                                <p:inputText id="nom" value="#{UsuarioBean.usuario.nombre}" required="true" label="nom"></p:inputText>
+                                                <p:outputLabel value="Nombre de Usuario:" for="nUs" />
+                                                <p:inputText id="nUs" value="#{UsuarioBean.usuario.nomusuario}" required="true" label="nUs"></p:inputText>
+                                                
+                                                <h:outputLabel for="pwd1" value="Clave: " />
+                                                <p:password id="pwd1" value="#{UsuarioBean.usuario.clave}" match="pwd2" label="Password 1" 
+                                                            validatorMessage="Las claves no coinciden!" required="true" />
+
+                                                <h:outputLabel for="pwd2" value="Repetir Clave: " />
+                                                <p:password id="pwd2" value="#{UsuarioBean.usuario.clave}" label="Password 2" required="true" />
+                                                
+                                                Perfil:<p:selectOneMenu value="#{UsuarioBean.usuario.perfil.codigo}" id="perfiles">
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                                                <f:selectItems   value="#{loginBean.itemsPerfiles}"/>
+                                                </p:selectOneMenu>  
+                                                
+                                                Empresa:<p:selectOneMenu value="#{UsuarioBean.usuario.subEmpresa.nitsubempresa}" id="subempresa"
+                                                                         style="width: 200px;">
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                                                <f:selectItems   value="#{listasBean.itemsSubEmpresas}"/>
+                                                </p:selectOneMenu> 
+                                                
+                                            </p:panelGrid>
+                                            
+                                        </td>
+                                    </tr>
+                                </table>
+                            </p:fieldset>
+                            <p:fieldset style= "margin-top:10px;" >                                    
+                                <p:commandButton icon="ui-icon-plus" update="aviso, pnlNuevoUsuario" 
+                                                 type="submit" id="BtnNvoUsuario" value="Crear" 
+                                                 actionListener="#{UsuarioBean.crearUsuario()}"/>          
+                            </p:fieldset>
+                                
+                           </td>
+                        </tr>
+                        
+                            <tr> 
+                                <td> 
+                                    
+                                </td>                                
+                            </tr>    
+                    </table>                   
+                </p:panel>                                                
+            </h:form>
+        </ui:composition>
+    </h:body>
+
+
+</html>

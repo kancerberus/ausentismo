@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:body>
+        <ui:composition>
+            <h:form id="listarEmpleado">
+               <p:growl id="aviso" showDetail="true" life="5000" />
+                <p:panel header="SOLICITUD Y REGISTRO DE PERMISOS" id="pnlListarEmpleado"  
+                         style="width:1200px;">
+                    <table>
+                        <tr><td>
+                                <p:fieldset legend="Consulta Empleados" style="margin-bottom:10px; margin-top:10px;" >
+                                    <table cellpadding="5">                        
+                                        <tr>
+                                            <td align="center">
+                                                <p:panelGrid id="tblEmpleados" columns="5" style="width:1100px; font-size: 90%;">                                    
+                                                <p:outputLabel value="Cedula:" for="cedula" />
+                                                <p:autoComplete id="cedula" value="#{autoCompleteView.txt1}" completeMethod="#{autoCompleteView.completeText}" />
+                                                <p:commandButton icon="ui-icon-refresh" value="Consultar" actionListener="#{ausentismoBean.BuscarEmpleado}" update="pnlListarEmpleado,ListarEmpleadof"/>    
+                                                <p:outputLabel value="Nombre: " for="nombre" />
+                                                <p:autoComplete id="nombre" dropdown="true" value="#{autoCompleteView.txt6}" completeMethod="#{autoCompleteView.completeText}" />
+                                               
+                                                </p:panelGrid>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </p:fieldset>                      
+                                <p:fieldset  >
+                                    <table cellpadding="5">                        
+                                        <tr>
+                                            <td align="center">
+                                                <p:panelGrid id="tblDatosEmpleados" columns="6" style="width:1000px; font-size: 90%;">
+                                                    <f:facet name="header">
+                                                        <h:outputText value="" />
+                                                    </f:facet>   
+                                                    <p:dataTable id="ListarEmpleadof" var="car" value="#{columnManagerView.cars}">                    
+                                                        <p:columns value="#{columnManagerView.columns}" var="column">
+                                                        <f:facet name="header">
+                                                            <h:outputText style="float:left;display:block;height:20px;width:10px;border:0 none;" styleClass="droppoint dropleft" />                           
+                                                            <h:outputText style="float:right;display:block;height:20px;width:10px;border:0 none;" styleClass="droppoint dropright" />
+                                                            <h:outputText value="#{column.header}" />
+                                                        </f:facet>
+                                                        <h:outputText value="#{car[column.property]}" />
+                                                         </p:columns>
+                                                    </p:dataTable>
+                                                </p:panelGrid>                                            
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </p:fieldset>                            
+                           </td>
+                        </tr>
+                    </table>                   
+                </p:panel>                                                
+            </h:form>
+        </ui:composition>
+    </h:body>
+
+
+</html>

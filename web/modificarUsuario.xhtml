@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:body>
+        <ui:composition>
+            <h:form id="modificarUsuario">
+               <p:growl id="aviso" showDetail="true" life="5000" />
+                <p:panel header="MODIFICAR DATOS USUARIO" id="pnlmodificarUsuario"  
+                         style="width:1100px;">
+                    <table>
+                        <tr><td>
+                            <p:fieldset legend="Modificación Usuario" style="margin-bottom:10px; margin-top:10px; width:auto" >                                       
+                                <h:panelGrid columns="4" cellpadding="5" style="width:auto; font-size: 90%;">                                    
+                                    <p:outputLabel value="Nombre de usuario" for="usuario" />
+                                    <p:inputText id="usuario" value="#{UsuarioBean.usuario.nomusuario}" required="true" label="usuario"/>                                      
+                                    <p:commandButton icon="ui-icon-search" value="Consultar" actionListener="#{UsuarioBean.buscarUsuario}" 
+                                                     update="aviso,tblDatosUsuario" />
+                                </h:panelGrid>                                
+                            </p:fieldset>
+                                
+                            <p:fieldset legend="Datos Usuario" style="margin-bottom:10px; margin-top:10px;" >
+                                <table cellpadding="10">                        
+                                    <tr>
+                                        <td align="center">
+                                            <p:panelGrid id="tblDatosUsuario" columns="4" style="width:1000px; font-size: 90%;">
+                                                <f:facet name="header">
+                                                    <h:outputText value="" />
+                                                </f:facet>  
+                                                <p:outputLabel value="Nombre:" for="nUsuario" />
+                                                <p:inputText style="width: 250px" id="nUsuario" value="#{UsuarioBean.usuario.nombre}" label="nUsuario"></p:inputText>                                                
+                                           
+                                                
+                                                Perfil:<p:selectOneMenu value="#{UsuarioBean.usuario.perfil.codigo}" id="Perf">
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                                                <f:selectItems   value="#{loginBean.itemsPerfiles}"/>
+                                                </p:selectOneMenu> 
+                                                
+                                                Empresa:<p:selectOneMenu value="#{UsuarioBean.usuario.subEmpresa.nitsubempresa}" id="subE"
+                                                                         style="width: 200px;">
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                                                <f:selectItems   value="#{listasBean.itemsSubEmpresas}"/>
+                                                </p:selectOneMenu> 
+                                                
+                                                <p:outputLabel for="@next" value="Activo: " />
+                                                <p:selectBooleanCheckbox value="#{UsuarioBean.usuario.estado}" />
+                                                
+                                                
+                                                <p:commandButton icon="ui-icon-disk" update="pnlmodificarUsuario, aviso, tblDatosUsuario" type="submit" id="modificarUsuario" value="Guardar Cambios" actionListener="#{UsuarioBean.modificarUsuario()}"/>
+                                                <p:commandButton icon="ui-icon-refresh" value="Limpiar" update="pnlmodificarUsuario, aviso" actionListener="#{UsuarioBean.limpiarUsuario()}" />
+                                                
+                                                
+                                            </p:panelGrid>
+                                            
+                                        </td>
+                                    </tr>
+                                </table>
+                            </p:fieldset>
+                            
+                            </td>
+                        </tr>
+                    </table>                   
+                </p:panel>                                                
+            </h:form>
+        </ui:composition>
+    </h:body>
+</html>
+

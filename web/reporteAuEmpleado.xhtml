@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:body>
+        <ui:composition>
+            <h:form id="InformeAusentismoEmpleado">
+                <p:growl id="aviso" showDetail="true" life="5000" />
+                    <p:panel header="REPORTE EMPLEADO" id="pnlInformeAusentismoEmpleado"  
+                        style="width:auto;">
+                                            <table>
+                        <tr><td>
+                            <p:fieldset legend="Datos de Inicio de Sesión" style="margin-bottom:10px; margin-top:10px;" >
+                                <table cellpadding="5">                        
+                                    <tr>
+                                        <td align="center">
+                                            <p:panelGrid id="tblDatosSesion" columns="4" style="width:1030px; font-size: 90%;">
+                                                <f:facet name="header">
+                                                    <h:outputText value="" />
+                                                </f:facet>
+                                                <h:outputText value="Nombre de la empresa" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.subEmpresa.nombre}" />                                                
+                                                <h:outputText value="Fecha" style="font-weight: bold;"/>
+                                                <h:outputText value="#{currentDate}">
+                                                    <f:convertDateTime pattern="MM/dd/yyyy" type="date"/> 
+                                                </h:outputText>                                                
+                                                <h:outputText value="Usuario de sesion" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.nomusuario}"/>
+                                                <h:outputText value="Nombre" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.nombre}"/>
+                                            </p:panelGrid>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </p:fieldset>
+                            <p:fieldset style="margin-bottom:10px; margin-top:10px;" >
+                                <table cellpadding="5">
+                                    <tr>
+                                        <td align="center">
+                                                    
+                                                <p:panelGrid id="tblInformeausentismosEmpleado" columns="6" style="width:1030px; font-size: 90%;">
+                                                <f:facet name="header">
+                                                    
+                                                <p:outputLabel value="Cedula Empleado: " for="cedula" />
+                                                <p:inputText id="cedula" value="#{ausentismoBean.cedula}" required="true" label="cedula">                                                    
+                                                </p:inputText>                                                     
+                                                <p:commandButton icon="ui-icon-search" update="aviso, tblausentismoEmpleado, chartAusentismoEmpleado" type="submit" id="BtnInf" value="Consultar" 
+                                                                  actionListener="#{ausentismoBean.ausentismoAnomesEmpleado()}"/>
+                                                
+                                                </f:facet>
+                                                Empresa:<p:selectOneMenu value="#{listasBean.empresa.nitempresa}" id="empresas">}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
+                                                <f:selectItems   value="#{listasBean.itemsEmpresas}"/>                                                  
+                                                </p:selectOneMenu>
+                                                
+                                                Motivo:<p:selectOneMenu value="#{ausentismoBean.ausentismo.motivoausentismo}" id="motivos">}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
+                                                <f:selectItems   value="#{ausentismoBean.itemsMotivos}"/>
+                                                </p:selectOneMenu>
+                                                
+                                                Año:<p:selectOneMenu value="#{ausentismoBean.ano.año}" id="año">}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
+                                                <f:selectItems   value="#{listasBean.itemsAños}"/>                                                   
+                                                </p:selectOneMenu>  
+                                                
+                                                Mes Desde:<p:selectOneMenu value="#{ausentismoBean.mes.desde}" id="mesd">}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                                                <f:selectItems   value="#{listasBean.itemsMeses}"/>
+                                                </p:selectOneMenu>
+                                                
+                                                Mes Hasta:<p:selectOneMenu value="#{ausentismoBean.mes.hasta}" id="mesh">}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
+                                                <f:selectItems   value="#{listasBean.itemsMeses}"/>
+                                                </p:selectOneMenu>                                                
+
+                                                
+                                                <h:outputText value="Anual: " />
+                                                <p:selectBooleanButton id="value2" value="#{ausentismoBean.todos}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">                                                    
+                                                </p:selectBooleanButton>  
+                                                
+                                               
+                                            </p:panelGrid>
+                                        </td>
+                                    </tr>
+                                </table>
+                                </p:fieldset>
+                                
+                                <p:fieldset style="margin-bottom:10px; margin-top:10px;" >
+                                    <p:dataTable id="tblausentismoEmpleado" var="informeAusentismoEmpleado" value="#{ausentismoBean.listAusentismoEmpleado}" style ="font-size: 80%;"                                              
+                                             paginator="true" rows="20">        
+                                        
+                                    <p:column headerText="cedula">
+                                        <h:outputText value="#{informeAusentismoEmpleado.empleado.cedula}" />
+                                    </p:column>
+                                    
+                                    <p:column headerText="Nombres">
+                                        <h:outputText value="#{informeAusentismoEmpleado.empleado.nombres}" />
+                                    </p:column>
+                                    <p:column headerText="Apellidos">
+                                        <h:outputText value="#{informeAusentismoEmpleado.empleado.apellidos}" />
+                                    </p:column>
+                                    
+                                    <p:column headerText="Mes">
+                                        <h:outputText value="#{informeAusentismoEmpleado.mes}" />
+                                    </p:column>
+                                    
+                                    <p:column headerText="Tiempo horas">
+                                        <h:outputText value="#{informeAusentismoEmpleado.tiempo_horas}" />
+                                    </p:column>  
+
+                                    <p:column headerText="Motivo">
+                                        <h:outputText value="#{informeAusentismoEmpleado.motivoausentismo}" />
+                                    </p:column>                                    
+                                        <p:column headerText="Total Eps" footerText="$#{ausentismoBean.totaleps}">
+                                        <h:outputText value="#{informeAusentismoEmpleado.eps}" >
+                                            <f:convertNumber type="currency" currencySymbol="$"/>
+                                        </h:outputText>    
+                                    </p:column>
+                                        <p:column headerText="Total Arl" footerText="$#{ausentismoBean.totalarl}">
+                                        <h:outputText value="#{informeAusentismoEmpleado.arl}" >
+                                            <f:convertNumber type="currency" currencySymbol="$"/>
+                                        </h:outputText>    
+                                    </p:column>
+                                        <p:column id="tote" headerText="Total Empleador"  footerText="$#{ausentismoBean.totalem} " >
+                                        <h:outputText value="#{informeAusentismoEmpleado.empleador}" >                                            
+                                            <f:convertNumber type="currency" maxFractionDigits="2" currencySymbol="$"/>
+                                            
+                                        </h:outputText>
+                                    </p:column>
+                                        <p:column headerText="Total Trabajador" footerText="$#{ausentismoBean.totaltrabajador}">
+                                        <h:outputText value="#{informeAusentismoEmpleado.trabajador}" >
+                                            <f:convertNumber type="currency" maxFractionDigits="2" currencySymbol="$"/>
+                                        </h:outputText>
+                                    </p:column>
+                                        <p:column headerText="SubTotal" footerText="$#{ausentismoBean.totalsubt}">
+                                            <h:outputText value="#{informeAusentismoEmpleado.totalsube}" >
+                                            <f:convertNumber type="currency" currencySymbol="$"/>
+                                        </h:outputText>    
+                                    </p:column> 
+                                </p:dataTable>   
+                                <p:fieldset style= "margin-top:10px; " >  
+                                <h:commandButton value="CSV Export" image="resources/imagenes/csv.png" style="float:right;">
+                                    <p:dataExporter type="csv" target="tblausentismoEmpleado" fileName="EmpleadoAusentismos" />
+                                </h:commandButton>  
+                                    
+                                <h:commandButton value="PDF Export" image="resources/imagenes/pdf.png" style="float:right;">
+                                    <p:dataExporter type="pdf" target="tblausentismoEmpleado" fileName="EmpeladoAusentismos" />
+                                </h:commandButton>         
+                                </p:fieldset>
+                                </p:fieldset> 
+                            <h:panelGroup id="chartAusentismoEmpleado" layout="block" >
+                                <p:fieldset style= "margin-top:5px;" >
+                                    <p:chart type="pie" model="#{ausentismoBean.pieausentismoanomesEmpleado}" style="width:500px;height:400px;" />
+                                </p:fieldset>
+                            </h:panelGroup> 
+                        </td>    
+                    </tr>
+                    </table> 
+                      
+                </p:panel>                                                
+            </h:form>
+        </ui:composition>
+    </h:body>
+</html>

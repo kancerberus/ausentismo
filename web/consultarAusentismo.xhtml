@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:body>
+        <ui:composition>
+            <h:outputScript name="traduccionCalendario.js" />
+            <h:form id="frmConsultarAusentismo">
+                <p:growl id="growlConsultaAusentismo" showDetail="true" life="5000" />
+                <p:panel header="CONSULTAR INGRESO DE AUSENCIAS" id="pnlConsultaAusentismo">  
+                    <table>                        
+                        <tr><td>
+                                <p:dataTable var="itemAusentismo" value="#{ausentismoBean.listaAusentismo}" id="dtListaAusentismos" style="font-size: 80%;"
+                                             rows="20" paginator="true" emptyMessage="No hay resultados"
+                                             filteredValue="#{ausentismoBean.filteredlistaAusentismo}" widgetVar="ausentismoWidget">
+                                    
+                                    <f:facet name="header">
+                                        <p:outputPanel>
+                                            <h:outputText value="Buscar en todos:"/>
+                                            <p:inputText id="globalFilter"
+                                                         onkeyup="PF('ausentismoWidget').filter()"
+                                                         style="width:150px" placeholder="Buscar texto..."/>
+                                        </p:outputPanel>
+                                    </f:facet>  
+                                    
+                                    <p:column headerText="Cod Registro" style="width:90px" filterMatchMode="contains">
+                                        <center><h:outputText value="#{itemAusentismo.cod_registro}" /></center>
+                                    </p:column>
+                                    <p:column headerText="Fecha Permiso" style="width:100px" filterMatchMode="contains">
+                                        <center><h:outputText value="#{itemAusentismo.fecha_permiso}" /></center>
+                                    </p:column>
+                                    <p:column headerText="Horas Permiso" style="width:90px" filterMatchMode="contains">
+                                        <center><h:outputText value="#{itemAusentismo.tiempo_horas}" /></center>
+                                    </p:column>                                    
+                                    <p:column headerText="Cedula" style="width:100px" filterBy="#{itemAusentismo.empleado.cedula}">
+                                        <center><h:outputText value="#{itemAusentismo.empleado.cedula}" /></center>
+                                    </p:column>
+                                    <p:column headerText="Nombre" style="width:150px" filterBy="#{itemAusentismo.empleado.nombres}">
+                                        <center><h:outputText value="#{itemAusentismo.empleado.nombres}" /></center>
+                                    </p:column>
+                                    <p:column headerText="Apellidos" style="width:150px" filterMatchMode="contains" filterBy="#{itemAusentismo.empleado.apellidos}">
+                                        <center><h:outputText value="#{itemAusentismo.empleado.apellidos}" /></center>
+                                    </p:column>                                    
+                                    <p:column headerText="Motivo Ausencia" style="width:150px" filterMatchMode="contains">
+                                        <center><h:outputText value="#{itemAusentismo.motivoausentismo}" /></center>
+                                    </p:column>
+                                </p:dataTable>
+                            </td></tr>
+                    </table>
+                </p:panel>                                
+            </h:form>
+        </ui:composition>
+    </h:body>
+</html>

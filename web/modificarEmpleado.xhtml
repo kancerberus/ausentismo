@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:body>
+        <ui:composition>
+            <h:form id="modificarEmpleado">
+               <p:growl id="aviso" showDetail="true" life="5000" />
+                <p:panel header="MODIFICAR DATOS EMPLEADO" id="pnlmodificarEmpleado"  
+                         style="width:1100px;">
+                    <table>
+                        <tr><td>
+                            <p:fieldset legend="Datos de Sesion" style="margin-bottom:10px; margin-top:10px;" >
+                                <table cellpadding="5">                        
+                                    <tr>
+                                        <td align="center">
+                                            <p:panelGrid id="tblDatosSesion" columns="4" style="width:1000px; font-size: 90%;">
+                                                <f:facet name="header">
+                                                    <h:outputText value="" />
+                                                </f:facet>
+                                                <h:outputText value="Nombre de la empresa" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.subEmpresa.nombre}" />                                                
+                                                <h:outputText value="Fecha" style="font-weight: bold;"/>
+                                                <h:outputText value="#{currentDate}">
+                                                    <f:convertDateTime pattern="MM/dd/yyyy" type="date"/> 
+                                                </h:outputText>                                                
+                                                <h:outputText value="Usuario de sesion" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.nomusuario}"/>
+                                                <h:outputText value="Nombre" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.nombre}"/>
+                                            </p:panelGrid>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </p:fieldset>
+
+                            <p:fieldset legend="Modificación Registro" style="margin-bottom:10px; margin-top:10px; width:auto" >                                       
+                                <h:panelGrid columns="4" cellpadding="5" style="width:auto; font-size: 90%;">                                    
+                                    <p:outputLabel value="Cedula" for="cedula1" />
+                                    <p:inputText id="cedula1" value="#{empleadoBean.empleado.cedula}" required="true" label="cedula1"/>                                      
+                                    <p:commandButton icon="ui-icon-search" value="Consultar" actionListener="#{empleadoBean.buscarEmpleado}" 
+                                                     update="aviso, tblDatosEmpleado" />
+                                </h:panelGrid>                                
+                            </p:fieldset>     
+                                
+                            <p:fieldset legend="Datos Empleado" style="margin-bottom:10px; margin-top:10px;" >
+                                <table cellpadding="5">                        
+                                    <tr>
+                                        <td align="center">
+                                            <p:panelGrid id="tblDatosEmpleado" columns="6" style="width:1000px; font-size: 90%;">
+                                                <f:facet name="header">
+                                                    <h:outputText value="" />
+                                                </f:facet>  
+                                                <p:outputLabel value="Nombres:" for="nEmpleado" />
+                                                <p:inputText id="nEmpleado" value="#{empleadoBean.empleado.nombres}" label="nEmpleado"></p:inputText>
+                                                
+                                                <p:outputLabel value="Apellidos:" for="apell" />
+                                                <p:inputText id="apell" value="#{empleadoBean.empleado.apellidos}"  label="apell"></p:inputText>
+                                                
+                                                <p:outputLabel value="Sueldo_mes" for="sueldo" />
+                                                <p:inputText id="sueldo" value="#{empleadoBean.empleado.sueldo_mes}"  label="sueldo"></p:inputText>
+                                                
+                                                <p:outputLabel value="Auxilio Transporte" for="auxtrans" />
+                                                <p:inputText id="auxtrans" value="#{empleadoBean.empleado.aux_transporte}" label="auxtrans"></p:inputText>
+                                                
+                                                <p:outputLabel for="fecN" value="Fecha de Nacimiento:" />
+                                                <p:calendar id="fecN" value="#{empleadoBean.empleado.fecha_nac}" pattern="dd-MM-yyyy" mask="true" /> 
+                                                
+                                                <h:outputLabel value="* Ciudad Residencia:" />
+                                                <p:autoComplete id="residencia" dropdown="true" value="#{empleadoBean.empleado.residencia.nombre}"
+                                                                
+                                                                completeMethod="#{listasBean.listarMunicipiosPatron}"  scrollHeight="200"
+                                                                forceSelection="true" />
+
+                                                EPS:<p:selectOneMenu value="#{empleadoBean.empleado.eps.codigo}" id="epss">}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
+                                                <f:selectItems   value="#{listasBean.itemsEpss}"/>
+                                                </p:selectOneMenu>
+
+                                                Cargo:<p:selectOneMenu value="#{empleadoBean.empleado.cargo.codigo}" id="cargos">}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
+                                                <f:selectItems   value="#{listasBean.itemsCargos}"/>
+                                                </p:selectOneMenu>
+
+                                                Estado Civil:<p:selectOneMenu value="#{empleadoBean.empleado.ecivil.codigo}" id="eciviles">}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                                                
+                                                <f:selectItems   value="#{listasBean.itemsEciviles}"/>
+                                                </p:selectOneMenu>
+
+                                                Genero:<p:selectOneMenu value="#{empleadoBean.empleado.sexo.codigo}" id="sexos">
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                                                
+                                                <f:selectItems   value="#{listasBean.itemsSexos}"/>
+                                                </p:selectOneMenu>   
+                                                
+                                                <p:outputLabel for="@next" value="Activo: " />
+                                                <p:selectBooleanCheckbox value="#{empleadoBean.empleado.estado}" />
+                                                
+                                                <p:commandButton icon="ui-icon-disk" update="pnlmodificarEmpleado, aviso" type="submit" id="modificarEmpleado" value="Guardar Cambios" actionListener="#{empleadoBean.modificarEmpleado()}"/>
+                                                <center><p:commandButton icon="ui-icon-refresh" value="Limpiar" update="pnlmodificarEmpleado, aviso" actionListener="#{empleadoBean.limpiarEmpleado}" /></center>
+                                            </p:panelGrid>
+                                            
+                                        </td>
+                                    </tr>
+                                </table>
+                            </p:fieldset>
+                                
+                           </td>
+                        </tr>
+                    </table>                   
+                </p:panel>                                                
+            </h:form>
+        </ui:composition>
+    </h:body>
+</html>
+

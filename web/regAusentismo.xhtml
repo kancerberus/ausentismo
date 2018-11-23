@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:body>
+        <ui:composition>
+            <h:form id="regAusentismo">
+               <p:growl id="aviso" showDetail="true" life="5000" />
+                <p:panel header="SOLICITUD Y REGISTRO DE PERMISOS" id="pnlRegAusentismo"  
+                         style="width:1080px;">
+                    <table>
+                        <tr><td>
+                            <p:fieldset legend="Datos de Inicio de Sesión" style="margin-bottom:10px; margin-top:10px;" >
+                                <table cellpadding="5">                        
+                                    <tr>
+                                        <td align="center">
+                                            <p:panelGrid id="tblDatosSesion" columns="4" style="width:1000px; font-size: 90%;">
+                                                <f:facet name="header">
+                                                    <h:outputText value="" />
+                                                </f:facet>
+                                                <h:outputText value="Nombre de la empresa" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.subEmpresa.nombre}" />                                                
+                                                <h:outputText value="Fecha" style="font-weight: bold;"/>
+                                                <h:outputText value="#{currentDate}">
+                                                    <f:convertDateTime pattern="MM/dd/yyyy" type="date"/> 
+                                                </h:outputText>                                                
+                                                <h:outputText value="Usuario de sesion" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.nomusuario}"/>
+                                                <h:outputText value="Nombre" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.nombre}"/>
+                                            </p:panelGrid>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </p:fieldset>
+                            <p:fieldset legend="Datos Empleado" style="margin-bottom:10px; margin-top:10px; width:auto" >                                       
+                                <h:panelGrid columns="4" cellpadding="5" style="width:auto; font-size: 90%;">                                    
+                                    <p:outputLabel value="Cedula:" for="cedula" />
+                                    <p:inputText id="cedula" value="#{ausentismoBean.cedula}" required="true" label="cedula">
+                                      <p:ajax event="blur" listener="#{ausentismoBean.BuscarEmpleado}" update="pnlRegAusentismo"></p:ajax>
+                                    </p:inputText> 
+                                    <p:growl id="growl" life="3000"/>
+                                    <p:commandButton icon="ui-icon-search" value="Consultar" actionListener="#{ausentismoBean.BuscarEmpleado}" update="pnlRegAusentismo"/>                                       
+                                </h:panelGrid>                                
+                                <table cellpadding="5">                                    
+                                    <p:panelGrid id="panel01" columns="10" style="width:1000px; font-size: 90%;">
+                                         <f:facet name="header">
+                                            <h:outputText value="" />
+                                        </f:facet>
+                                        <h:outputText value="Nombres: " style="font-weight: bold;" /><h:outputText value="#{ausentismoBean.ausentismo.empleado.nombres}"/>                                                                                            
+                                        <h:outputText id="apellidos" value="Apellidos: " style="font-weight: bold;" /><h:outputText value="#{ausentismoBean.ausentismo.empleado.apellidos}" /> 
+                                        <h:outputText value="Edad: " style="font-weight: bold;" /><h:outputText value="#{ausentismoBean.ausentismo.empleado.edad}" /> 
+                                        <h:outputText value="Cargo: " style="font-weight: bold;" /><h:outputText value="#{ausentismoBean.ausentismo.empleado.cargo.nombre}" /> 
+                                        <h:outputText value="Estado Civil: " style="font-weight: bold;" /><h:outputText value="#{ausentismoBean.ausentismo.empleado.ecivil.nombre}" /> 
+                                        <h:outputText value="Genero: " style="font-weight: bold;" /><h:outputText value="#{ausentismoBean.ausentismo.empleado.sexo.nombre}" />                                                 
+                                        <h:outputText value="Horas Acumuladas: " style="font-weight: bold;" /><h:outputText style="color: #056da9; font-weight: bolder" value="#{ausentismoBean.ausentismo.empleado.thacum}" />                                                 
+                                    </p:panelGrid>  
+                                </table>
+                            </p:fieldset>
+                            <p:fieldset legend="Registro Ausencia" style="margin-bottom:10px; margin-top:10px; width:1000px" >     
+                                <table>
+                                <p:panelGrid id="registroAusentismo" columns="6"  style="width:1030px; font-size: 90%;">     
+                                        <p:outputLabel for="fecP" value="Fecha de Permiso:" />
+                                        <p:calendar id="fecP" value="#{ausentismoBean.ausentismo.fecha_permiso}" pattern="dd-MM-yyyy" mask="true" />                                        
+                                        <p:outputLabel for="timeS" value="Hora Salida:" />
+                                        <p:calendar id="timeS" value="#{ausentismoBean.ausentismo.hora_salida}" pattern="HH:mm" timeOnly="true"  />
+                                        <p:outputLabel for="timeE" value="Hora Llegada:" />
+                                        <p:calendar id="timeE" value="#{ausentismoBean.ausentismo.hora_llegada}" pattern="HH:mm" timeOnly="true"  />
+                                        <p:outputLabel for="th" value="Tiempo en Horas:" />                                        
+                                        <p:inputNumber id="th" value="#{ausentismoBean.ausentismo.tiempo_horas}" decimalPlaces="2"></p:inputNumber>
+                                        
+                                        Motivo<p:selectOneMenu value="#{ausentismoBean.ausentismo.motivoausentismo}" id="motivos">
+                                        <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                                        <f:selectItems   value="#{ausentismoBean.itemsMotivos}"/>
+                                        </p:selectOneMenu> 
+                                        
+                                        Observaciones
+                                        <p:inputTextarea cols="50" value="#{ausentismoBean.ausentismo.observaciones}" queryDelay="750" minQueryLength="4" />                                                                                                               
+                                        <p:commandButton icon="ui-icon-disk" update="pnlRegAusentismo, aviso" type="submit" id="registrarausentismo" value="Registrar" actionListener="#{ausentismoBean.guardarRegistro()}"/>
+                                        <p:commandButton icon="ui-icon-refresh" value="Limpiar" update="pnlRegAusentismo, motivos" actionListener="#{ausentismoBean.limpiarAusentismo}" />
+                                    </p:panelGrid>
+                                </table>                                
+                            </p:fieldset> 
+                           </td>
+                        </tr> 
+                    </table>                   
+                </p:panel>                                                
+            </h:form>
+        </ui:composition>
+    </h:body>
+</html>
+

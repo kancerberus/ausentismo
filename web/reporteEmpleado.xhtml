@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    
+     <h:body>
+        <ui:composition>
+            <h:outputScript name="traduccionCalendario.js" />
+            <h:form id="frmReporteempleados">
+                <p:growl id="growlReporteempleados" showDetail="true" life="5000" />
+                <p:panel header="CONSULTAR EMPLEADOS" id="pnlReporteempleados" style="width:auto; font-size: 90%;">  
+                    <table>                        
+                        <tr><td>
+                                <p:dataTable var="itemEmpleado" value="#{empleadoBean.listaEmpleado}" id="dtListaEmpleados" style="font-size: 80%;"
+                                             rows="20" paginator="true" emptyMessage="No hay resultados"
+                                             filteredValue="#{empleadoBean.filteredlistaEmpleado}" widgetVar="empleadosWidget">
+                                    
+                                    <f:facet name="header">
+                                        <p:outputPanel>
+                                            <h:outputText value="EMPLEADOS "/>
+                                            <p:inputText id="globalFilter"
+                                                         onkeyup="PF('empleadosWidget').filter()"
+                                                         style="width:150px" placeholder="Buscar texto..."/>
+                                        </p:outputPanel>
+                                    </f:facet>                                      
+                                    <p:column headerText="Cedula" style="width:auto" filterBy="#{itemEmpleado.cedula}">
+                                        <h:outputText value="#{itemEmpleado.cedula}" />
+                                    </p:column>                                       
+                                    <p:column headerText="Nombres" style="width:auto" filterBy="#{itemEmpleado.nombres}">
+                                        <h:outputText value="#{itemEmpleado.nombres}" />
+                                    </p:column>
+                                    <p:column headerText="Apellidos" style="width:auto" filterMatchMode="contains" filterBy="#{itemEmpleado.apellidos}">
+                                        <h:outputText value="#{itemEmpleado.apellidos}" />
+                                    </p:column>                                                                            
+                                    <p:column headerText="Cargo" style="width:auto" filterMatchMode="contains">
+                                        <h:outputText value="#{itemEmpleado.cargo.nombre}" />
+                                    </p:column>        
+                                    <p:column headerText="Eps" style="width:auto" filterMatchMode="contains">
+                                        <h:outputText value="#{itemEmpleado.eps.nombre}" />
+                                    </p:column>                                    
+                                    <p:column headerText="Sueldo Mes" style="width:auto;" filterMatchMode="contains">
+                                        <h:outputText value="#{itemEmpleado.sueldo_mes}" />
+                                    </p:column>                                    
+                                    <p:column headerText="Auxilio De Transporte" style="width:auto" filterMatchMode="contains">
+                                        <h:outputText value="#{itemEmpleado.aux_transporte}" />
+                                    </p:column>                                    
+                                </p:dataTable>
+                                
+                                <p:fieldset style= "margin-top:10px;" > 
+                                <h:commandButton value="CSV Export" image="resources/imagenes/csv.png" style="float:right;">
+                                    <p:dataExporter type="csv" target="dtListaEmpleados" fileName="Empleados" />
+                                </h:commandButton>
+                                
+                                <h:commandButton value="PDF Export" image="resources/imagenes/pdf.png" style="float:right;">
+                                    <p:dataExporter type="pdf" target="dtListaEmpleados" fileName="Empleados" />
+                                </h:commandButton>                    
+                                
+                                </p:fieldset>
+                            </td></tr>
+                    </table>
+                </p:panel>                                
+            </h:form>
+        </ui:composition>
+    </h:body>
+</html>
