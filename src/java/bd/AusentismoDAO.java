@@ -933,14 +933,18 @@ public class AusentismoDAO {
                     
                 case "EM-TR":
                     //Calcula sumatoria para tipo EM-TR con acumulador de horas de empleado y tiempo horas
-                    int thacum= ausentismo.getEmpleado().getThacum();                   
-                        thacum+=th;
+                    int thacumA= ausentismo.getEmpleado().getThacum();                   
+                    float thacumD = thacumA + th;
                     
-                    if (thacum <= 24){
-                        empleador = salhoras*th;
-                    }else if(thacum > 24){                        
-                        empleador = salhoras*24;
-                        trabajador = salhoras*(thacum-24);
+                    if (thacumA > 24){
+                        trabajador= th*salhoras;
+                    }else if(thacumA <= 24 && thacumD>24){
+                        double  thdes=thacumD-24;
+                        double  thant=24-thacumA;
+                        trabajador=thdes*salhoras;
+                        empleador=thant*salhoras;
+                    }else{
+                        empleador=th*salhoras;
                     }
                     break;
             }  
@@ -1020,7 +1024,7 @@ public class AusentismoDAO {
             tha = 16;
             thd = th - tha;
            
-            
+            boolean finalizado=false;
             double empleador=0;
             double arl=0;
             double eps=0;
@@ -1079,14 +1083,18 @@ public class AusentismoDAO {
                     
                 case "EM-TR":
                     //Calcula sumatoria para tipo EM-TR con acumulador de horas de empleado y tiempo horas
-                    int thacum= ausentismo.getEmpleado().getThacum();                   
-                        thacum+=th;
+                    int thacumA= ausentismo.getEmpleado().getThacum();                   
+                    float thacumD = thacumA + th;
                     
-                    if (thacum <= 24){
-                        empleador = salhoras*th;
-                    }else if(thacum > 24){                        
-                        empleador = salhoras*24;
-                        trabajador = salhoras*(thacum-24);
+                    if (thacumA > 24){
+                        trabajador= th*salhoras;
+                    }else if(thacumA <= 24 && thacumD>24){
+                        double  thdes=thacumD-24;
+                        double  thant=24-thacumA;
+                        trabajador=thdes*salhoras;
+                        empleador=thant*salhoras;
+                    }else{
+                        empleador=th*salhoras;
                     }
                     break;
             }  
