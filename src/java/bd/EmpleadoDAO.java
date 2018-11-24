@@ -115,7 +115,7 @@ public class EmpleadoDAO {
                         +"from registro_ausentismo re "
                         +"inner join empleado e on (e.cedula=re.fk_cedula) "
                         +"inner join motivopermiso mo on (mo.cod_motivo=re.fk_cod_motivo) "
-                        +"where fk_cedula = '"+cedula.trim()+"' and mo.tipo = 'EM-TR'";
+                        +"where fk_cedula = '"+cedula.trim()+"' and mo.tipo = 'EM-TR' order by cod_regausentismo";
                 
                 rs = consulta.ejecutar(sql);
                                 
