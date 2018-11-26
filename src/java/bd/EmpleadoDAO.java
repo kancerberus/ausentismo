@@ -121,6 +121,7 @@ public class EmpleadoDAO {
                                 
                 while (rs.next()) {            
                     double empleador=0; 
+                    trabajador=0;
                     thoras = rs.getDouble("thoras");
                     thacum= thoras+thacum;
                     salhoras= rs.getFloat("sueldohora");
@@ -132,21 +133,21 @@ public class EmpleadoDAO {
                             empleador=thoras*salhoras;                            
                         }
                         total=trabajador+empleador;
-                        if(thacum > tp){                        
-                            if(finalizado==false){
+                        if(thacum > tp){                             
+                            if(finalizado==false){                                
                                 double thorastrabajador= thacum-tp;
                                 trabajador=thorastrabajador*salhoras;
                                 double  thorasempleador= thoras-thorastrabajador;
                                 empleador=thorasempleador*salhoras;
-                                finalizado=true;
-                                total=trabajador+empleador;
-
-                            }                            
+                                finalizado=true;                                      
+                                  
+                            }                               
                             else{
-                                empleador=0;
+                                empleador=0;                                
                                 trabajador = thoras * salhoras;                        
                                                                
                             }
+                            total=trabajador+empleador;
                             
                         }                        
                         //Ingresa la actualización en BD  
