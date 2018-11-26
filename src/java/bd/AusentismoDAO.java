@@ -1117,11 +1117,11 @@ public class AusentismoDAO {
                         + "'" + ausentismo.getEmpleado().getCedula() + "',"
                         + "'A',"
                         + "'" + formatoFecha1.format(ausentismo.getFecha_permiso()) + "',"
-                        + "" + empleador + ","
-                        + "" + eps + ","
-                        + "" + arl + ","
-                        + "" + trabajador + ","
-                        + "" + total + ")";
+                        + " round(CAST(('"+empleador+"') as numeric), '3'), "
+                        + " round(CAST(('"+eps+"') as numeric), '3'), "
+                        + " round(CAST(('"+arl+"') as numeric), '3'), "
+                        + " round(CAST(('"+trabajador+"') as numeric), '3'), "
+                        + " round(CAST(('"+total+"') as numeric), '3'))";
 
                 resultado = consulta.actualizar(sql);
                 return resultado;
