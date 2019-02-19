@@ -75,6 +75,7 @@ public class UIAusentismo implements Serializable {
     
     private PieChartModel pieSubempresa;
     private ExpressionFactory ef;    
+    private String minutos;
 
     public UIAusentismo()  throws Exception {
        contextoJSF = FacesContext.getCurrentInstance();
@@ -169,7 +170,12 @@ public class UIAusentismo implements Serializable {
                 invalido = true;
             }            
 
-            if (invalido == false) {
+            if (invalido == false) {                
+                    float min=0;
+                    min=Float.parseFloat(minutos);
+                    float horas= Float.parseFloat(ausentismo.getTiempo_horas());
+                    horas+= min;
+                    ausentismo.setTiempo_horas(Float.toString(horas));
                     Integer resultado = gestorAusentismo.guardarAusentismo(ausentismo);
 
                     if (resultado > 0) {
@@ -441,7 +447,14 @@ public class UIAusentismo implements Serializable {
             
                 return itemsMotivos;    
     }
-    
+
+    public String getMinutos() {
+        return minutos;
+    }
+
+    public void setMinutos(String minutos) {
+        this.minutos = minutos;
+    }    
 
     public PieChartModel getPieausentismoanomesEmpleado() {
         return pieausentismoanomesEmpleado;
