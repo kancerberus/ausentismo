@@ -72,24 +72,23 @@ and open the template in the editor.
                                         <p:calendar id="timeS" value="#{ausentismoBean.ausentismo.hora_salida}" pattern="HH:mm" timeOnly="true"  />
                                         <p:outputLabel for="timeE" value="Hora Llegada:" />
                                         <p:calendar id="timeE" value="#{ausentismoBean.ausentismo.hora_llegada}" pattern="HH:mm" timeOnly="true"  />
-                                        <p:outputLabel for="th" value="Tiempo en Horas:" />                                        
-                                        <p:inputNumber id="th" value="#{ausentismoBean.ausentismo.tiempo_horas}" decimalPlaces="2"></p:inputNumber>
-                                        <p:outputLabel for="tm" value="Tiempo en Minutos" />                                        
-                                        <p:selectOneMenu id="tm" value="#{ausentismoBean.minutos}" style="width:125px">
-                                            <f:selectItem itemLabel="0" itemValue='0' />
-                                            <f:selectItem itemLabel="5" itemValue='0.083' />
-                                            <f:selectItem itemLabel="10" itemValue='0.166' />
-                                            <f:selectItem itemLabel="15" itemValue='0.25' />
-                                            <f:selectItem itemLabel="20" itemValue='0.333' />
-                                            <f:selectItem itemLabel="25" itemValue='0.416' />
-                                            <f:selectItem itemLabel="30" itemValue='0.5'/>
-                                            <f:selectItem itemLabel="35" itemValue='0.583'/>
-                                            <f:selectItem itemLabel="40" itemValue='0.666' />
-                                            <f:selectItem itemLabel="45" itemValue='0.75' />
-                                            <f:selectItem itemLabel="50" itemValue='0.833' />
-                                            <f:selectItem itemLabel="55" itemValue='0.916' />                                            
-                                        </p:selectOneMenu>
-                                        
+                                        <p:outputLabel for="th" value="Tiempo en Horas y Minutos:"/>
+                                        <p:inputNumber maxValue="999" id="th" value="#{ausentismoBean.ausentismo.tiempo_horas}" size="5" style="margin-left: 5px" decimalPlaces="0">
+                                            <p:selectOneMenu id="tm" value="#{ausentismoBean.minutos}" style="width:25px;float: right; margin-left: 2px">
+                                                    <f:selectItem itemLabel="0" itemValue='0' />
+                                                    <f:selectItem itemLabel="5" itemValue='0.083' />
+                                                    <f:selectItem itemLabel="10" itemValue='0.166' />
+                                                    <f:selectItem itemLabel="15" itemValue='0.25' />
+                                                    <f:selectItem itemLabel="20" itemValue='0.333' />
+                                                    <f:selectItem itemLabel="25" itemValue='0.416' />
+                                                    <f:selectItem itemLabel="30" itemValue='0.5'/>
+                                                    <f:selectItem itemLabel="35" itemValue='0.583'/>
+                                                    <f:selectItem itemLabel="40" itemValue='0.666' />
+                                                    <f:selectItem itemLabel="45" itemValue='0.75' />
+                                                    <f:selectItem itemLabel="50" itemValue='0.833' />
+                                                    <f:selectItem itemLabel="55" itemValue='0.916' />                                            
+                                            </p:selectOneMenu>
+                                        </p:inputNumber>              
                                         Motivo<p:selectOneMenu value="#{ausentismoBean.ausentismo.motivoausentismo}" id="motivos">
                                         <f:selectItem itemLabel="Seleccione..." itemValue="" />
                                         <f:selectItems   value="#{ausentismoBean.itemsMotivos}"/>
