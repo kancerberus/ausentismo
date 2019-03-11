@@ -156,11 +156,7 @@ public class UIAusentismo implements Serializable {
         gestorAusentismo = new GestorAusentismo();
 
         try {
-            //verificar que todas las cajas este llenas
-            if(ausentismo.getTiempo_horas().equals("0")){
-                util.mostrarMensaje("El tiempo en horas no puede ser CERO");                
-                invalido=true;
-            }            
+            //verificar que todas las cajas este llenas           
             if (ausentismo.getEmpleado().getCedula() == null) {
                 msg = "La cédula esta vacía!";
                 invalido = true;              
