@@ -33,6 +33,7 @@ public class GestorPrincipal implements Serializable {
     
     
     
+    
 
     public String selGeneral(String opcion) {
         switch (opcion) {
@@ -55,6 +56,7 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
+                
                 break;
                 
             case "consultar_ausentismo":
@@ -76,6 +78,7 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
+                
                 break;                
 
             case "finalizar_reg":
@@ -97,6 +100,7 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
+                
                 break;                 
             
             case "crear_empleado":
@@ -118,6 +122,7 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
+                
                 break;  
                 
             case "listar_empleado":
@@ -139,6 +144,7 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
+                
                 break;  
                 
             case "crear_empresa":
@@ -160,6 +166,7 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
+                
                 break;  
                 
             case "crear_usuario":
@@ -181,6 +188,7 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
+                
                 break;  
                 
             case "cargosyepsbd":
@@ -201,7 +209,8 @@ public class GestorPrincipal implements Serializable {
                 setReporteGrafica(false);
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
-                setModificarUsuario(false);                
+                setModificarUsuario(false); 
+                
                 break;  
                 
             case "crear_subempresa":
@@ -223,6 +232,7 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
+                
                 break;
                 
             case "informe_ausentismo":
@@ -244,6 +254,7 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
+                
                 break;
                 
             case "informe_por_empresa":
@@ -265,6 +276,7 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
+                
                 break;
                 
             case "reporte_empleado":
@@ -286,6 +298,7 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
+                
                 break;
                 
             case "modificar_empleado":
@@ -307,6 +320,7 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
+                
                 break;                
 
                 
@@ -329,6 +343,7 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false); 
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
+                
                 break;
                 
                 
@@ -351,6 +366,7 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
+                
                 break;
                 
                 
@@ -373,6 +389,7 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(true);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
+                
                 break;
                 
             case "ausentismo_empleado":
@@ -394,6 +411,7 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);                
                 setAusentismoEmpleado(true);
                 setModificarUsuario(false);
+                
                 break;
                 
             case "modificar_usuario":
@@ -415,7 +433,10 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);                
                 setAusentismoEmpleado(false);
                 setModificarUsuario(true);
+
                 break;
+                
+            
         }
 
         return "";

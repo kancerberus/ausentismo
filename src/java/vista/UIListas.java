@@ -206,10 +206,10 @@ public class UIListas implements Serializable {
                 ArrayList<Empresa> listaEmpresa;
                 listaEmpresa = gestorListas.listarEmpresas();
                 itemsEmpresas.clear();
-                for (int i = 0; i < listaEmpresa.size(); i++) {                    
+                for (int i = 0; i < listaEmpresa.size(); i++) {
                         itemsEmpresas.add(new SelectItem(listaEmpresa.get(i).getNitempresa(), listaEmpresa.get(i).getNombre()));                        
-                    }                        
-                }               
+                    }
+                }
             catch (Exception ex) {
                         Logger.getLogger(UIAusentismo.class.getName()).log(Level.SEVERE, null, ex);
                 }

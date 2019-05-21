@@ -100,9 +100,7 @@ public class UIAusentismo implements Serializable {
         String nitsesion = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);        
         GestorEmpleado gestorEmpleado = new GestorEmpleado();
         Empleado em = gestorEmpleado.validarEmpleado(cedula,nitsesion);
-        Integer thacum = gestorAusentismo.horasanoAcumuladas(cedula);
-        
-        
+        Integer thacum = gestorAusentismo.horasanoAcumuladas(cedula);        
         
         if(em!=null && em.isEstado() == true){
            ausentismo.setEmpleado(em);

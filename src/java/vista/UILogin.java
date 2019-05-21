@@ -21,7 +21,6 @@ import modelo.Sesion;
 import modelo.Usuario;
 import modelo.Perfil;
 import util.Utilidades;
-import vista.UIEmpleado;
 
 /**
  *

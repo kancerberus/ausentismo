@@ -280,7 +280,7 @@ public class ListasDAO {
             consulta = new Consulta(getConexion());
             
 
-                        if  (cod_perfil.equals(4)) {
+                        if  (cod_perfil.equals(4) || cod_perfil.equals(2)) {
 
                             sql = "SELECT e.nitempresa,e.nombre from subempresa sub "
                                     + "inner join empresa e on (e.nitempresa=sub.fk_nitempresa) "
