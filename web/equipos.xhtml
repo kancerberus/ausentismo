@@ -46,11 +46,13 @@ and open the template in the editor.
                                     <p:selectOneMenu value="#{concursoBean.concurso.codConcurso}">
                                     <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
                                     <f:selectItems   value="#{concursoBean.listaConcursosEmpresas}"/>                                      
+                                    <p:ajax listener="#{concursoBean.getListaConcursosEmpresas}" update="equipos"/>
                                     </p:selectOneMenu>
                                     Nombre Equipo
                                     <p:inputText value="#{concursoBean.grupoConcurso.nombre}" />                                                        
                                     <p:commandButton icon="ui-icon-newwin" update="gruposConcurso"  
                                                  type="submit" value="Crear Equipo"  actionListener="#{concursoBean.crearGrupoConcurso()}"/>
+                                    
                                     </h:panelGrid>
                                     <br/>
                                     <h:panelGrid>
@@ -87,9 +89,10 @@ and open the template in the editor.
                                         <h:outputText id="apellido" value="#{concursoBean.empleado.apellidos}" />                                         
                                         
                                         Capitan
-                                        <p:selectBooleanCheckbox value="#{concursoBean.grupoParticipantes.capitan}" disabled="#{concursoBean.captain eq true}"/>
-                                        
-                                        <p:commandButton icon="ui-icon-newwin" update="grupoParticipantes,picture "  oncomplete="PF('dlg').show();" onclick="PF('dlg').show();"
+                                        <p:selectBooleanCheckbox id="capitan" value="#{concursoBean.grupoParticipantes.capitan}" disabled="#{concursoBean.captain eq true}">
+                                            <p:ajax oncomplete="PF('dlg').show();"  listener="#{concursoBean.cargarListaGrupoParticipantes()}"/>
+                                        </p:selectBooleanCheckbox>
+                                        <p:commandButton icon="ui-icon-newwin" oncomplete="PF('dlg').show();" onclick="PF('dlg').show();"
                                                 type="submit" value="Agregar"  actionListener="#{concursoBean.agregarEmpleado()}"/>
                                     </h:panelGrid>       
                                     

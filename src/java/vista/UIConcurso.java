@@ -28,7 +28,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import jdk.internal.util.xml.impl.Input;
 import modelo.Actividad;
 import modelo.AdjuntosActividad;
 import util.Utilidades;
@@ -37,7 +36,6 @@ import modelo.Empleado;
 import modelo.Empresa;
 import modelo.GrupoConcurso;
 import modelo.GrupoConcursoParticipantes;
-import net.sf.jasperreports.engine.util.FileBufferedOutputStream;
 import org.primefaces.event.CloseEvent;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.MoveEvent;
@@ -172,11 +170,14 @@ public class UIConcurso implements Serializable {
                 util.mostrarMensaje("Grupo sin nombre!");
                 invalido = true;              
             }
-            
-            /*if (hoy.before(concurso.getFecha_limite_insc())) {
+            concurso.getEmpresa();
+            if (hoy.after(concurso.getFecha_limite_insc())) {
                 util.mostrarMensaje("Fecha Limite De inscripcion Vencida!");
+                msg = "Fecha Limite De inscripcion Vencida!"; 
+                concurso=new Concurso();
+                this.getListaConcursosEmpresas();                       
                 invalido = true;              
-            }*/
+            }
          
 
             if (invalido == false) {  
@@ -191,11 +192,13 @@ public class UIConcurso implements Serializable {
                         grupoConcurso = new GrupoConcurso();
                         this.cargarGruposConcursos();
                         this.cargarConcursosGerente();
+                        concurso=new Concurso();
+                        this.getListaConcursosEmpresas();
                     } else {
                         util.mostrarMensaje("!! El Equipo no pudo ser almacenado !!");
                     }
             } else {                
-                    util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
+                    util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                     
             }            
         } catch (Exception e) {
             Logger.getLogger(UIConcurso.class.getName()).log(Level.SEVERE, null, e);
@@ -238,7 +241,10 @@ public class UIConcurso implements Serializable {
             this.grupoParticipantes.getGrupoConcurso().setCodGrupo(codGrupo);            
             if (invalido == false) {
                     Integer resultado = gestorConcurso.agregarEmpleado(grupoParticipantes);
-
+                    if(grupoParticipantes.isCapitan()==true){
+                        grupoParticipantes.setCapitan(false);
+                        captain=false;
+                    }
                     if (resultado > 0) {
                         util.mostrarMensaje("!! Participante agregado !!");
                         empleado = new Empleado();
@@ -434,24 +440,27 @@ public class UIConcurso implements Serializable {
                 ArrayList<Concurso> listaConcursos;
                 listaConcursos = gestorConcurso.listarConcursos(nitsesion);
                 listaConcursosEmpresas.clear();
+                
+                
+                
+                
                 for (int i = 0; i < listaConcursos.size(); i++) {
                         listaConcursosEmpresas.add(new SelectItem(listaConcursos.get(i).getCodConcurso(), listaConcursos.get(i).getNombre(), listaConcursos.get(i).getFecha_limite_insc().toString()));
                     }
-                
-                /*if(!listaConcursos.isEmpty()){
-                for(int i=0;i<=listaConcurso.size()-1;i++){
-                if(concurso.getCodConcurso().equals(listaConcurso.get(i).getCodConcurso())){                    
-                    concurso=listaConcurso.get(i);
-                    }
-                }
-                }*/
                 
                 }
             catch (Exception ex) {
                         Logger.getLogger(UIAusentismo.class.getName()).log(Level.SEVERE, null, ex);
                         util.mostrarMensaje(ex.getMessage()); 
-                }                      
+                }  
             
+            if(concurso.getCodConcurso()!=null){
+                    for(int i=0;i<=listaConcurso.size()-1;i++){
+                        if(concurso.getCodConcurso().equals(listaConcurso.get(i).getCodConcurso())){                    
+                        concurso=listaConcurso.get(i);
+                        }
+                    }
+                }            
                 return listaConcursosEmpresas;                
     }
     
