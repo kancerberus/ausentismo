@@ -207,12 +207,27 @@ public class ConcursoDAO {
         ResultSet rs;
         Consulta consulta = null;
         try {
+            
+            String nit="";
+            consulta = new Consulta(getConexion());
+            String sql1
+                    = "  select fk_nitempresa " +
+                    " from subempresa " +
+                    " where nitsubempresa='"+nitsesion+"'";
+
+            rs = consulta.ejecutar(sql1);
+            
+            while(rs.next()){
+                nit=rs.getString("fk_nitempresa");
+            }
+            
+            
             consulta = new Consulta(getConexion());
             String sql
-                    = " SELECT cod_grupo, gconc.cod_concurso codgconc, conc.nombre nomconc, gconc.nombre nombregconc" +
+                    = " SELECT cod_grupo, gconc.cod_concurso codgconc, conc.nombre nomconc, gconc.nombre nombregconc, conc.participantes participantes " +
                         " FROM campaña.grupo_concurso gconc " +
                         " JOIN campaña.concurso conc on(conc.cod_concurso=gconc.cod_concurso) "+
-                        " WHERE conc.fk_nitempresa='"+nitsesion+"'" +
+                        " WHERE conc.fk_nitempresa='"+nit+"'" +
                         " ORDER BY conc.cod_concurso";
 
             rs = consulta.ejecutar(sql);
@@ -220,8 +235,8 @@ public class ConcursoDAO {
             while (rs.next()) {
                 grupoConcurso =new GrupoConcurso();
                 grupoConcurso.setCodGrupo(rs.getString("cod_grupo"));
-                grupoConcurso.setConcurso(new Concurso(rs.getString("codgconc"), rs.getString("nomconc")));                
-                grupoConcurso.setNombre(rs.getString("nombregconc"));
+                grupoConcurso.setConcurso(new Concurso(rs.getString("codgconc"), rs.getString("nomconc"), rs.getInt("participantes")));                
+                grupoConcurso.setNombre(rs.getString("nombregconc"));                
                 listaGrupoConcursos.add(grupoConcurso);
             }
             return listaGrupoConcursos;
@@ -240,11 +255,27 @@ public class ConcursoDAO {
         ResultSet dt;
         Consulta consulta = null;
         try {
+            
+            String nit="";
+            consulta = new Consulta(getConexion());
+            String sql1
+                    = "  select fk_nitempresa " +
+                    " from subempresa " +
+                    " where nitsubempresa='"+nitsesion+"'";
+
+            dt = consulta.ejecutar(sql1);
+            
+            while(dt.next()){
+                nit=dt.getString("fk_nitempresa");
+            }
+            
             consulta = new Consulta(getConexion());
             String sql
-                    = " SELECT cod_concurso, nombre, fk_nitempresa, participantes, estado, fecha_limite_insc "
-                    + " FROM campaña.concurso "
-                    + " WHERE fk_nitempresa='"+nitsesion+"' ";
+                    = "  SELECT conc.cod_concurso, conc.nombre, conc.fk_nitempresa, participantes, estado, fecha_limite_insc  " +
+                        " FROM campaña.concurso conc " +
+                        " JOIN subempresa sub ON (sub.nitsubempresa=conc.fk_nitempresa) " +
+                        " JOIN empresa emp ON(emp.nitempresa=sub.fk_nitempresa) " +
+                        " WHERE emp.nitempresa='"+nit+"'";
 
             dt = consulta.ejecutar(sql);
 
@@ -276,9 +307,10 @@ public class ConcursoDAO {
         try {
             consulta = new Consulta(getConexion());
             String sql
-                    = " SELECT cod_grupo, nombre "
-                    + " FROM campaña.grupo_concurso "
-                    + " WHERE cod_concurso='"+codConcurso+"' ";
+                    = "  SELECT cod_grupo, gconc.nombre, conc.nombre nomconc, conc.participantes participantes  " +
+                        " FROM campaña.grupo_concurso gconc " +
+                        " JOIN campaña.concurso conc on(conc.cod_concurso=gconc.cod_concurso)  " +
+                        " WHERE gconc.cod_concurso='"+codConcurso+"'  ";
 
             dt = consulta.ejecutar(sql);
 
@@ -286,7 +318,7 @@ public class ConcursoDAO {
                 grupoConcurso=new GrupoConcurso();
                 grupoConcurso.setCodGrupo(dt.getString("cod_grupo"));
                 grupoConcurso.setNombre(dt.getString("nombre"));  
-                grupoConcurso.setConcurso(new Concurso(codConcurso, ""));
+                grupoConcurso.setConcurso(new Concurso(codConcurso, dt.getString("nomconc"), dt.getInt("participantes")));
                 
                 listaGrupoConcursos.add(grupoConcurso);
             }
@@ -305,12 +337,27 @@ public class ConcursoDAO {
         ResultSet rs;
         Consulta consulta = null;
         try {
+            
+            String nit="";
+            consulta = new Consulta(getConexion());
+            String sql1
+                    = "  select fk_nitempresa " +
+                    " from subempresa " +
+                    " where nitsubempresa='"+nitsesion+"'";
+
+            rs = consulta.ejecutar(sql1);
+            
+            while(rs.next()){
+                nit=rs.getString("fk_nitempresa");
+            }
+            
+            
             consulta = new Consulta(getConexion());
             String sql
                     = " SELECT cod_concurso, conc.nombre nomconc, em.nombre nombre,fk_nitempresa, participantes, estado, fecha_limite_insc " +
                         "FROM campaña.concurso conc " +
                         "JOIN empresa em on(em.nitempresa=conc.fk_nitempresa) "+
-                        " WHERE fk_nitempresa='"+nitsesion+"' " +                    
+                        " WHERE fk_nitempresa='"+nit+"' " +                    
                         "ORDER BY cod_concurso";
 
             rs = consulta.ejecutar(sql);

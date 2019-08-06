@@ -41,11 +41,11 @@ and open the template in the editor.
                                 </table>
                             </p:fieldset> 
                                 <p:fieldset legend="Concursos" style="margin-bottom:10px; margin-top:10px;" >                                    
-                                    Concursos: *  
+                                    Concursos: *
                                     <p:selectOneMenu value="#{concursoBean.concurso.codConcurso}">
                                     <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
                                     <f:selectItems   value="#{concursoBean.listaConcursosEmpresas}" />
-                                    <p:ajax update="aviso, gConcursos, gridBasesConcurso" listener="#{concursoBean.getListaGrupoConcurso}" />
+                                    <p:ajax update="gConcursos, gridBasesConcurso, aviso" listener="#{concursoBean.getListaConcursosEmpresas}" />                                    
                                     </p:selectOneMenu>
                                     Equipos: *
                                     <p:selectOneMenu id="gConcursos" value="#{concursoBean.grupoConcurso.codGrupo}">
@@ -67,7 +67,7 @@ and open the template in the editor.
                                                 <h:outputText value="Numero Max Participantes " style="font-weight: bold;" />
                                                 <h:outputText value="#{concursoBean.concurso.participantes}" />
                                                 <h:outputText value="Estado " style="font-weight: bold;" />
-                                                <h:outputText value="#{concursoBean.concurso.estado}" />
+                                                <h:outputText value="#{concursoBean.concurso.estado ? 'Activo' : 'Inactivo'}" />
                                                 <h:outputText value="Fecha Limite " style="font-weight: bold;" />
                                                 <h:outputText value="#{concursoBean.concurso.fecha_limite_insc}"/>                                                
                                             </p:panelGrid>
@@ -93,8 +93,6 @@ and open the template in the editor.
                                         </p:column>
                                     </p:dataTable>
                                 </p:fieldset>
-                                
-                                
                                 <p:dialog id="picture" width="15%" height="60%" widgetVar="dlg" header="Adjuntos Actividad" resizable="false" >                                        
                                 <p:autoUpdate/>
                                 <p:ajax event="close" update="aviso" listener="#{concursoBean.handleClose}" />
@@ -134,8 +132,7 @@ and open the template in the editor.
                                             <p:commandButton value="Submit" ajax="false"   actionListener="#{concursoBean.cargarLogo(event)}" />
                                         </p:column>
                                     </h:panelGrid>
-                                </p:dialog>                                   
-                                
+                                </p:dialog>
                            </td>
                         </tr>   
                     </table> 

@@ -32,9 +32,10 @@ public class Concurso implements Serializable{
         this.fecha_limite_insc = fecha_limite_insc;
     }
 
-    public Concurso(String codConcurso, String nombre) {
+    public Concurso(String codConcurso, String nombre, Integer participantes) {
         this.codConcurso = codConcurso;
         this.nombre = nombre;
+        this.participantes= participantes;
     }
 
 

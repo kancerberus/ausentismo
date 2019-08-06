@@ -37,6 +37,20 @@ public class EmpleadoDAO {
         Municipio mu = null;
         
         try {
+            
+            String nit="";
+            consulta = new Consulta(getConexion());
+            String sql1
+                    = "  select fk_nitempresa " +
+                    " from subempresa " +
+                    " where nitsubempresa='"+nitsesion+"'";
+
+            rs = consulta.ejecutar(sql1);
+            
+            while(rs.next()){
+                nit=rs.getString("fk_nitempresa");
+            }
+            
             consulta = new Consulta(getConexion());
             
             sql = "SELECT em.nombres nombres,em.apellidos apellidos,em.fecha_nacimiento fecha_nac, "
@@ -46,7 +60,7 @@ public class EmpleadoDAO {
                     + "INNER JOIN cargo c on (c.cod_cargo=em.cargo) "
                     + "INNER JOIN det_lista det1 on (det1.cod_det_lista=em.cod_det_lista_sexo) "
                     + "INNER JOIN det_lista det2 on (det2.cod_det_lista=em.cod_det_lista_ecivil) "
-                    + " WHERE nitsubempresa ='" + nitsesion +"' and cedula='" + cedula.trim() +"'";
+                    + " WHERE nitsubempresa ='" + nit +"' and cedula='" + cedula.trim() +"'";
 
             rs = consulta.ejecutar(sql);
             if (rs.next()) {
