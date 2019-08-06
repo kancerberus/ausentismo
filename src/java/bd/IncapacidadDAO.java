@@ -19,8 +19,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import modelo.Cie10;
 import modelo.Empleado;
 import modelo.Empresa;
+import modelo.GrupoCie10;
+import modelo.Incapacidad;
 import org.primefaces.model.chart.PieChartModel;
 import vista.UIListas;
 
@@ -28,12 +31,12 @@ import vista.UIListas;
  *
  * @author diego
  */
-public class AusentismoDAO {    
+public class IncapacidadDAO {    
     private Connection conexion;
     private UIListas uilistas;
     
     
-    public AusentismoDAO(Connection conexion) throws Exception{
+    public IncapacidadDAO(Connection conexion) throws Exception{
         this.conexion = conexion;
         this.uilistas = new UIListas();
     }
@@ -86,39 +89,27 @@ public class AusentismoDAO {
         Consulta consulta = null;
         String selfecha = null;
         String queryfecha = null;
-        String queryfechainc = null;
         Double totaleps = 0.00;
 
         if (selmesano == null){
             selfecha = selano;
             queryfecha = "to_char(fechapermiso,'yyyy')";
-            queryfechainc="to_char(fecha_inicial,'yyyy')";
         }else{
             selfecha = selmesano;
             queryfecha = "to_char(fechapermiso,'yyyy/mm')";
-            queryfechainc="to_char(fecha_inicial,'yyyy/mm')";
         }
 
 
         try {
             consulta = new Consulta(getConexion());
             String sql
-                    = "SELECT fechapermiso, e.nombres nombres, e.apellidos apellidos, e.sueldo_mes sueldo, " +
-                    " e.nitsubempresa,tiempohoras, m.nombre_motivo nom_motivo, m.tipo tipo,ra.eps eps, " +
-                    " ra.arl arl, ra.empleador empleador, ra.trabajador trabajador, ra.total total " +
-                    " FROM registro_ausentismo ra " +
-                    " INNER JOIN empleado e on (cedula=fk_cedula) " +
-                    " INNER JOIN motivopermiso m on (cod_motivo=fk_cod_motivo) " +
-                    " WHERE e.nitsubempresa ='" + nitsesion + "' AND " + queryfecha + "='" + selfecha + "' "+
-                    " UNION ALL " +
-                    " SELECT ri.fecha_inicial, e.nombres nombres, e.apellidos apellidos, e.sueldo_mes sueldo, " +
-                    " e.nitsubempresa,tiempohoras, m.nombre_motivo nom_motivo, m.tipo tipo,ri.eps eps, " +
-                    " ri.arl arl, ri.empleador empleador, ri.trabajador trabajador, ri.total total " +
-                    " FROM registro_incapacidad ri " +
-                    " INNER JOIN empleado e on (cedula=fk_cedula) " +
-                    " INNER JOIN motivopermiso m on (cod_motivo=fk_cod_motivo) " +                    
-                    " WHERE e.nitsubempresa ='" + nitsesion + "' AND " + queryfechainc + "='" + selfecha + "' "+
-                    " ORDER BY fechapermiso";
+                    = "select fechapermiso, e.nombres nombres, e.apellidos apellidos, e.sueldo_mes sueldo, e.nitsubempresa,tiempohoras, m.nombre_motivo nom_motivo, m.tipo tipo,"
+                    + "ra.eps eps, ra.arl arl, ra.empleador empleador, ra.trabajador trabajador, ra.total total " 
+                    + "from registro_ausentismo ra " 
+                    + "inner join empleado e on (cedula=fk_cedula) " 
+                    + "inner join motivopermiso m on (cod_motivo=fk_cod_motivo) "
+                    + "where e.nitsubempresa ='" + nitsesion + "' and " + queryfecha + "='" + selfecha + "' "
+                    + "order by fechapermiso";
 
             rs = consulta.ejecutar(sql);
 
@@ -169,7 +160,6 @@ public class AusentismoDAO {
         String selfecha = null;
         String selfecha2 = null;
         String queryfecha = null;
-        String queryfechainc = null;
         Double totaleps = 0.00;
         String sql="";
         
@@ -177,13 +167,11 @@ public class AusentismoDAO {
         
         if ((selmesdesde == null) && (selmeshasta == null)){
             selfecha = selano;
-            queryfecha = "to_char(fechapermiso,'yyyy')";             
-            queryfechainc = "to_char(fecha_inicial,'yyyy')"; 
+            queryfecha = "to_char(fechapermiso,'yyyy')"; 
         }else{
             selfecha = selmesdesde;
             selfecha2 = selmeshasta;
             queryfecha = "to_char(fechapermiso,'yyyy/mm')";
-            queryfechainc = "to_char(fecha_inicial,'yyyy/mm')"; 
         }
                             
                 //Valida que llegue año y empresa
@@ -196,15 +184,7 @@ public class AusentismoDAO {
                             +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "
                             +"where e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') "
                             +"and " + queryfecha + " = '" + selfecha + "' " 
-                            +"group by se.nombre, to_char(fechapermiso,'mm') "
-                            + " UNION ALL "+
-                            "SELECT se.nombre as nombre, to_char(fecha_inicial,'mm') as fechaper, sum(cast(tiempohoras as float)) as tothoras, sum(eps) as toteps, sum(empleador) as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador, round(CAST(sum(eps)+sum(empleador)+sum(arl)+sum(trabajador) as numeric), '2') as totalsube " +
-                            "from registro_incapacidad " +
-                            "inner join empleado e on (e.cedula=fk_cedula) " +
-                            "inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) " +
-                            "where e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') " +
-                            "and " + queryfechainc + " = '"+selfecha+"' "+
-                            "group by se.nombre, to_char(fecha_inicial,'mm')";                    
+                            +"group by se.nombre, to_char(fechapermiso,'mm')";                    
                 }
                 //Valida que llegue año y empresa y motivopermiso
                 if (nitem != null && selano != null && selmotivo!=null) {
@@ -214,15 +194,7 @@ public class AusentismoDAO {
                             +"inner join empleado e on (e.cedula=fk_cedula) inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) " 
                             +"where e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') and fk_cod_motivo='"+selmotivo+"' "
                             +"and " + queryfecha + " = '" + selfecha + "' "
-                            +"group by se.nombre, to_char(fechapermiso,'mm'), fk_cod_motivo "
-                            + " UNION ALL "
-                            +"select se.nombre as nombre, to_char(fecha_inicial,'mm') as fechaper, "
-                            +"sum(cast(tiempohoras as float)) as tothoras, sum(eps) as toteps, sum(empleador) as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador, "
-                            +"round(CAST(sum(eps)+sum(empleador)+sum(arl)+sum(trabajador) as numeric), '2') as totalsube from registro_incapacidad "
-                            +"inner join empleado e on (e.cedula=fk_cedula) inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) " 
-                            +"where e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') and fk_cod_motivo='"+selmotivo+"' "
-                            +"and " + queryfechainc + " = '" + selfecha + "' "
-                            +"group by se.nombre, to_char(fecha_inicial,'mm'), fk_cod_motivo";
+                            +"group by se.nombre, to_char(fechapermiso,'mm'), fk_cod_motivo";
                 }
                 
                 //Valida que llegue nitsubempresa nitempresa y año
@@ -235,18 +207,7 @@ public class AusentismoDAO {
                             "inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "+
                             "where e.nitsubempresa = '"+nitsubem+"'"+
                             "and " + queryfecha + " = '" + selfecha + "'"+
-                            "group by se.nombre, to_char(fechapermiso,'mm') "+
-                            " UNION ALL "+
-                            "select se.nombre,to_char(fecha_inicial,'mm') as fechaper, sum(cast(tiempohoras as float)) as tothoras, "+
-                            "sum(eps) as toteps, sum(empleador) as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador, "+
-                            "round(CAST(sum(eps)+sum(empleador)+sum(arl)+sum(trabajador) as numeric), '2') as totalsube "+
-                            "from registro_incapacidad "+
-                            "inner join empleado e on (e.cedula=fk_cedula) "+
-                            "inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "+
-                            "where e.nitsubempresa = '"+nitsubem+"'"+
-                            "and " + queryfechainc + " = '" + selfecha + "'"+
-                            "group by se.nombre, to_char(fecha_inicial,'mm')";
-                    
+                            "group by se.nombre, to_char(fechapermiso,'mm')";                    
                 }
                 //Valida que llegue nitsubempresa nitempresa año y motivo
                 if(nitem != null && nitsubem != null && selfecha != null && selfecha2==null && selmotivo!=null) {
@@ -257,19 +218,8 @@ public class AusentismoDAO {
                             +"inner join empleado e on (e.cedula=fk_cedula) "
                             +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa)  "
                             +"where e.nitsubempresa = '"+nitsubem+"' and fk_cod_motivo='"+selmotivo+"' "
-                            +" and " + queryfecha + " = '" + selfecha + "'"
-                            +" group by se.nombre, to_char(fechapermiso,'mm'), fk_cod_motivo "
-                            +" UNION ALL "
-                            +"select se.nombre,to_char(fecha_inicial,'mm') as fechaper, sum(cast(tiempohoras as float)) as tothoras, "
-                            +"sum(eps) as toteps, sum(empleador) as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador, "
-                            +"round(CAST(sum(eps)+sum(empleador)+sum(arl)+sum(trabajador) as numeric), '2') as totalsube "
-                            +"from registro_incapacidad "
-                            +"inner join empleado e on (e.cedula=fk_cedula) "
-                            +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa)  "
-                            +"where e.nitsubempresa = '"+nitsubem+"' and fk_cod_motivo='"+selmotivo+"' "
-                            + "and " + queryfechainc + " = '" + selfecha + "'"
-                            +"group by se.nombre, to_char(fecha_inicial,'mm'), fk_cod_motivo";
-                            
+                            + "and " + queryfecha + " = '" + selfecha + "'"
+                            +"group by se.nombre, to_char(fechapermiso,'mm'), fk_cod_motivo"; 
                     
                 }
                 
@@ -283,18 +233,7 @@ public class AusentismoDAO {
                             "inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "+
                             "where e.nitsubempresa = '"+nitsubem+"'" +
                             "and " + queryfecha + " between '" + selfecha + "' and '" + selfecha2 + "' " +
-                            "group by se.nombre, to_char(fechapermiso,'mm') "+
-                            " UNION ALL "+
-                            "select se.nombre,to_char(fecha_inicial,'mm') as fechaper, sum(cast(tiempohoras as float)) as tothoras, "+
-                            "sum(eps) as toteps, sum(empleador) as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador, "+
-                            "round(CAST(sum(eps)+sum(empleador)+sum(arl)+sum(trabajador) as numeric), '2') as totalsube "+
-                            "from registro_incapacidad "+
-                            "inner join empleado e on (e.cedula=fk_cedula) "+
-                            "inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "+
-                            "where e.nitsubempresa = '"+nitsubem+"'" +
-                            "and " + queryfechainc + " between '" + selfecha + "' and '" + selfecha2 + "' " +
-                            "group by se.nombre, to_char(fecha_inicial,'mm')";
-                                         
+                            "group by se.nombre, to_char(fechapermiso,'mm')";                    
                 }
                 
                 //Valida que llegue nitsubempresa, mes desde, mes hasta y año y motivo
@@ -308,20 +247,7 @@ public class AusentismoDAO {
                             "where e.nitsubempresa = '"+nitsubem+"'" +
                             "and " + queryfecha + " between '" + selfecha + "' and '" + selfecha2 + "' " +
                             "and fk_cod_motivo='"+selmotivo+"'"+
-                            "group by se.nombre, to_char(fechapermiso,'mm'), fk_cod_motivo "+
-                            " UNION ALL "+
-                            "select se.nombre,to_char(fecha_inicial,'mm') as fechaper, sum(cast(tiempohoras as float)) as tothoras, "+
-                            "sum(eps) as toteps, sum(empleador) as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador, "+
-                            "round(CAST(sum(eps)+sum(empleador)+sum(arl)+sum(trabajador) as numeric), '2') as totalsube "+
-                            "from registro_incapacidad "+
-                            "inner join empleado e on (e.cedula=fk_cedula) "+
-                            "inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "+
-                            "where e.nitsubempresa = '"+nitsubem+"'" +
-                            "and " + queryfechainc + " between '" + selfecha + "' and '" + selfecha2 + "' " +
-                            "and fk_cod_motivo='"+selmotivo+"'"+
-                            "group by se.nombre, to_char(fecha_inicial,'mm'), fk_cod_motivo";
-                            
-                            
+                            "group by se.nombre, to_char(fechapermiso,'mm'), fk_cod_motivo";                    
                 }
                 //valida que llegue nitempresa mes desde y mes hasta
                 if(selmesdesde != null && selmeshasta != null && nitem != null && nitsubem==null){
@@ -333,18 +259,7 @@ public class AusentismoDAO {
                             +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "
                             +"where e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') "
                             +"and " + queryfecha + " between '" + selfecha + "' and '" + selfecha2 + "' " 
-                            +"group by se.nombre, to_char(fechapermiso,'mm') "+
-                            " UNION ALL "+
-                            " select se.nombre as nombre, to_char(fecha_inicial,'mm') as fechaper, sum(cast(tiempohoras as float)) as tothoras, "
-                            +"sum(eps) as toteps, sum(empleador) as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador, "
-                            +"round(CAST(sum(eps)+sum(empleador)+sum(arl)+sum(trabajador) as numeric), '2') as totalsube "
-                            +"from registro_incapacidad "
-                            +"inner join empleado e on (e.cedula=fk_cedula) " 
-                            +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "
-                            +"where e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') "
-                            +"and " + queryfechainc + " between '" + selfecha + "' and '" + selfecha2 + "' " 
-                            +"group by se.nombre, to_char(fecha_inicial,'mm')";
-                            
+                            +"group by se.nombre, to_char(fechapermiso,'mm')";                 
 
                 }
                 //Valida que llegue nitempresa mes desde mes hasta y motivo
@@ -358,20 +273,7 @@ public class AusentismoDAO {
                             +"where e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') "
                             +"and " + queryfecha + " between '" + selfecha + "' and '" + selfecha2 + "' " 
                             +"and fk_cod_motivo= '"+selmotivo+"'"
-                            +"group by se.nombre, to_char(fechapermiso,'mm'), fk_cod_motivo"
-                            + " UNION ALL "+
-                            " select se.nombre as nombre, to_char(fecha_inicial,'mm') as fechaper, sum(cast(tiempohoras as float)) as tothoras, "
-                            +"sum(eps) as toteps, sum(empleador) as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador, "
-                            +"round(CAST(sum(eps)+sum(empleador)+sum(arl)+sum(trabajador) as numeric), '2') as totalsube "
-                            +"from registro_incapacidad "
-                            +"inner join empleado e on (e.cedula=fk_cedula) " 
-                            +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "
-                            +"where e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') "
-                            +"and " + queryfechainc + " between '" + selfecha + "' and '" + selfecha2 + "' " 
-                            +"and fk_cod_motivo= '"+selmotivo+"'"
-                            +"group by se.nombre, to_char(fecha_inicial,'mm'), fk_cod_motivo";
-                            
-                            
+                            +"group by se.nombre, to_char(fechapermiso,'mm'), fk_cod_motivo";
                 }
                 
                 
@@ -394,7 +296,9 @@ public class AusentismoDAO {
                         au.setEmpleador(rs.getDouble("totempleador"));
                         au.setArl(rs.getDouble("totarl"));
                         au.setTrabajador(rs.getDouble("tottrabajador"));
-                        au.setTotalsube(rs.getDouble("totalsube"));
+                        au.setTotalsube(rs.getDouble("totalsube"));  
+                        
+                        
 
                         listaausentismoEmpresa.add(au);
                     }                             
@@ -417,20 +321,17 @@ public class AusentismoDAO {
         String selfecha = null;
         String selfecha2 = null;
         String queryfecha = null;
-        String queryfechainc = null;
         Double totaleps = 0.00;
         String sql="";
 
         //formato fecha recibida
         if ((selmesdesde == null) && (selmeshasta == null)){
             selfecha = selano;
-            queryfecha = "to_char(fechapermiso,'yyyy')";
-            queryfechainc = "to_char(ri.fecha_inicial,'yyyy')";
+            queryfecha = "to_char(fechapermiso,'yyyy')"; 
         }else{
             selfecha = selmesdesde;
             selfecha2 = selmeshasta;
             queryfecha = "to_char(fechapermiso,'yyyy/mm')";
-            queryfechainc = "to_char(ri.fecha_inicial,'yyyy/mm')";
         }
         
         //Valida y muestra la seleccion de empresa año y motivo de la aucensia
@@ -444,19 +345,7 @@ public class AusentismoDAO {
                         +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "
                         +"where fk_cedula='"+cedula+"' and e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') "
                         +"and "+queryfecha+" = '"+selfecha+"' and fk_cod_motivo='"+selmotivo+"' "
-                        +"group by e.nombres, e.cedula, e.apellidos, to_char(fechapermiso,'mm'), m.nombre_motivo "
-                        + " UNION ALL "+
-                        " select cedula , e.nombres as nombre, apellidos, to_char(ri.fecha_inicial,'mm') as fechaper, sum(cast(tiempohoras as float)) as tothoras, " 
-                        +"sum(eps) as toteps, sum(empleador) as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador, " 
-                        +"round(CAST(sum(eps)+sum(empleador)+sum(arl)+sum(trabajador) as numeric), '2') as totalsube, m.nombre_motivo as motivo  " 
-                        +"from registro_incapacidad ri " 
-                        +"inner join motivopermiso m on (cod_motivo=fk_cod_motivo) "
-                        +"inner join empleado e on (e.cedula=ri.fk_cedula) "
-                        +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "
-                        +"where fk_cedula='"+cedula+"' and e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') "
-                        +"and "+queryfechainc+" = '"+selfecha+"' and fk_cod_motivo='"+selmotivo+"' "
-                        +"group by e.nombres, e.cedula, e.apellidos, to_char(ri.fecha_inicial,'mm'), m.nombre_motivo";
-                        
+                        +"group by e.nombres, e.cedula, e.apellidos, to_char(fechapermiso,'mm'), m.nombre_motivo";
         }
         //Valida y muestra la seleccion de empresa y año
         if (nitem != null && selano != null && selmotivo == null) {
@@ -469,18 +358,7 @@ public class AusentismoDAO {
                         +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "
                         +"where fk_cedula='"+cedula+"' and e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') "
                         +"and "+queryfecha+" = '"+selfecha+"' "
-                        +"group by e.nombres, e.cedula, e.apellidos, to_char(fechapermiso,'mm'), m.nombre_motivo "
-                        + " UNION ALL "+
-                        "select cedula, e.nombres as nombre, apellidos, to_char(ri.fecha_inicial,'mm') as fechaper, sum(cast(tiempohoras as float)) as tothoras, " 
-                        +"sum(eps) as toteps, sum(empleador) as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador, " 
-                        +"round(CAST(sum(eps)+sum(empleador)+sum(arl)+sum(trabajador) as numeric), '2') as totalsube, m.nombre_motivo as motivo  " 
-                        +"from registro_incapacidad ri " 
-                        +"inner join motivopermiso m on (cod_motivo=fk_cod_motivo) "
-                        +"inner join empleado e on (e.cedula=ri.fk_cedula) "
-                        +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "
-                        +"where fk_cedula='"+cedula+"' and e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') "
-                        +"and "+queryfechainc+" = '"+selfecha+"' "
-                        +"group by e.nombres, e.cedula, e.apellidos, to_char(ri.fecha_inicial,'mm'), m.nombre_motivo ";
+                        +"group by e.nombres, e.cedula, e.apellidos, to_char(fechapermiso,'mm'), m.nombre_motivo";
         }
         //valida y muestra la seleccion de empresa mesdesde y meshasta y año correspondiente
         if (nitem != null &&  selmesdesde != null && selmeshasta != null && queryfecha!=null ) {
@@ -493,18 +371,7 @@ public class AusentismoDAO {
                         +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "
                         +"where fk_cedula='"+cedula+"' and e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') "
                         +"and " + queryfecha + " between '" + selfecha + "' and '" + selfecha2 + "' "
-                        +"group by e.nombres, e.cedula, e.apellidos, to_char(fechapermiso,'mm'), m.nombre_motivo"
-                        + " UNION ALL "+
-                        "select cedula, e.nombres as nombre, apellidos, to_char(ri.fecha_inicial,'mm') as fechaper, sum(cast(tiempohoras as float)) as tothoras, " 
-                        +"sum(eps) as toteps, sum(empleador) as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador, " 
-                        +"round(CAST(sum(eps)+sum(empleador)+sum(arl)+sum(trabajador) as numeric), '2') as totalsube, m.nombre_motivo as motivo  " 
-                        +"from registro_incapacidad ri " 
-                        +"inner join motivopermiso m on (cod_motivo=fk_cod_motivo) "
-                        +"inner join empleado e on (e.cedula=ri.fk_cedula) "
-                        +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "
-                        +"where fk_cedula='"+cedula+"' and e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') "
-                        +"and " + queryfechainc + " between '" + selfecha + "' and '" + selfecha2 + "' "
-                        +"group by e.nombres, e.cedula, e.apellidos, to_char(ri.fecha_inicial,'mm'), m.nombre_motivo";
+                        +"group by e.nombres, e.cedula, e.apellidos, to_char(fechapermiso,'mm'), m.nombre_motivo";                        
         }
         //valida y muestra la seleccion de empresa mesdesde meshasta motivo y año
         if (nitem != null &&  selmesdesde != null && selmeshasta != null && queryfecha!=null && selmotivo!=null ) {
@@ -517,19 +384,7 @@ public class AusentismoDAO {
                         +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "
                         +"where fk_cedula='"+cedula+"' and e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') "
                         +"and " + queryfecha + " between '" + selfecha + "' and '" + selfecha2 + "' and fk_cod_motivo='"+selmotivo+"' "
-                        +"group by e.nombres, e.cedula, e.apellidos, to_char(fechapermiso,'mm'), m.nombre_motivo "
-                        + " UNION ALL "+
-                        " select cedula, e.nombres as nombre, apellidos, to_char(ri.fecha_inicial,'mm') as fechaper, sum(cast(tiempohoras as float)) as tothoras, " 
-                        +"sum(eps) as toteps, sum(empleador) as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador, " 
-                        +"round(CAST(sum(eps)+sum(empleador)+sum(arl)+sum(trabajador) as numeric), '2') as totalsube, m.nombre_motivo as motivo  " 
-                        +"from registro_incapacidad ri " 
-                        +"inner join motivopermiso m on (cod_motivo=fk_cod_motivo) "
-                        +"inner join empleado e on (e.cedula=ri.fk_cedula) "
-                        +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "
-                        +"where fk_cedula='"+cedula+"' and e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') "
-                        +"and " + queryfechainc + " between '" + selfecha + "' and '" + selfecha2 + "' and fk_cod_motivo='"+selmotivo+"' "
-                        +"group by e.nombres, e.cedula, e.apellidos, to_char(ri.fecha_inicial,'mm'), m.nombre_motivo";
-                                     
+                        +"group by e.nombres, e.cedula, e.apellidos, to_char(fechapermiso,'mm'), m.nombre_motivo";                        
         }
                 
             try {
@@ -670,7 +525,6 @@ public class AusentismoDAO {
         String selfecha = null;
         String selfecha2 = null;
         String queryfecha = null;
-        String queryfechainc = null;
         Double totaleps = 0.00;
         String sql="";
 
@@ -678,41 +532,27 @@ public class AusentismoDAO {
         if ((selmesdesde == null) && (selmeshasta == null)){
             selfecha = selano;
             queryfecha = "to_char(fechapermiso,'yyyy')"; 
-            queryfechainc = "to_char(fecha_inicial,'yyyy')"; 
         }else{
             selfecha = selmesdesde;
             selfecha2 = selmeshasta;
             queryfecha = "to_char(fechapermiso,'yyyy/mm')";
-            queryfechainc = "to_char(fecha_inicial,'yyyy/mm')"; 
         }
                             
                 //Valida que llegue año y empresa
                 if (nitem != null && selano != null) {
-                    sql = " select nombre, sum(toteps) as toteps, sum(totempleador) as totempleador, sum(totarl) as totarl, sum(tottrabajador) as tottrabajador "
-                            + "from( select em.nombre as nombre,sum(eps) as toteps, sum(empleador) " 
+                    sql = " select em.nombre as nombre,sum(eps) as toteps, sum(empleador) " 
                             +"as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador "                              
                             +"from registro_ausentismo "
                             +"inner join empleado e on (e.cedula=fk_cedula)" 
                             +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa)"
                             +"inner join empresa em on(em.nitempresa=se.fk_nitempresa)"
                             +"where fk_nitempresa = '"+nitem+"' and " + queryfecha + " = '" + selfecha + "' " 
-                            +"group by em.nombre " 
-                            + " UNION ALL "+
-                            " select em.nombre as nombre,sum(eps) as toteps, sum(empleador) " 
-                            +"as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador "                              
-                            +"from registro_incapacidad "
-                            +"inner join empleado e on (e.cedula=fk_cedula)" 
-                            +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa)"
-                            +"inner join empresa em on(em.nitempresa=se.fk_nitempresa)"
-                            +"where fk_nitempresa = '"+nitem+"' and " + queryfechainc + " = '" + selfecha + "' " 
-                            +"group by em.nombre) as uniontotalesincapacidad "
-                            + " group by nombre ";
+                            +"group by em.nombre";                 
                 }
                 
-                //Valida que llegue año y empresa y motivo
+                //Valida que llegue año y empresa
                 if (nitem != null && selano != null && selmotivo !=null) {
-                    sql = " select nombre, sum(toteps) as toteps, sum(totempleador) as totempleador, sum(totarl) as totarl, sum(tottrabajador) as tottrabajador "
-                            + " from (select em.nombre as nombre,sum(eps) as toteps, sum(empleador) " 
+                    sql = " select em.nombre as nombre,sum(eps) as toteps, sum(empleador) " 
                             +"as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador "                              
                             +"from registro_ausentismo "
                             +"inner join empleado e on (e.cedula=fk_cedula)" 
@@ -720,50 +560,24 @@ public class AusentismoDAO {
                             +"inner join empresa em on(em.nitempresa=se.fk_nitempresa)"
                             +"where fk_nitempresa = '"+nitem+"' and " + queryfecha + " = '" + selfecha + "' " 
                             +"and fk_cod_motivo='"+selmotivo+"' "
-                            +"group by em.nombre, fk_cod_motivo "
-                            + " UNION ALL "+
-                            " select em.nombre as nombre,sum(eps) as toteps, sum(empleador) " 
-                            +"as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador "                              
-                            +"from registro_incapacidad "
-                            +"inner join empleado e on (e.cedula=fk_cedula)" 
-                            +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa)"
-                            +"inner join empresa em on(em.nitempresa=se.fk_nitempresa)"
-                            +"where fk_nitempresa = '"+nitem+"' and " + queryfechainc + " = '" + selfecha + "' " 
-                            +"and fk_cod_motivo='"+selmotivo+"' "
-                            +" group by em.nombre, fk_cod_motivo)  as totalesunionausentismoincapacidad "
-                            +" group by nombre ";
-                          
+                            +"group by em.nombre, fk_cod_motivo";                 
                 }
                 //valida que llegue nitsubempresa y fecha
                 if(nitem != null && nitsubem != null && selfecha != null && selfecha2==null) {
-                    sql = " select nombre, sum(toteps) as toteps, sum(totempleador) as totempleador, sum(totarl) as totarl, sum(tottrabajador) as tottrabajador "
-                            + " from ("                            
-                            + "select se.nombre as nombre,sum(eps) as toteps, sum(empleador) as totempleador, sum(arl) "
+                    sql = " select se.nombre as nombre,sum(eps) as toteps, sum(empleador) as totempleador, sum(arl) "
                             +" as totarl, sum(trabajador) as tottrabajador " 
                             +" from registro_ausentismo "
                             +" inner join empleado e on (e.cedula=fk_cedula)"
                             +" inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "
                             +" inner join empresa em on(em.nitempresa=se.fk_nitempresa) "
                             +" where se.nitsubempresa = '"+nitsubem+"' and  " + queryfecha + " = '"+ selfecha + "' " 
-                            +" group by se.nombre "
-                            + " UNION ALL "+
-                            " select se.nombre as nombre,sum(eps) as toteps, sum(empleador) as totempleador, sum(arl) "
-                            +" as totarl, sum(trabajador) as tottrabajador " 
-                            +" from registro_incapacidad "
-                            +" inner join empleado e on (e.cedula=fk_cedula)"
-                            +" inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "
-                            +" inner join empresa em on(em.nitempresa=se.fk_nitempresa) "
-                            +" where se.nitsubempresa = '"+nitsubem+"' and  " + queryfechainc + " = '"+ selfecha + "' " 
-                            +" group by se.nombre ) as totalesunionausentismoincapacidad "
-                            + " group by nombre";
+                            +" group by se.nombre";
                  
                 }
                 
                 //valida que llegue nitsubempresa fecha y motivo
                 if(nitem != null && nitsubem != null && selfecha != null && selfecha2==null && selmotivo!=null) {
-                    sql = " select nombre, sum(toteps) as toteps, sum(totempleador) as totempleador, sum(totarl) as totarl, sum(tottrabajador) as tottrabajador "
-                            + " from ("
-                            + "select se.nombre as nombre,sum(eps) as toteps, sum(empleador) as totempleador, sum(arl) "
+                    sql = " select se.nombre as nombre,sum(eps) as toteps, sum(empleador) as totempleador, sum(arl) "
                             +" as totarl, sum(trabajador) as tottrabajador " 
                             +" from registro_ausentismo "
                             +" inner join empleado e on (e.cedula=fk_cedula)"
@@ -771,26 +585,13 @@ public class AusentismoDAO {
                             +" inner join empresa em on(em.nitempresa=se.fk_nitempresa) "
                             +" where se.nitsubempresa = '"+nitsubem+"' and  " + queryfecha + " = '"+ selfecha + "' " 
                             +"and fk_cod_motivo='"+selmotivo+"'"
-                            +" group by se.nombre, fk_cod_motivo "
-                            + " UNION ALL "+
-                            " select se.nombre as nombre,sum(eps) as toteps, sum(empleador) as totempleador, sum(arl) "
-                            +" as totarl, sum(trabajador) as tottrabajador " 
-                            +" from registro_incapacidad "
-                            +" inner join empleado e on (e.cedula=fk_cedula)"
-                            +" inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "
-                            +" inner join empresa em on(em.nitempresa=se.fk_nitempresa) "
-                            +" where se.nitsubempresa = '"+nitsubem+"' and  " + queryfechainc + " = '"+ selfecha + "' " 
-                            +"and fk_cod_motivo='"+selmotivo+"'"
-                            +" group by se.nombre, fk_cod_motivo) as totalesunionausentismoincapacidad "
-                            + " group by nombre ";
+                            +" group by se.nombre, fk_cod_motivo";
                  
                 }
                 
                 //Valida que llegue nitsubempresa, mes desde, mes hasta y año
-                if (selmesdesde != null && selmeshasta != null && nitsubem != null && selmotivo ==null) {                                        
-                    sql = " select nombre, sum(toteps) as toteps, sum(totempleador) as totempleador, sum(totarl) as totarl, sum(tottrabajador) as tottrabajador "
-                            + " from ("
-                            + "select se.nombre as nombre,sum(eps) as toteps, sum(empleador) " 
+                if (selmesdesde != null && selmeshasta != null && nitsubem != null) {                                        
+                    sql = " select se.nombre as nombre,sum(eps) as toteps, sum(empleador) " 
                             +"as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador "                              
                             +"from registro_ausentismo "
                             +"inner join empleado e on (e.cedula=fk_cedula) " 
@@ -798,27 +599,14 @@ public class AusentismoDAO {
                             +"inner join empresa em on (em.nitempresa=se.fk_nitempresa) "
                             +"where se.nitsubempresa = '"+nitsubem+"' "
                             +"and " + queryfecha + " between '" + selfecha + "' and '" + selfecha2 + "' "
-                            +"group by se.nombre "
-                            + " UNION ALL "+
-                            " select se.nombre as nombre,sum(eps) as toteps, sum(empleador) " 
-                            +"as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador "                              
-                            +"from registro_incapacidad "
-                            +"inner join empleado e on (e.cedula=fk_cedula) " 
-                            +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "
-                            +"inner join empresa em on (em.nitempresa=se.fk_nitempresa) "
-                            +"where se.nitsubempresa = '"+nitsubem+"' "
-                            +"and " + queryfechainc + " between '" + selfecha + "' and '" + selfecha2 + "' "
-                            +"group by se.nombre) as totalesunionausentismoincapacidad "
-                            + " group by nombre";
+                            +"group by se.nombre";
                     
                    
                 }
                 
                 //Valida que llegue nitsubempresa, mes desde, mes hasta año y motivo
-                if (selmesdesde != null && selmeshasta != null && nitsubem != null && selmotivo !=null) {                                        
-                    sql = " select nombre, sum(toteps) as toteps, sum(totempleador) as totempleador, sum(totarl) as totarl, sum(tottrabajador) as tottrabajador "
-                            + " from ("
-                            +" select se.nombre as nombre,sum(eps) as toteps, sum(empleador) " 
+                if (selmesdesde != null && selmeshasta != null && nitsubem != null) {                                        
+                    sql = " select se.nombre as nombre,sum(eps) as toteps, sum(empleador) " 
                             +"as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador "                              
                             +"from registro_ausentismo "
                             +"inner join empleado e on (e.cedula=fk_cedula) " 
@@ -827,28 +615,13 @@ public class AusentismoDAO {
                             +"where se.nitsubempresa = '"+nitsubem+"' "
                             +"and " + queryfecha + " between '" + selfecha + "' and '" + selfecha2 + "' "
                             +"and fk_cod_motivo='"+selmotivo+"' "
-                            +"group by se.nombre, fk_cod_motivo "
-                            + " UNION ALL "+
-                            " select se.nombre as nombre,sum(eps) as toteps, sum(empleador) " 
-                            +"as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador "                              
-                            +"from registro_incapacidad "
-                            +"inner join empleado e on (e.cedula=fk_cedula) " 
-                            +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "
-                            +"inner join empresa em on (em.nitempresa=se.fk_nitempresa) "
-                            +"where se.nitsubempresa = '"+nitsubem+"' "
-                            +"and " + queryfechainc + " between '" + selfecha + "' and '" + selfecha2 + "' "
-                            +"and fk_cod_motivo='"+selmotivo+"' "
-                            +"group by se.nombre, fk_cod_motivo) as totalesunionausentismoincapacidad "
-                            + " group by nombre ";
-                            
+                            +"group by se.nombre, fk_cod_motivo";
                     
                    
                 }
                 //valida que llegue nitempresa mes desde y mes hasta
                 if(selmesdesde != null && selmeshasta != null && nitem != null && nitsubem==null){
-                    sql = " select nombre, sum(toteps) as toteps, sum(totempleador) as totempleador, sum(totarl) as totarl, sum(tottrabajador) as tottrabajador "
-                            + " from ( " 
-                            + "select em.nombre as nombre,sum(eps) as toteps, sum(empleador) " 
+                    sql = " select em.nombre as nombre,sum(eps) as toteps, sum(empleador) " 
                             +"as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador "                              
                             +"from registro_ausentismo "
                             +"inner join empleado e on (e.cedula=fk_cedula)" 
@@ -856,25 +629,12 @@ public class AusentismoDAO {
                             +"inner join empresa em on(em.nitempresa=se.fk_nitempresa)"
                             +"where fk_nitempresa = '"+nitem+"'" 
                             +"and " + queryfecha + " between '" + selfecha + "' and '" + selfecha2 + "' " 
-                            +"group by em.nombre"
-                            + " UNION ALL "+
-                            " select em.nombre as nombre,sum(eps) as toteps, sum(empleador) " 
-                            +"as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador "                              
-                            +"from registro_incapacidad "
-                            +"inner join empleado e on (e.cedula=fk_cedula)" 
-                            +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa)"
-                            +"inner join empresa em on(em.nitempresa=se.fk_nitempresa)"
-                            +"where fk_nitempresa = '"+nitem+"'" 
-                            +"and " + queryfechainc + " between '" + selfecha + "' and '" + selfecha2 + "' " 
-                            +"group by em.nombre ) as totalesunionausentismoincapacidad "
-                            + " group by nombre ";
+                            +"group by em.nombre";
                 }
                 
                 //valida que llegue nitempresa mes desde  mes hasta y motivo
                 if(selmesdesde != null && selmeshasta != null && nitem != null && nitsubem==null && selmotivo!=null){
-                    sql = " select nombre, sum(toteps) as toteps, sum(totempleador) as totempleador, sum(totarl) as totarl, sum(tottrabajador) as tottrabajador "
-                            + " from( "
-                            + "select em.nombre as nombre,sum(eps) as toteps, sum(empleador) " 
+                    sql = " select em.nombre as nombre,sum(eps) as toteps, sum(empleador) " 
                             +"as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador "                              
                             +"from registro_ausentismo "
                             +"inner join empleado e on (e.cedula=fk_cedula)" 
@@ -883,19 +643,7 @@ public class AusentismoDAO {
                             +"where fk_nitempresa = '"+nitem+"'" 
                             +"and " + queryfecha + " between '" + selfecha + "' and '" + selfecha2 + "' " 
                             +"and fk_cod_motivo='"+selmotivo+"' "
-                            +"group by em.nombre, fk_cod_motivo "
-                            + " UNION ALL "+
-                            " select em.nombre as nombre,sum(eps) as toteps, sum(empleador) " 
-                            +"as totempleador, sum(arl) as totarl, sum(trabajador) as tottrabajador "                              
-                            +"from registro_incapacidad "
-                            +"inner join empleado e on (e.cedula=fk_cedula)" 
-                            +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa)"
-                            +"inner join empresa em on(em.nitempresa=se.fk_nitempresa)"
-                            +"where fk_nitempresa = '"+nitem+"'" 
-                            +"and " + queryfechainc + " between '" + selfecha + "' and '" + selfecha2 + "' " 
-                            +"and fk_cod_motivo='"+selmotivo+"' "
-                            +"group by em.nombre, fk_cod_motivo) as totalesunionausentismoincapacidad"
-                            + " group by nombre ";
+                            +"group by em.nombre, fk_cod_motivo";
                 }
                 
                 
@@ -933,7 +681,6 @@ public class AusentismoDAO {
         String selfecha = null;
         String selfecha2 = null;
         String queryfecha = null;
-        String queryfechainc = null;
         Double totaleps = 0.00;
         String sql="";
 
@@ -941,12 +688,10 @@ public class AusentismoDAO {
         if ((selmesdesde == null) && (selmeshasta == null)){
             selfecha = selano;
             queryfecha = "to_char(fechapermiso,'yyyy')"; 
-            queryfechainc = "to_char(fecha_inicial,'yyyy')"; 
         }else{
             selfecha = selmesdesde;
             selfecha2 = selmeshasta;
             queryfecha = "to_char(fechapermiso,'yyyy/mm')";
-            queryfechainc = "to_char(fecha_inicial,'yyyy/mm')";
         }
                             
                 //Valida que llegue año y empresa
@@ -959,16 +704,6 @@ public class AusentismoDAO {
                         +"inner join empresa em on (em.nitempresa=se.fk_nitempresa) "    
                         +"where e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') " 
                         +"and " + queryfecha + " = '" + selfecha + "' " 
-                        +"group by se.nombre, em.nombre "
-                        + " UNION ALL "+
-                        " Select em.nombre as nombreem, se.nombre as nombre, " 
-                        +"round(CAST(sum(eps)+sum(empleador)+sum(arl)+sum(trabajador) as numeric), '2') as totalsube " 
-                        +"from registro_incapacidad " 
-                        +"inner join empleado e on (e.cedula=fk_cedula) " 
-                        +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) " 
-                        +"inner join empresa em on (em.nitempresa=se.fk_nitempresa) "    
-                        +"where e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') " 
-                        +"and " + queryfechainc + " = '" + selfecha + "' " 
                         +"group by se.nombre, em.nombre";
                 }
                 
@@ -983,17 +718,6 @@ public class AusentismoDAO {
                         +"where e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') " 
                         +"and " + queryfecha + " = '" + selfecha + "' " 
                         +"and fk_cod_motivo='"+selmotivo+"' "  
-                        +"group by se.nombre, em.nombre, fk_cod_motivo "
-                        + " UNION ALL "+
-                        " Select em.nombre as nombreem, se.nombre as nombre, " 
-                        +"round(CAST(sum(eps)+sum(empleador)+sum(arl)+sum(trabajador) as numeric), '2') as totalsube " 
-                        +"from registro_incapacidad " 
-                        +"inner join empleado e on (e.cedula=fk_cedula) " 
-                        +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) " 
-                        +"inner join empresa em on (em.nitempresa=se.fk_nitempresa) "    
-                        +"where e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') " 
-                        +"and " + queryfechainc + " = '" + selfecha + "' " 
-                        +"and fk_cod_motivo='"+selmotivo+"' "  
                         +"group by se.nombre, em.nombre, fk_cod_motivo";
                 }
                 
@@ -1006,18 +730,7 @@ public class AusentismoDAO {
                             +"inner join empresa em on (em.nitempresa=se.fk_nitempresa) " 
                             +"where e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '" +nitem+ "') " 
                             +"and " + queryfecha + " between '" + selfecha + "' and '" + selfecha2 + "' " 
-                            +"group by se.nombre, em.nombre "
-                            + " UNION ALL "+
-                            " Select em.nombre as nombreem, se.nombre as nombre, " 
-                            +"round(CAST(sum(eps)+sum(empleador)+sum(arl)+sum(trabajador) as numeric), '2') as totalsube "
-                            +"from registro_incapacidad " 
-                            +"inner join empleado e on (e.cedula=fk_cedula) " 
-                            +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) " 
-                            +"inner join empresa em on (em.nitempresa=se.fk_nitempresa) " 
-                            +"where e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '" +nitem+ "') " 
-                            +"and " + queryfechainc + " between '" + selfecha + "' and '" + selfecha2 + "' " 
-                            +"group by se.nombre, em.nombre ";
-                            
+                            +"group by se.nombre, em.nombre";
                 }
                 
                 if(selmesdesde != null && selmeshasta != null && nitem != null && selmotivo!=null){
@@ -1029,17 +742,6 @@ public class AusentismoDAO {
                             +"inner join empresa em on (em.nitempresa=se.fk_nitempresa) " 
                             +"where e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '" +nitem+ "') " 
                             +"and " + queryfecha + " between '" + selfecha + "' and '" + selfecha2 + "' " 
-                            +"and fk_cod_motivo='"+selmotivo+"'"
-                            +"group by se.nombre, em.nombre, fk_cod_motivo "
-                            + " UNION ALL "+
-                            " Select em.nombre as nombreem, se.nombre as nombre, " 
-                            +"round(CAST(sum(eps)+sum(empleador)+sum(arl)+sum(trabajador) as numeric), '2') as totalsube "
-                            +"from registro_incapacidad " 
-                            +"inner join empleado e on (e.cedula=fk_cedula) " 
-                            +"inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) " 
-                            +"inner join empresa em on (em.nitempresa=se.fk_nitempresa) " 
-                            +"where e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '" +nitem+ "') " 
-                            +"and " + queryfechainc + " between '" + selfecha + "' and '" + selfecha2 + "' " 
                             +"and fk_cod_motivo='"+selmotivo+"'"
                             +"group by se.nombre, em.nombre, fk_cod_motivo";
                 }
@@ -1271,13 +973,14 @@ public class AusentismoDAO {
         }     
     } 
     
-    public Integer guardarAusentismo(Ausentismo ausentismo) throws SQLException{
+    public Integer guardarIncapacidad(Incapacidad incapacidad) throws SQLException{
         Consulta consulta = null;        
         Integer resultado;
         ResultSet rs;
         String sql = "";
         String tipo = "";       
         double salmin = 0.00;
+        Integer horasdia = 0;
         float th = 0;        
         double salhoras = 0.00;
         double thd = 0;
@@ -1297,19 +1000,19 @@ public class AusentismoDAO {
             consulta = new Consulta(getConexion());          
             
             //Búsqueda del tipo de motivo
-            sql = "SELECT tipo from motivopermiso where cod_motivo = '" + ausentismo.getMotivoausentismo() + "'";
+            sql = "SELECT tipo from motivopermiso where cod_motivo = '" + incapacidad.getMotivoincapacidad() + "'";
             rs = consulta.ejecutar(sql); 
             if (rs.next()) {                
-                ausentismo.setTipo_permiso(rs.getString("tipo"));    
-                tipo = ausentismo.getTipo_permiso();                
+                incapacidad.setTipo_permiso(rs.getString("tipo"));    
+                tipo = incapacidad.getTipo_permiso();                
                     
             }
             
             //Búsqueda del sueldo de Empleado
-            sql = "SELECT sueldo_mes from empleado where cedula = '" + ausentismo.getEmpleado().getCedula() + "'";
+            sql = "SELECT sueldo_mes from empleado where cedula = '" + incapacidad.getEmpleado().getCedula() + "'";
             rs = consulta.ejecutar(sql); 
             if (rs.next()) {
-                ausentismo.getEmpleado().setSueldo_mes(rs.getInt("sueldo_mes"));
+                incapacidad.getEmpleado().setSueldo_mes(rs.getInt("sueldo_mes"));
 
             }
             
@@ -1318,9 +1021,18 @@ public class AusentismoDAO {
             if (rs.next()) {
                salmin = rs.getDouble("sal_min");
             }
+            
+            sql = "SELECT horasdia from subempresa";
+            rs = consulta.ejecutar(sql); 
+            if (rs.next()) {
+               horasdia = rs.getInt("horasdia");
+            }
 
-            salhoras = (ausentismo.getEmpleado().getSueldo_mes()/240.00);
-            th = Float.parseFloat(ausentismo.getTiempo_horas());
+            salhoras = (incapacidad.getEmpleado().getSueldo_mes()/240.00);
+            
+            incapacidad.setTiempoHoras(String.valueOf(incapacidad.getTiempoDias()*horasdia));
+            
+            th = Float.parseFloat(incapacidad.getTiempoHoras());
             double minhoras = (salmin/240);
             tha = 16;
             thd = th - tha;
@@ -1373,51 +1085,29 @@ public class AusentismoDAO {
                 case "ARL":                
                     arl = salhoras*th;  
                     break;
-                    
-                case "TRABAJADOR":
-                    trabajador = salhoras*th;
-                    break;
-                    
-                case "EPSN":
-                    eps = salhoras*th;                    
-                    break;
-                    
-                case "EM-TR":
-                    //Calcula sumatoria para tipo EM-TR con acumulador de horas de empleado y tiempo horas
-                    int thacumA= ausentismo.getEmpleado().getThacum();                   
-                    float thacumD = thacumA + th;
-                    
-                    if (thacumA > 24){
-                        trabajador= th*salhoras;
-                    }else if(thacumA <= 24 && thacumD>24){
-                        double  thdes=thacumD-24;
-                        double  thant=24-thacumA;
-                        trabajador=thdes*salhoras;
-                        empleador=thant*salhoras;
-                    }else{
-                        empleador=th*salhoras;
-                    }
-                    break;
+                
             }  
             total = empleador + eps + arl + trabajador;
+        
 
             
             
             //Sentencia SQL para guardar el registro
-                sql = "INSERT INTO registro_ausentismo ("
-                        + "fecharegistro, fk_cod_motivo, horasalida, "
-                        + "horallegada, tiempohoras, observaciones, "
-                        + "fk_cedula, estado, fechapermiso, empleador, eps, arl,trabajador, total )"
+                sql = "INSERT INTO registro_incapacidad ("
+                        + "fecha_registro, fk_cod_motivo, "
+                        + " tiempo_dias, tiempohoras, observaciones, cod_cie10, cod_det_lista_tipo_incapacidad, "
+                        + "fk_cedula, fecha_inicial, fecha_final, empleador, eps, arl,trabajador, total )"
                         + "VALUES ("
                         + "'" + formatoFecha.format(ahora) + "',"                                                                                                    
-                        + "'" + ausentismo.getMotivoausentismo() + "',"
-                        + "'" + formatoHora.format(ausentismo.getHora_salida()) + "',"
-                        + "'" + formatoHora.format(ausentismo.getHora_llegada()) + "',"
-                        + "'" + ausentismo.getTiempo_horas() + "',"                      
-                        + "'" + ausentismo.getObservaciones() + "',"
-                        + "'" + ausentismo.getEmpleado().getCedula() + "',"
-                        + "'A',"
-                        + "'" + formatoFecha1.format(ausentismo.getFecha_permiso()) + "',"
+                        + "'" + incapacidad.getMotivoincapacidad() + "',"
+                        + "'" + incapacidad.getTiempoDias() + "',"
+                        + "'" + incapacidad.getTiempoHoras() + "',"
+                        + "'" + incapacidad.getObservaciones() + "',"
+                        + "'" + incapacidad.getCie10().getCodCie10() + "',"
+                        + "'" + incapacidad.getTipoIncapacidad().getCodigo() + "',"
+                        + "'" + incapacidad.getEmpleado().getCedula() + "',"
+                        + "'" + formatoFecha1.format(incapacidad.getFecha_inicial())+"',"
+                        + "'" + formatoFecha1.format(incapacidad.getFecha_final())+"',"                        
                         + " round(CAST(('"+empleador+"') as numeric), '3'), "
                         + " round(CAST(('"+eps+"') as numeric), '3'), "
                         + " round(CAST(('"+arl+"') as numeric), '3'), "
@@ -1434,7 +1124,7 @@ public class AusentismoDAO {
     }
     
     
-    public ArrayList<Motivo> listarMotivos() throws SQLException {
+    public ArrayList<Motivo> listarMotivosIncapacidad() throws SQLException {
         Motivo motivo;
         ArrayList<Motivo> listaMotivos = new ArrayList<>();
         ResultSet rs;
@@ -1442,8 +1132,10 @@ public class AusentismoDAO {
         try {
             consulta = new Consulta(getConexion());
             String sql
-                    = " SELECT cod_motivo,nombre_motivo,tipo "
-                    + " FROM motivopermiso order by cod_motivo";
+                    = " SELECT cod_motivo,nombre_motivo,tipo " +
+                        "FROM motivopermiso " +
+                        "WHERE cod_motivo='2' or cod_motivo='1' " +
+                        "ORDER BY cod_motivo";
 
             rs = consulta.ejecutar(sql);
 
@@ -1455,6 +1147,36 @@ public class AusentismoDAO {
                 listaMotivos.add(motivo);
             }
             return listaMotivos;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
+    
+    public Cie10 cargarCie10(String Cie10) throws SQLException {
+        Cie10 cie10=null;
+        ResultSet rs;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(getConexion());
+            String sql
+                    = " select c10.cod_cie10 codCie10, c10.nombre nomCie10, gc10.cod_grupo_cie10 codGcie10, gc10.nombre nomGCie10 " +
+                    " FROM cie10 c10 " +
+                    " JOIN grupo_cie10 gc10 using (cod_grupo_cie10) " +
+                    " WHERE cod_cie10='"+Cie10+"' ";
+                        
+
+            rs = consulta.ejecutar(sql);
+
+            while (rs.next()) {
+                cie10= new Cie10();
+                cie10.setCodCie10(rs.getString("codCie10"));
+                cie10.setNombre(rs.getString("nomCie10"));
+                cie10.setGrupoCie10(new GrupoCie10(rs.getString("codGcie10"), rs.getString("nomGCie10")));
+            }
+            return cie10;
 
         } catch (SQLException ex) {
             throw ex;

@@ -7,18 +7,19 @@ package modelo;
 import java.util.Date;
 
 
-public class Ausentismo {
-    private String cod_registro;
+public class Incapacidad {
+    private String cod_reg_Incapacidad;
+    private Cie10 cie10;
+    private GrupoCie10 grupoCie10;
     private Empleado empleado;
     private SubEmpresa subempresa;
-    private Empresa empresa;
-    private Date fecha_permiso;
+    private Empresa empresa;    
     private Date fecha_registro;
-    private Date hora_salida;
-    private Date hora_llegada;
-    private String tiempo_horas;  
-    
-    private String motivoausentismo; 
+    private Integer tiempoDias;  
+    private String tiempoHoras;
+    private Date fecha_inicial;
+    private Date fecha_final;
+    private String motivoincapacidad; 
     private String tipo_permiso;
     private Motivo motivo;
     private String observaciones;
@@ -35,16 +36,78 @@ public class Ausentismo {
     
     
     private Double totalsube;
-    
-    
-    public Ausentismo() {   
-        this.fecha_registro = new Date();
-        this.fecha_permiso = new Date();             
-        this.empleado = new Empleado();
-        this.motivo = new Motivo();   
-        this.subempresa = new SubEmpresa();
-        this.empresa = new Empresa();
-    } 
+
+    public Incapacidad() {
+    }
+
+    public Incapacidad(String cod_reg_Incapacidad, Cie10 cie10, GrupoCie10 grupoCie10, Empleado empleado, SubEmpresa subempresa, Empresa empresa, Date fecha_registro, String tiempoHoras,Integer tiempoDias, Date fecha_inicial, Date fecha_final, String motivoincapacidad, String tipo_permiso, Motivo motivo, String observaciones, String mes, String cargo, String estado, Double arl, Double eps, Double hs, Double empleador, Double trabajador, Double total, TipoIncapacidad tipoIncapacidad, Double totalsube) {
+        this.cod_reg_Incapacidad = cod_reg_Incapacidad;
+        this.cie10 = cie10;
+        this.grupoCie10 = grupoCie10;
+        this.empleado = empleado;
+        this.subempresa = subempresa;
+        this.empresa = empresa;
+        this.fecha_registro = fecha_registro;
+        this.tiempoHoras = tiempoHoras;
+        this.tiempoDias = tiempoDias;
+        this.fecha_inicial = fecha_inicial;
+        this.fecha_final = fecha_final;
+        this.motivoincapacidad = motivoincapacidad;
+        this.tipo_permiso = tipo_permiso;
+        this.motivo = motivo;
+        this.observaciones = observaciones;
+        this.mes = mes;
+        this.cargo = cargo;
+        this.estado = estado;
+        this.arl = arl;
+        this.eps = eps;
+        this.hs = hs;
+        this.empleador = empleador;
+        this.trabajador = trabajador;
+        this.total = total;
+        this.tipoIncapacidad = tipoIncapacidad;
+        this.totalsube = totalsube;
+    }
+
+    public String getTiempoHoras() {
+        return tiempoHoras;
+    }
+
+    public void setTiempoHoras(String tiempoHoras) {
+        this.tiempoHoras = tiempoHoras;
+    }
+
+    public GrupoCie10 getGrupoCie10() {
+        return grupoCie10;
+    }
+
+    public void setGrupoCie10(GrupoCie10 grupoCie10) {
+        this.grupoCie10 = grupoCie10;
+    }
+
+    public Date getFecha_inicial() {
+        return fecha_inicial;
+    }
+
+    public void setFecha_inicial(Date fecha_inicial) {
+        this.fecha_inicial = fecha_inicial;
+    }
+
+    public Date getFecha_final() {
+        return fecha_final;
+    }
+
+    public void setFecha_final(Date fecha_final) {
+        this.fecha_final = fecha_final;
+    }
+
+    public Cie10 getCie10() {
+        return cie10;
+    }
+
+    public void setCie10(Cie10 cie10) {
+        this.cie10 = cie10;
+    }
 
     public TipoIncapacidad getTipoIncapacidad() {
         return tipoIncapacidad;
@@ -54,9 +117,26 @@ public class Ausentismo {
         this.tipoIncapacidad = tipoIncapacidad;
     }
 
+    public String getCod_reg_Incapacidad() {
+        return cod_reg_Incapacidad;
+    }
+
+    public void setCod_reg_Incapacidad(String cod_reg_Incapacidad) {
+        this.cod_reg_Incapacidad = cod_reg_Incapacidad;
+    }
+
+    public String getMotivoincapacidad() {
+        return motivoincapacidad;
+    }
+
+    public void setMotivoincapacidad(String motivoincapacidad) {
+        this.motivoincapacidad = motivoincapacidad;
+    }
+
     public Empresa getEmpresa() {
         return empresa;
     }
+    
     public void setEmpresa(Empresa empresa) {
         this.empresa = empresa;
     }
@@ -84,20 +164,12 @@ public class Ausentismo {
         this.fecha_registro = fecha_registro;
     }
 
-    public String getTiempo_horas() {
-        return tiempo_horas;
+    public Integer getTiempoDias() {
+        return tiempoDias;
     }
 
-    public void setTiempo_horas(String tiempo_horas) {
-        this.tiempo_horas = tiempo_horas;
-    }
-
-    public String getMotivoausentismo() {
-        return motivoausentismo;
-    }
-
-    public void setMotivoausentismo(String motivoausentismo) {
-        this.motivoausentismo = motivoausentismo;
+    public void setTiempoDias(Integer tiempoDias) {
+        this.tiempoDias = tiempoDias;
     }
 
     public String getObservaciones() {
@@ -108,28 +180,12 @@ public class Ausentismo {
         this.observaciones = observaciones;
     } 
 
-    public Date getFecha_permiso() {
-        return fecha_permiso;
-    }
-
-    public void setFecha_permiso(Date fecha_permiso) {
-        this.fecha_permiso = fecha_permiso;
-    }
-
     public String getCargo() {
         return cargo;
     }
 
     public void setCargo(String cargo) {
         this.cargo = cargo;
-    }
-
-    public String getCod_registro() {
-        return cod_registro;
-    }
-
-    public void setCod_registro(String cod_registro) {
-        this.cod_registro = cod_registro;
     }
 
     public String getEstado() {
@@ -140,21 +196,6 @@ public class Ausentismo {
         this.estado = estado;
     }
 
-    public Date getHora_salida() {
-        return hora_salida;
-    }
-
-    public void setHora_salida(Date hora_salida) {
-        this.hora_salida = hora_salida;
-    }
-
-    public Date getHora_llegada() {
-        return hora_llegada;
-    }
-
-    public void setHora_llegada(Date hora_llegada) {
-        this.hora_llegada = hora_llegada;
-    }
 
     public String getTipo_permiso() {
         return tipo_permiso;

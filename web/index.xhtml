@@ -3,7 +3,8 @@
 <html lang="en" class="no-js"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <h:head>
 
@@ -58,7 +59,10 @@
                         <br></br>                        
                         <tr>
                             <td colspan="2" align="center">
-                                <p:commandButton value="Entrar" update="growl" actionListener="#{loginBean.Ingresar}"  />
+                                <p:commandButton value="Entrar" update="growl" actionListener="#{loginBean.Ingresar}"  >
+                                    <f:actionListener binding="#{concursoBean.cargarConcursos()}"/>                                    
+                                    <f:actionListener binding="#{concursoBean.cargarGruposConcursos()}"/>                                    
+                                </p:commandButton>
                             </td>
                         </tr>
                     </table>                   

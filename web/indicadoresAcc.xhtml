@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"     
+      xmlns:f="http://java.sun.com/jsf/core"      
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    
+    <h:body>
+        <ui:composition>
+            <h:form id="indAccidentes">
+                <p:growl id="avisoAccidente" showDetail="true" life="50000" />
+                <p:panel header="INDICADORES ACCIDENTES" id="pnlInformeaccidenteEmpresa"
+                         style="width:auto;">
+                    <table>
+                        <tr><td>
+                            <p:fieldset legend="DATOS AUSENTISMOS" style="margin-bottom:10px; margin-top:10px; width:auto; font-size: 90%; " >
+                                <table cellpadding="5">
+                                    <tr>
+                                        <td align="center">
+                                            <p:panelGrid id="tblInformeaccidentesEmpresa" columns="4" style="width:1030px; font-size: 90%;">
+                                                <f:facet name="header">
+                                                    <h:outputText value="" />
+                                                </f:facet>
+                                                Empresa:<p:selectOneMenu value="#{listasBean.empresa.nitempresa}" >}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
+                                                <f:selectItems   value="#{listasBean.itemsEmpresas}"/>  
+                                                <p:ajax update="subempresas"/>
+                                                </p:selectOneMenu>
+                                                
+                                                SubEmpresa:<p:selectOneMenu id="subempresas" value="#{listasBean.subempresa.nitsubempresa}" >}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                  	
+                                                <f:selectItems   value="#{listasBean.itemsSubEmpresas}"/>
+                                                </p:selectOneMenu>   
+                                                
+                                                Mes Desde:<p:selectOneMenu value="#{accidenteBean.mes.desde}" >}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
+                                                <f:selectItems   value="#{listasBean.itemsMeses}"/>
+                                                </p:selectOneMenu>
+                                                
+                                                Mes Hasta:<p:selectOneMenu value="#{accidenteBean.mes.hasta}" >}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
+                                                <f:selectItems   value="#{listasBean.itemsMeses}"/>
+                                                </p:selectOneMenu>
+                                                
+                                                Año:<p:selectOneMenu value="#{accidenteBean.ano.año}" >}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
+                                                <f:selectItems   value="#{listasBean.itemsAños}"/>                                                   
+                                                </p:selectOneMenu>   
+                                                
+                                                <h:outputText value="Anual: " />
+                                                <p:selectBooleanButton value="#{accidenteBean.todos}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">                                                    
+                                                </p:selectBooleanButton>
+                                            </p:panelGrid>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </p:fieldset>
+                            <p:fieldset style= "margin-top:10px;" >                                    
+                                <p:commandButton icon="ui-icon-newwin" update="barCargo,distTipoLesion,barTipoLesion,distParteAfectada,pieParteAfectada,barAgente,distAgente,barMecanismo,distMecanismo,distClasificacion,pieClasificacion,barTAccidente,distTAccidente,barCInmediata,avisoAccidente,distCInmediata,tipoEvento,cumplimiento,dist,barCBasica,cumpInc,cumpAcc,cumpEnf,distRiesgos,distCBasica" type="submit" value="Generar"  actionListener="#{accidenteBean.generarAccidentes()}"/>
+                            </p:fieldset>
+                                <br/>
+                            <p:panel header="ESTADISTICAS GENERALES">
+                                <h:panelGrid columns="2" cellpadding="10" >
+                                    <p:panel header="DISTRIBUCIÓN POR TIPO DE ACCIDENTE" id="dist" >
+                                     <p:column width="50%">
+                                         <p:dataTable id="tipoEvento" var="varTipoEventos" value="#{accidenteBean.distribucionTipoEventos}"
+                                          rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
+                                            <p:column headerText="Clase De Evento">
+                                                <h:outputText value="#{varTipoEventos.tipoEvento.nombre}" />
+                                            </p:column>
+
+                                             <p:column headerText="Casos" >
+                                                <h:outputText value="#{varTipoEventos.casos}" />
+                                            </p:column>
+
+                                             <p:column headerText="Incapacitantes" >
+                                                <h:outputText value="#{varTipoEventos.incapacitantes}" />
+                                            </p:column>
+                                             
+                                             <p:column headerText="Investigados" >
+                                                 <h:outputText value="#{varTipoEventos.investigados}" />
+                                            </p:column>
+                                             
+                                             <p:columnGroup type="footer">
+                                                <p:row>
+                                                    <p:column style="text-align:left" footerText="TOTALES" />
+                                                    <p:column footerText="#{accidenteBean.totCasos}" />
+
+                                                    <p:column footerText="#{accidenteBean.totInc}" />
+                                                    <p:column footerText="#{accidenteBean.totInv}" />
+                                                </p:row>
+                                            </p:columnGroup>
+                                            
+                                         </p:dataTable>
+                                     </p:column>
+                                    </p:panel>
+                                                                                
+                                    <p:panel header="CUMPLIMIENTO INVESTIGACIONES">
+                                        <p:column headerText="Clase De Evento" style="float: left">
+                                            <p:dataTable id="cumplimiento" var="varCumplimiento" value="#{accidenteBean.distribucionTipoEventos}"
+                                                            rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 30%">
+                                                   <p:column headerText="Clase De Evento">
+                                                        <h:outputText value="#{varCumplimiento.tipoEvento.nombre}" />
+                                                    </p:column>
+                                               </p:dataTable>
+                                        </p:column>
+                                        
+                                        <p:progressBar id="cumpInc" value="#{accidenteBean.cumpInc}" labelTemplate="{value}%" displayOnly="true" style="width: 60%;float: right;margin-top: -11%;margin-right: 5%"/>
+                                        <p:progressBar id="cumpAcc" value="#{accidenteBean.cumpAcc}" labelTemplate="{value}%" displayOnly="true" style="width: 60%;float: right;margin-top: -7.5%;margin-right: 5%"/>
+                                        <p:progressBar id="cumpEnf" value="#{accidenteBean.cumpEnf}" labelTemplate="{value}%" displayOnly="true" style="width: 60%;float: right;margin-top: -3.9%;margin-right: 5%"/>
+                                        
+                                    </p:panel>
+                             </h:panelGrid>                             
+                            </p:panel>
+                            <p:panel header="DISTRIBUCIÓN DE LOS INCIDENTES, ACCIDENTES Y ENFERMEDADES POR CLASE DE RIESGO">
+                                <h:panelGrid columns="2" cellpadding="10" >                                    
+                                    <p:column width="60%">
+                                        <p:dataTable id="distRiesgos" var="varRiesgos" value="#{accidenteBean.distribucionRiesgos}"
+                                                     rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
+                                            <p:column headerText="Tipo de Accidente">
+                                                <h:outputText value="#{varRiesgos.riesgo.nombre}"/>
+                                            </p:column>                                        
+                                            <p:column headerText="Incidentes">
+                                                <h:outputText value="#{varRiesgos.incidentes}"/>
+                                            </p:column>
+                                            <p:column headerText="Accidentes">
+                                                <h:outputText value="#{varRiesgos.accidentes}"/>
+                                            </p:column>
+                                            <p:column headerText="Enfermedad">
+                                                <h:outputText value="#{varRiesgos.enfermedades}"/>
+                                            </p:column>
+                                            <p:column headerText="INC-ATEL"> 
+                                                <h:outputText value="#{varRiesgos.incatels}"/>
+                                            </p:column>
+                                            
+                                            <p:columnGroup type="footer">
+                                                <p:row>
+                                                    <p:column style="text-align:left" footerText="TOTALES" />
+                                                    <p:column footerText="#{accidenteBean.totIncidente}" />
+
+                                                    <p:column footerText="#{accidenteBean.totAcc}" />
+                                                    <p:column footerText="#{accidenteBean.totEnf}" />
+                                                    <p:column footerText="#{accidenteBean.totIncatel}" />
+                                                </p:row>
+                                            </p:columnGroup>
+                                            
+                                        </p:dataTable>
+                                    </p:column>
+                                    <p:column>
+                                        <p:panel header="DISTRIBUCIÓN DE LOS INCIDENTES, ACCIDENTES Y ENFERMEDADES">
+                                            <p:selectOneMenu id="tipos" value="#{accidenteBean.tipoAccion}" style="width:125px">
+                                                <f:selectItem itemLabel="Seleccione" itemValue="0" />
+                                                <f:selectItem itemLabel="Incidente" itemValue="11" />
+                                                <f:selectItem itemLabel="Accidente" itemValue="12" />
+                                                <f:selectItem itemLabel="Enfermedad" itemValue="13" />
+                                                <p:ajax listener="#{accidenteBean.generarAccidentes()}" update="pieRiesgos"/>
+                                            </p:selectOneMenu>
+                                            <br/>
+                                            <p:chart id="pieRiesgos" type="pie" model="#{accidenteBean.pieRiesgos}" style="width:500px;height:300px" />
+                                        </p:panel>
+                                    </p:column>
+                                </h:panelGrid>
+                            </p:panel>
+                                <p:panel header="DISTRIBUCIÓN CAUSAS BÁSICAS">
+                                    <h:panelGrid columns="2" cellpadding="10" >
+                                        <p:column width="50%">
+                                            <p:dataTable id="distCBasica" var="varCBasica" value="#{accidenteBean.distribucionCausaBasica}"
+                                                     rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
+                                            <p:column headerText="Tipo de Accidente">
+                                                <h:outputText value="#{varCBasica.causaBasica.nombre}"/>
+                                            </p:column>                                        
+                                            <p:column headerText="Incidentes">
+                                                <h:outputText value="#{varCBasica.incidentes}"/>
+                                            </p:column>
+                                            <p:column headerText="Accidentes">
+                                                <h:outputText value="#{varCBasica.accidentes}"/>
+                                            </p:column>
+                                            <p:column headerText="Enfermedad">
+                                                <h:outputText value="#{varCBasica.enfermedades}"/>
+                                            </p:column>
+                                            <p:column headerText="TOTALES"> 
+                                                <h:outputText value="#{varCBasica.totCbasica}"/>
+                                            </p:column>
+                                            
+                                            <p:columnGroup type="footer">
+                                                <p:row>
+                                                    <p:column style="text-align:left" footerText="TOTALES" />
+                                                    <p:column footerText="#{accidenteBean.totCbasicaInc}" />
+
+                                                    <p:column footerText="#{accidenteBean.totCbasicaAcc}" />
+                                                    <p:column footerText="#{accidenteBean.totCbasicaEnf}" />
+                                                    <p:column footerText="#{accidenteBean.totCbasicaTot}" />
+                                                </p:row>
+                                            </p:columnGroup>
+                                            
+                                        </p:dataTable>
+                                        </p:column>
+                                        <p:column width="50%">
+                                            <p:chart id="barCBasica" type="bar" model="#{accidenteBean.horizontalBarCausaBasica}" style="width: 600px;height:400px"/>
+                                        </p:column>
+                                    </h:panelGrid>
+                                </p:panel>
+                                <p:panel header="DISTRIBUCIÓN POR CAUSAS INMEDIATAS ">
+                                    <h:panelGrid columns="2" cellpadding="10" >
+                                        <p:column width="50%">
+                                            <p:dataTable id="distCInmediata" var="varCInmediata" value="#{accidenteBean.distribucionCausaInmediata}"
+                                                     rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
+                                            <p:column headerText="Tipo de Accidente">
+                                                <h:outputText value="#{varCInmediata.causaInmediata.nombre}"/>
+                                            </p:column>                                        
+                                            <p:column headerText="Incidentes">
+                                                <h:outputText value="#{varCInmediata.incidentes}"/>
+                                            </p:column>
+                                            <p:column headerText="Accidentes">
+                                                <h:outputText value="#{varCInmediata.accidentes}"/>
+                                            </p:column>
+                                            <p:column headerText="Enfermedad">
+                                                <h:outputText value="#{varCInmediata.enfermedades}"/>
+                                            </p:column>
+                                            <p:column headerText="TOTALES"> 
+                                                <h:outputText value="#{varCInmediata.totCInmediata}"/>
+                                            </p:column>
+                                            
+                                            <p:columnGroup type="footer">
+                                                <p:row>
+                                                    <p:column style="text-align:left" footerText="TOTALES" />
+                                                    <p:column footerText="#{accidenteBean.totCInmInc}" />
+
+                                                    <p:column footerText="#{accidenteBean.totCInmAcc}" />
+                                                    <p:column footerText="#{accidenteBean.totCInmEnf}" />
+                                                    <p:column footerText="#{accidenteBean.totCInmTot}" />
+                                                </p:row>
+                                            </p:columnGroup>
+                                            
+                                        </p:dataTable>
+                                        </p:column>
+                                        <p:column width="50%">
+                                            <p:chart id="barCInmediata" type="bar" model="#{accidenteBean.horizontalBarCausaInmediata}" style="width: 600px;height:400px"/>
+                                        </p:column>
+                                    </h:panelGrid>
+                                </p:panel>
+                                <p:panel header="DISTRIBUCIÓN DE LA ACCIDENTALIDAD ">
+                                    <p:panel header="DISTRIBUCIÓN POR TIPO DE ACCIDENTE ">
+                                        <h:panelGrid columns="2" cellpadding="10" >
+                                        <p:column width="50%">
+                                            <p:dataTable id="distTAccidente" var="varTAccidente" value="#{accidenteBean.distribucionTipoAccion}"
+                                                     rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
+                                            <p:column headerText="Tipo de Accion">
+                                                <h:outputText value="#{varTAccidente.tipoAccidente.nombre}"/>
+                                            </p:column>                                        
+                                            <p:column headerText="Casos">
+                                                <h:outputText value="#{varTAccidente.casos}"/>
+                                            </p:column>
+                                            <p:column headerText="Porcentaje">
+                                                <h:outputText value="#{varTAccidente.porcentaje}"/>
+                                            </p:column>                                 
+                                            
+                                            <p:columnGroup type="footer">
+                                                <p:row>
+                                                    <p:column style="text-align:left" footerText="TOTALES" />
+                                                    <p:column footerText="#{accidenteBean.totTaccidente}" />
+                                                    <p:column footerText="100%" />
+                                                </p:row>
+                                            </p:columnGroup>
+                                            
+                                        </p:dataTable>
+                                        </p:column>  
+                                        <p:column width="50%">
+                                            <p:chart id="barTAccidente" type="pie" model="#{accidenteBean.pieTipoAccidente}" style="width: 500px;height:400px"/>
+                                        </p:column>
+                                    </h:panelGrid>
+                                    </p:panel>      
+                                    <p:panel header="DISTRIBUCIÓN POR CLASIFICACION">
+                                        <h:panelGrid columns="2" cellpadding="10" >
+                                        <p:column width="50%">
+                                            <p:dataTable id="distClasificacion" var="varClasificacion" value="#{accidenteBean.distribucionClasificacion}"
+                                                     rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
+                                            <p:column headerText="Clasificacion">
+                                                <h:outputText value="#{varClasificacion.clasificacion.nombre}"/>
+                                            </p:column>                                        
+                                            <p:column headerText="Casos">
+                                                <h:outputText value="#{varClasificacion.casos}"/>
+                                            </p:column>
+                                            <p:column headerText="Porcentaje">
+                                                <h:outputText value="#{varClasificacion.porcentaje}"/>
+                                            </p:column>                                 
+                                            
+                                            <p:columnGroup type="footer">
+                                                <p:row>
+                                                    <p:column style="text-align:left" footerText="TOTALES" />
+                                                    <p:column footerText="#{accidenteBean.totClasificaciones}" />
+                                                    <p:column footerText="100%" />
+                                                </p:row>
+                                            </p:columnGroup>
+                                            
+                                        </p:dataTable>
+                                        </p:column>  
+                                        <p:column width="50%">
+                                            <p:chart id="pieClasificacion" type="pie" model="#{accidenteBean.pieClasificacion}" style="width: 500px;height:400px"/>
+                                        </p:column>
+                                    </h:panelGrid>
+                                    </p:panel>
+                                </p:panel>
+                                
+                                <p:panel header="DISTRIBUCIÓN POR MECANISMO">
+                                        <h:panelGrid columns="2" cellpadding="10" >
+                                        <p:column width="50%">
+                                            <p:dataTable id="distMecanismo" var="varMecaniscmo" value="#{accidenteBean.distribucionMecanismo}"
+                                                     rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
+                                            <p:column headerText="Mecanismo">
+                                                <h:outputText value="#{varMecaniscmo.mecanismo.nombre}"/>
+                                            </p:column>                                        
+                                            <p:column headerText="Incidentes">
+                                                <h:outputText value="#{varMecaniscmo.incidentes}"/>
+                                            </p:column>
+                                            <p:column headerText="Accidentes">
+                                                <h:outputText value="#{varMecaniscmo.accidentes}"/>
+                                            </p:column>                     
+                                            <p:column headerText="Totales">
+                                                <h:outputText value="#{varMecaniscmo.totMecanismo}"/>
+                                            </p:column>                     
+                                            <p:column headerText="Porcentaje">
+                                                <h:outputText value="#{varMecaniscmo.porcentaje}"/>
+                                            </p:column>                     
+                                            
+                                            <p:columnGroup type="footer">
+                                                <p:row>
+                                                    <p:column style="text-align:left" footerText="TOTALES" />
+                                                    <p:column footerText="#{accidenteBean.totMecInc}" />
+                                                    <p:column footerText="#{accidenteBean.totMecAcc}" />
+                                                    <p:column footerText="#{accidenteBean.totMecTots}" />
+                                                    <p:column footerText="100%" />
+                                                </p:row>
+                                            </p:columnGroup>
+                                            
+                                        </p:dataTable>
+                                        </p:column>  
+                                        <p:column width="50%">
+                                            <p:chart id="barMecanismo" type="bar" model="#{accidenteBean.horizontalBarMecanismos}" style="width: 600px;height:400px"/>
+                                        </p:column>
+                                    </h:panelGrid>
+                                    </p:panel>
+                                <p:panel header="DISTRIBUCIÓN POR AGENTE">
+                                        <h:panelGrid columns="2" cellpadding="10" >
+                                        <p:column width="50%">
+                                            <p:dataTable id="distAgente" var="varAgente" value="#{accidenteBean.distribucionAgente}"
+                                                     rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
+                                            <p:column headerText="Agente Accidente">
+                                                <h:outputText value="#{varAgente.agenteAccidente.nombre}"/>
+                                            </p:column>                                        
+                                            <p:column headerText="Incidentes">
+                                                <h:outputText value="#{varAgente.incidentes}"/>
+                                            </p:column>
+                                            <p:column headerText="Accidentes">
+                                                <h:outputText value="#{varAgente.accidentes}"/>
+                                            </p:column>                     
+                                            <p:column headerText="Totales">
+                                                <h:outputText value="#{varAgente.totAgAccidente}"/>
+                                            </p:column>                     
+                                            <p:column headerText="Porcentaje">
+                                                <h:outputText value="#{varAgente.porcentaje}"/>
+                                            </p:column>                     
+                                            
+                                            <p:columnGroup type="footer">
+                                                <p:row>
+                                                    <p:column style="text-align:left" footerText="TOTALES" />
+                                                    <p:column footerText="#{accidenteBean.totAgInc}" />
+                                                    <p:column footerText="#{accidenteBean.totAgAcc}" />
+                                                    <p:column footerText="#{accidenteBean.totAgTots}" />
+                                                    <p:column footerText="100%" />
+                                                </p:row>
+                                            </p:columnGroup>
+                                            
+                                        </p:dataTable>
+                                        </p:column>  
+                                        <p:column width="50%">
+                                            <p:chart id="barAgente" type="bar" model="#{accidenteBean.horizontalBarAgenteAccidente}" style="width: 600px;height:400px"/>
+                                        </p:column>
+                                    </h:panelGrid>
+                                    </p:panel>
+                                
+                                <p:panel header="DISTRIBUCIÓN POR PARTE DEL CUERPO AFECTADA">
+                                        <h:panelGrid columns="2" cellpadding="10" >
+                                        <p:column width="50%">
+                                            <p:dataTable id="distParteAfectada" var="varParteAfectada" value="#{accidenteBean.distribucionParteAfectada}"
+                                                     rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
+                                            <p:column headerText="Parte Afectada">
+                                                <h:outputText value="#{varParteAfectada.parteAfectada.nombre}"/>
+                                            </p:column>                                        
+                                            <p:column headerText="Incidentes">
+                                                <h:outputText value="#{varParteAfectada.incidentes}"/>
+                                            </p:column>
+                                            <p:column headerText="Accidentes">
+                                                <h:outputText value="#{varParteAfectada.accidentes}"/>
+                                            </p:column>                     
+                                            <p:column headerText="Totales">
+                                                <h:outputText value="#{varParteAfectada.totParteAfectada}"/>
+                                            </p:column>                     
+                                            <p:column headerText="Porcentaje">
+                                                <h:outputText value="#{varParteAfectada.porcentaje}"/>
+                                            </p:column>                     
+                                            
+                                            <p:columnGroup type="footer">
+                                                <p:row>
+                                                    <p:column style="text-align:left" footerText="TOTALES" />
+                                                    <p:column footerText="#{accidenteBean.totPafecInc}" />
+                                                    <p:column footerText="#{accidenteBean.totPafecAcc}" />
+                                                    <p:column footerText="#{accidenteBean.totPafecTots}" />
+                                                    <p:column footerText="100%" />
+                                                </p:row>
+                                            </p:columnGroup>
+                                            
+                                        </p:dataTable>
+                                        </p:column>  
+                                        <p:column width="50%">
+                                            <p:chart id="pieParteAfectada" type="pie" model="#{accidenteBean.pieParteAfectada}" style="width: 600px;height:400px"/>
+                                        </p:column>
+                                    </h:panelGrid>
+                                    </p:panel>
+                                
+                                <p:panel header="DISTRIBUCIÓN POR TIPO DE LESION">
+                                        <h:panelGrid columns="2" cellpadding="10" >
+                                        <p:column width="50%">
+                                            <p:dataTable id="distTipoLesion" var="varTipoLesion" value="#{accidenteBean.distribucionTipoLesion}"
+                                                     rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
+                                            <p:column headerText="Parte Afectada">
+                                                <h:outputText value="#{varTipoLesion.tipoLesion.nombre}"/>
+                                            </p:column>                                        
+                                            <p:column headerText="Incidentes">
+                                                <h:outputText value="#{varTipoLesion.incidentes}"/>
+                                            </p:column>
+                                            <p:column headerText="Accidentes">
+                                                <h:outputText value="#{varTipoLesion.accidentes}"/>
+                                            </p:column>                     
+                                            <p:column headerText="Totales">
+                                                <h:outputText value="#{varTipoLesion.totTipoLesion}"/>
+                                            </p:column>                     
+                                            <p:column headerText="Porcentaje">
+                                                <h:outputText value="#{varTipoLesion.porcentaje}"/>
+                                            </p:column>                     
+                                            
+                                            <p:columnGroup type="footer">
+                                                <p:row>
+                                                    <p:column style="text-align:left" footerText="TOTALES" />
+                                                    <p:column footerText="#{accidenteBean.totTipoLesionInc}" />
+                                                    <p:column footerText="#{accidenteBean.totTipoLesionAcc}" />
+                                                    <p:column footerText="#{accidenteBean.totTipoLesiontots}" />
+                                                    <p:column footerText="100%" />
+                                                </p:row>
+                                            </p:columnGroup>
+                                            
+                                        </p:dataTable>
+                                        </p:column>  
+                                        <p:column width="50%">
+                                            <p:chart id="barTipoLesion" type="bar" model="#{accidenteBean.horizontalBarTipoLesion}" style="width: 600px;height:400px"/>
+                                        </p:column>
+                                    </h:panelGrid>
+                                    </p:panel>
+                                
+                                <p:panel header="DISTRIBUCIÓN DE LA ACCIDENTALIDAD POR CARGO">
+                                        <h:panelGrid columns="2" cellpadding="10" >                                        
+                                        <p:column width="50%">
+                                            <p:chart id="barCargo" type="bar" model="#{accidenteBean.horizontalBarCargos}" style="width: 600px;height:400px"/>
+                                        </p:column>
+                                    </h:panelGrid>
+                                </p:panel>
+                            </td>
+                        </tr>                        
+                    </table>                   
+                </p:panel>                                                
+            </h:form>
+        </ui:composition>
+    </h:body>
+</html>

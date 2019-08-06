@@ -5,42 +5,51 @@
  */
 package vista;
 
-import controlador.GestorAusentismo;
 import controlador.GestorEmpleado;
+import controlador.GestorIncapacidad;
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.el.ELContext;
-import modelo.Ausentismo;
 import modelo.Empleado;
 import modelo.Motivo;
 import util.Utilidades;
 import javax.el.ExpressionFactory;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import modelo.Año;
+import modelo.Cie10;
+import modelo.GrupoCie10;
+import modelo.Incapacidad;
 import modelo.Mes;
 import modelo.SubEmpresa;
+import modelo.TipoIncapacidad;
 import org.primefaces.model.chart.PieChartModel;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
 
 
 /**
  *
  * @author Andres
  */
-public class UIAusentismo implements Serializable {
+public class UIIncapacidad implements Serializable {
 
     private String cedula;
     private Empleado empleado;
-    private Ausentismo ausentismo; 
+    private Incapacidad incapacidad;
     private Mes mes;
     private Año ano;
     private Motivo motivo;
     private SubEmpresa subempresa;
+    private String cie10;
     
     DecimalFormat formato1 = new DecimalFormat("#,###.00");   
     private float totarl=0;
@@ -55,43 +64,43 @@ public class UIAusentismo implements Serializable {
     private float totalem=0;    
     private float totalsubt=0;
     
-    
     Boolean todos;
     Boolean selec;
     public Utilidades util = new Utilidades();
     private FacesContext contextoJSF;
     private ELContext contextoEL;
     private ExpressionFactory reg;
-    private GestorAusentismo gestorAusentismo;
+    private GestorIncapacidad gestorIncapacidad;
     private ArrayList<SelectItem> itemsMotivos = new ArrayList<>();
-    private List<Ausentismo> listaAusentismo;
-    private List<Ausentismo> listaAusentismoanomes;
-    private List<Ausentismo> listaausentismoEmpresa;
-    private List<Ausentismo> listAusentismoEmpleado;
-    private List<Ausentismo> pieausentismoEmpresa;
-    private List<Ausentismo> pieausentismoEmpleado;
+    private List<Incapacidad> listaIncapacidad;
+    private List<Incapacidad> listaIncapacidadanomes;
+    private List<Incapacidad> listaincapacidadEmpresa;
+    private List<Incapacidad> listIncapacidadEmpleado;
+    private List<Incapacidad> pieincapacidadEmpresa;
+    private List<Incapacidad> pieincapacidadEmpleado;
     
-    private List<Ausentismo> pieporSubempresa;
-    private List<Ausentismo> filteredlistaAusentismo;
-    private PieChartModel pieausentismoanomesEmpresa;
-    private PieChartModel pieausentismoanomesEmpleado;
+    private List<Incapacidad> pieporSubempresa;
+    private List<Incapacidad> filteredlistaIncapacidad;
+    private PieChartModel pieincapacidadanomesEmpresa;
+    private PieChartModel pieincapacidadanomesEmpleado;
     
     private PieChartModel pieSubempresa;
     private ExpressionFactory ef;    
     private String minutos;
 
-    public UIAusentismo()  throws Exception {
+    public UIIncapacidad()  throws Exception {
        contextoJSF = FacesContext.getCurrentInstance();
        contextoEL = contextoJSF.getELContext(); 
        reg = contextoJSF.getApplication().getExpressionFactory();
        empleado = new Empleado();
-       ausentismo = new Ausentismo();
+       incapacidad = new Incapacidad();
+       incapacidad.setTipoIncapacidad(new TipoIncapacidad());
        mes = new Mes();
        ano = new Año();
-       gestorAusentismo = new GestorAusentismo();
-       pieausentismoanomesEmpresa = new PieChartModel();
+       gestorIncapacidad = new GestorIncapacidad();
+       pieincapacidadanomesEmpresa = new PieChartModel();
        pieSubempresa = new PieChartModel();
-       pieausentismoanomesEmpleado = new PieChartModel();
+       pieincapacidadanomesEmpleado = new PieChartModel();
        
     }
 
@@ -102,12 +111,10 @@ public class UIAusentismo implements Serializable {
         ef = contextoJSF.getApplication().getExpressionFactory();
         String nitsesion = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);        
         GestorEmpleado gestorEmpleado = new GestorEmpleado();
-        Empleado em = gestorEmpleado.validarEmpleado(cedula,nitsesion);
-        Integer thacum = gestorAusentismo.horasanoAcumuladas(cedula);        
+        Empleado em = gestorEmpleado.validarEmpleado(cedula,nitsesion);        
         
         if(em!=null && em.isEstado() == true){
-           ausentismo.setEmpleado(em);
-           ausentismo.getEmpleado().setThacum(thacum);
+           incapacidad.setEmpleado(em);           
         }
         else {
             util.mostrarMensaje("La cedula no existe....");
@@ -130,47 +137,47 @@ public class UIAusentismo implements Serializable {
     
 
         
-    public void buscarAusentismo() throws Exception {
+    /*public void buscarIncapacidad() throws Exception {
     
-        GestorAusentismo gestorAusentismo = new GestorAusentismo();
-        String cod_registro = ausentismo.getCod_registro();
+        GestorIncapacidad gestorIncapacidad = new GestorIncapacidad();
+        String cod_registro = incapacidad.getCod_registro();
 
         contextoJSF = FacesContext.getCurrentInstance();
         contextoEL = contextoJSF.getELContext();
         ef = contextoJSF.getApplication().getExpressionFactory();
         String nitsesion = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);        
         
-        ausentismo = gestorAusentismo.buscarAusentismo(cod_registro, nitsesion); 
+        incapacidad = gestorIncapacidad.buscarIncapacidad(cod_registro, nitsesion); 
         
-        if(ausentismo == null){                                                
+        if(incapacidad == null){                                                
             util.mostrarMensaje("El registro no existe o se encuentra cerrado");
-            ausentismo = new Ausentismo();
+            incapacidad = new Incapacidad();
         }        
-    }
+    }*/
     
     public void dialogoIncapacidad(){        
-        if(ausentismo.getMotivoausentismo().equals("2") || ausentismo.getMotivoausentismo().equals("1")){
+        if(incapacidad.getMotivoincapacidad().equals("2") || incapacidad.getMotivoincapacidad().equals("1")){
             RequestContext req= RequestContext.getCurrentInstance();
             req.execute("PF('dlg2').show();");
         }
         
     }
 
-    public void guardarRegistro() throws Exception{    
+    /*public void guardarRegistro() throws Exception{    
 
         Boolean invalido = false;
         String msg = null;
 
         //ingreso de informacion al gestor
-        gestorAusentismo = new GestorAusentismo();
+        gestorIncapacidad = new GestorIncapacidad();
 
         try {
             //verificar que todas las cajas este llenas           
-            if (ausentismo.getEmpleado().getCedula() == null) {
+            if (incapacidad.getEmpleado().getCedula() == null) {
                 msg = "La cédula esta vacía!";
                 invalido = true;              
             }
-            if (ausentismo.getMotivoausentismo().equals("Seleccione...")) {
+            if (incapacidad.getMotivoincapacidad().equals("Seleccione...")) {
                 msg = "Seleccione un Motivo";
                 invalido = true;
             }            
@@ -178,14 +185,14 @@ public class UIAusentismo implements Serializable {
             if (invalido == false) {                
                     float min=0;
                     min=Float.parseFloat(minutos);
-                    float horas= Float.parseFloat(ausentismo.getTiempo_horas());
+                    float horas= Float.parseFloat(incapacidad.getTiempo_horas());
                     horas+= min;
-                    ausentismo.setTiempo_horas(Float.toString(horas));
-                    Integer resultado = gestorAusentismo.guardarAusentismo(ausentismo);
+                    incapacidad.setTiempo_horas(Float.toString(horas));
+                    Integer resultado = gestorIncapacidad.guardarIncapacidad(incapacidad);
 
                     if (resultado > 0) {
                         util.mostrarMensaje("!! El registro fue realizado de manera exitosa !!");
-                        ausentismo = new Ausentismo();                    
+                        incapacidad = new Incapacidad();                    
                     } else {
                         util.mostrarMensaje("!! El registro no pudo ser almacenado !!");
                     }
@@ -197,33 +204,33 @@ public class UIAusentismo implements Serializable {
                 util.mostrarMensaje(ex.getMessage());
                 util.mostrarMensaje("!! El registro no pudo ser almacenado !!");               
             }
-    }
+    }*/
     
-    public void modificarAusentismo() throws Exception{    
+    /*public void modificarIncapacidad() throws Exception{    
 
         Boolean invalido = false;
         String msg = null;
 
         //ingreso de informacion al gestor
-        gestorAusentismo = new GestorAusentismo();               
+        gestorIncapacidad = new GestorIncapacidad();               
 
         try {
             //verificar que todas las cajas este llenas
-            if (ausentismo.getEmpleado().getCedula() == null) {
+            if (incapacidad.getEmpleado().getCedula() == null) {
                 msg = "La cédula esta vacía!";
                 invalido = true;                
             }
-            if (ausentismo.getMotivoausentismo().equals("Seleccione...")) {
+            if (incapacidad.getMotivoincapacidad().equals("Seleccione...")) {
                 msg = "Seleccione un Motivo";
                 invalido = true;
             }
 
             if (invalido == false) {
-                    Integer resultado = gestorAusentismo.modificarAusentismo(ausentismo);
+                    Integer resultado = gestorIncapacidad.modificarIncapacidad(incapacidad);
 
                     if (resultado > 0) {
                         util.mostrarMensaje("!! El registro ha sido cerrado !!");
-                        ausentismo = new Ausentismo();                    
+                        incapacidad = new Incapacidad();                    
                     } else {
                         util.mostrarMensaje("!! El registro no pudo ser almacenado !!");
                     }
@@ -234,15 +241,15 @@ public class UIAusentismo implements Serializable {
                 util.mostrarMensaje(ex.getMessage());
                 util.mostrarMensaje("!! El registro no pudo ser almacenado !!");               
             }
-    }
+    }*/
     
-    public void limpiarAusentismo() {       
-        ausentismo = new Ausentismo(); 
+    public void limpiarIncapacidad() {       
+        incapacidad = new Incapacidad(); 
         empleado = new Empleado();        
         itemsMotivos.clear();
     }
     
-    public List<Ausentismo> getListaAusentismo() {
+    /*public List<Incapacidad> getListaIncapacidad() {
 
         contextoJSF = FacesContext.getCurrentInstance();
         contextoEL = contextoJSF.getELContext();
@@ -250,15 +257,15 @@ public class UIAusentismo implements Serializable {
         String nitsesion = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);          
 
         try {
-            listaAusentismo = gestorAusentismo.listarAusentismos(nitsesion);
+            listaIncapacidad = gestorIncapacidad.listarIncapacidads(nitsesion);
         } catch (Exception ex) {
-            Logger.getLogger(UIAusentismo.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UIIncapacidad.class.getName()).log(Level.SEVERE, null, ex);
         }        
-        return (listaAusentismo);
-    }
+        return (listaIncapacidad);
+    }*/
   
     
-    public void ausentismoAnomes() { 
+    /*public void incapacidadAnomes() { 
         
         contextoJSF = FacesContext.getCurrentInstance();
         contextoEL = contextoJSF.getELContext();
@@ -276,28 +283,28 @@ public class UIAusentismo implements Serializable {
         }
 
         try {            
-            listaAusentismoanomes = gestorAusentismo.ausentismoAnomes(nitsesion,selmesano,selano);
-            setListaAusentismoanomes(listaAusentismoanomes);                                  
+            listaIncapacidadanomes = gestorIncapacidad.incapacidadAnomes(nitsesion,selmesano,selano);
+            setListaIncapacidadanomes(listaIncapacidadanomes);                                  
             totarl=0; toteps=0; totempleador=0; tottrabajador=0; total=0;
             
             
-            //Carga totales ausentismo ano y mes 
-            for(int i=0; i < listaAusentismoanomes.size(); i++){
-                totarl +=  listaAusentismoanomes.get(i).getArl();                
-                toteps += listaAusentismoanomes.get(i).getEps();
-                totempleador += listaAusentismoanomes.get(i).getEmpleador();
-                tottrabajador += listaAusentismoanomes.get(i).getTrabajador();
-                total += listaAusentismoanomes.get(i).getTotal();                               
+            //Carga totales incapacidad ano y mes 
+            for(int i=0; i < listaIncapacidadanomes.size(); i++){
+                totarl +=  listaIncapacidadanomes.get(i).getArl();                
+                toteps += listaIncapacidadanomes.get(i).getEps();
+                totempleador += listaIncapacidadanomes.get(i).getEmpleador();
+                tottrabajador += listaIncapacidadanomes.get(i).getTrabajador();
+                total += listaIncapacidadanomes.get(i).getTotal();                               
             }   
 
             
         } catch (Exception ex) {
-            Logger.getLogger(UIAusentismo.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UIIncapacidad.class.getName()).log(Level.SEVERE, null, ex);
         }
             
-    }
-    //muestra reporte de ausentismos por cedula de empleado
-    public void ausentismoAnomesEmpleado() {             
+    }*/
+    //muestra reporte de incapacidads por cedula de empleado
+    /*public void incapacidadAnomesEmpleado() {             
         
         contextoJSF = FacesContext.getCurrentInstance();
         contextoEL = contextoJSF.getELContext();
@@ -316,49 +323,49 @@ public class UIAusentismo implements Serializable {
            selmesdesde = (ano.getAño())+"/"+(mes.getDesde());
            selmeshasta = (ano.getAño()+"/"+(mes.getHasta()));           
         }        
-        selmotivo = ausentismo.getMotivoausentismo();
+        selmotivo = incapacidad.getMotivoincapacidad();
         
         try {       
 
-            listAusentismoEmpleado = gestorAusentismo.ausentismoanomesEmpleado(cedula, nitem, selmesdesde, selmeshasta, selano, selmotivo);
-            pieausentismoEmpleado = gestorAusentismo.pieausentismoanomesEmpleado(cedula, nitem, selmesdesde, selmeshasta, selano, selmotivo);
-            setListAusentismoEmpleado(listAusentismoEmpleado);
+            listIncapacidadEmpleado = gestorIncapacidad.incapacidadanomesEmpleado(cedula, nitem, selmesdesde, selmeshasta, selano, selmotivo);
+            pieincapacidadEmpleado = gestorIncapacidad.pieincapacidadanomesEmpleado(cedula, nitem, selmesdesde, selmeshasta, selano, selmotivo);
+            setListIncapacidadEmpleado(listIncapacidadEmpleado);
             
             totaleps=0;totalarl=0;totalem=0; totaltrabajador=0; totalsubt=0;
             //calculo de totales eps,arl,empleador,trabajador y total 
             
             
-            for(int i=0; i < listAusentismoEmpleado.size(); i++){
-                totaleps += listAusentismoEmpleado.get(i).getEps();
-                totalarl += listAusentismoEmpleado.get(i).getArl();
-                totalem += listAusentismoEmpleado.get(i).getEmpleador();
-                totaltrabajador += listAusentismoEmpleado.get(i).getTrabajador();
-                totalsubt += listAusentismoEmpleado.get(i).getTotalsube();
+            for(int i=0; i < listIncapacidadEmpleado.size(); i++){
+                totaleps += listIncapacidadEmpleado.get(i).getEps();
+                totalarl += listIncapacidadEmpleado.get(i).getArl();
+                totalem += listIncapacidadEmpleado.get(i).getEmpleador();
+                totaltrabajador += listIncapacidadEmpleado.get(i).getTrabajador();
+                totalsubt += listIncapacidadEmpleado.get(i).getTotalsube();
                 
             }
             
             
             
-            //Carga Pie Totales Ausentismo Vs Tipo
-            pieausentismoanomesEmpleado.clear();
-            pieausentismoanomesEmpleado.set("EPS", pieausentismoEmpleado.get(0).getEps());
-            pieausentismoanomesEmpleado.set("ARL", pieausentismoEmpleado.get(0).getArl());
-            pieausentismoanomesEmpleado.set("TRABAJADOR", pieausentismoEmpleado.get(0).getTrabajador());
-            pieausentismoanomesEmpleado.set("EMPLEADOR", pieausentismoEmpleado.get(0).getEmpleador());
-            pieausentismoanomesEmpleado.setTitle(pieausentismoEmpleado.get(0).getEmpleado().getNombres()+" "+ pieausentismoEmpleado.get(0).getEmpleado().getApellidos()+"   TOTAL AUSENTISMOS ");
-            pieausentismoanomesEmpleado.setLegendPosition("w");
-            pieausentismoanomesEmpleado.setShowDataLabels(true);
-            pieausentismoanomesEmpleado.setDiameter(300);
+            //Carga Pie Totales Incapacidad Vs Tipo
+            pieincapacidadanomesEmpleado.clear();
+            pieincapacidadanomesEmpleado.set("EPS", pieincapacidadEmpleado.get(0).getEps());
+            pieincapacidadanomesEmpleado.set("ARL", pieincapacidadEmpleado.get(0).getArl());
+            pieincapacidadanomesEmpleado.set("TRABAJADOR", pieincapacidadEmpleado.get(0).getTrabajador());
+            pieincapacidadanomesEmpleado.set("EMPLEADOR", pieincapacidadEmpleado.get(0).getEmpleador());
+            pieincapacidadanomesEmpleado.setTitle(pieincapacidadEmpleado.get(0).getEmpleado().getNombres()+" "+ pieincapacidadEmpleado.get(0).getEmpleado().getApellidos()+"   TOTAL AUSENTISMOS ");
+            pieincapacidadanomesEmpleado.setLegendPosition("w");
+            pieincapacidadanomesEmpleado.setShowDataLabels(true);
+            pieincapacidadanomesEmpleado.setDiameter(300);
             
     
         } catch (Exception ex) {
-            Logger.getLogger(UIAusentismo.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UIIncapacidad.class.getName()).log(Level.SEVERE, null, ex);
         }
     
-    }
+    }*/
 
     
-    public void ausentismoAnomesEmpresa() { 
+    /*public void incapacidadAnomesEmpresa() { 
         
         contextoJSF = FacesContext.getCurrentInstance();
         contextoEL = contextoJSF.getELContext();
@@ -382,41 +389,41 @@ public class UIAusentismo implements Serializable {
          nitsubem = null;         
         }
         
-        selmotivo = ausentismo.getMotivoausentismo();
+        selmotivo = incapacidad.getMotivoincapacidad();
         
         try {       
 
-            listaausentismoEmpresa = gestorAusentismo.ausentismoanomesEmpresa(nitem, nitsubem, selmesdesde, selmeshasta, selano, selmotivo);
-            pieausentismoEmpresa = gestorAusentismo.pieausentismoanomesEmpresa(nitem, nitsubem, selmesdesde, selmeshasta, selano, selmotivo);
-            pieporSubempresa = gestorAusentismo.pieporSubempresa(nitem, nitsubem, selmesdesde, selmeshasta, selano, selmotivo);
-            setListaausentismoEmpresa(listaausentismoEmpresa); 
+            listaincapacidadEmpresa = gestorIncapacidad.incapacidadanomesEmpresa(nitem, nitsubem, selmesdesde, selmeshasta, selano, selmotivo);
+            pieincapacidadEmpresa = gestorIncapacidad.pieincapacidadanomesEmpresa(nitem, nitsubem, selmesdesde, selmeshasta, selano, selmotivo);
+            pieporSubempresa = gestorIncapacidad.pieporSubempresa(nitem, nitsubem, selmesdesde, selmeshasta, selano, selmotivo);
+            setListaincapacidadEmpresa(listaincapacidadEmpresa); 
             
             
             
             totaleps=0;totalarl=0;totalem=0; totaltrabajador=0; totalsubt=0;
             
-            for(int i=0; i < listaausentismoEmpresa.size(); i++){                
-                totaleps += listaausentismoEmpresa.get(i).getEps();
-                totalarl += listaausentismoEmpresa.get(i).getArl();
-                totalem += listaausentismoEmpresa.get(i).getEmpleador();
-                totaltrabajador += listaausentismoEmpresa.get(i).getTrabajador();
-                totalsubt += listaausentismoEmpresa.get(i).getTotalsube();                
+            for(int i=0; i < listaincapacidadEmpresa.size(); i++){                
+                totaleps += listaincapacidadEmpresa.get(i).getEps();
+                totalarl += listaincapacidadEmpresa.get(i).getArl();
+                totalem += listaincapacidadEmpresa.get(i).getEmpleador();
+                totaltrabajador += listaincapacidadEmpresa.get(i).getTrabajador();
+                totalsubt += listaincapacidadEmpresa.get(i).getTotalsube();                
                 
             }            
             
-            //Carga Pie Totales Ausentismo Vs Tipo
-            pieausentismoanomesEmpresa.clear();            
-            pieausentismoanomesEmpresa.set("EPS", pieausentismoEmpresa.get(0).getEps());
-            pieausentismoanomesEmpresa.set("ARL", pieausentismoEmpresa.get(0).getArl());
-            pieausentismoanomesEmpresa.set("TRABAJADOR", pieausentismoEmpresa.get(0).getTrabajador());
-            pieausentismoanomesEmpresa.set("EMPLEADOR", pieausentismoEmpresa.get(0).getEmpleador());
-            pieausentismoanomesEmpresa.setTitle(pieausentismoEmpresa.get(0).getEmpresa().getNombre()+"   TOTALES AUSENTISMO VS TIPO");
-            pieausentismoanomesEmpresa.setLegendPosition("w");
-            pieausentismoanomesEmpresa.setShowDataLabels(true);
-            pieausentismoanomesEmpresa.setDiameter(300);
+            //Carga Pie Totales Incapacidad Vs Tipo
+            pieincapacidadanomesEmpresa.clear();
+            pieincapacidadanomesEmpresa.set("EPS", pieincapacidadEmpresa.get(0).getEps());
+            pieincapacidadanomesEmpresa.set("ARL", pieincapacidadEmpresa.get(0).getArl());
+            pieincapacidadanomesEmpresa.set("TRABAJADOR", pieincapacidadEmpresa.get(0).getTrabajador());
+            pieincapacidadanomesEmpresa.set("EMPLEADOR", pieincapacidadEmpresa.get(0).getEmpleador());
+            pieincapacidadanomesEmpresa.setTitle(pieincapacidadEmpresa.get(0).getEmpresa().getNombre()+"   TOTALES AUSENTISMO VS TIPO");
+            pieincapacidadanomesEmpresa.setLegendPosition("w");
+            pieincapacidadanomesEmpresa.setShowDataLabels(true);
+            pieincapacidadanomesEmpresa.setDiameter(300);
             
             
-            //Carga Totales Ausentismo vs Subemrpesa
+            //Carga Totales Incapacidad vs Subemrpesa
                 pieSubempresa.clear();
                 for(int i=0; i < pieporSubempresa.size(); i++){    
 
@@ -429,28 +436,148 @@ public class UIAusentismo implements Serializable {
             
             
         } catch (Exception ex) {
-            Logger.getLogger(UIAusentismo.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UIIncapacidad.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }    
+    }    */
+    
+    public void cargarDiferenciaDias() throws Exception{
+        try {
+            
+            
+            
+        } catch (Exception ex) {
+        Logger.getLogger(UIIncapacidad.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    
+    public void onDateSelect(SelectEvent event) {        
+        
+        if(incapacidad.getFecha_final()==null){
+            incapacidad.setFecha_final(new Date());
+        }
+        int dias=(int) ((incapacidad.getFecha_final().getTime()-incapacidad.getFecha_inicial().getTime())/86400000);
+        incapacidad.setTiempoDias(dias+1);                            
+        
+        
+    }
+    
+    public void limpiarAusentismo() {       
+        incapacidad = new Incapacidad(); 
+        empleado = new Empleado();        
+        itemsMotivos.clear();
+    }
+        
+     
+    public void guardarRegistro() throws Exception{    
+
+        Boolean invalido = false;
+        String msg = null;
+
+        //ingreso de informacion al gestor
+        gestorIncapacidad = new GestorIncapacidad();
+
+        try {
+            //verificar que todas las cajas este llenas           
+            if (incapacidad.getEmpleado().getCedula() == null) {
+                msg = "La cédula esta vacía!";
+                invalido = true;              
+            }
+            if (incapacidad.getMotivoincapacidad().equals("Seleccione...")) {
+                msg = "Seleccione un Motivo";
+                invalido = true;
+            }            
+
+            if (invalido == false) {                                    
+                    Integer resultado = gestorIncapacidad.guardarIncapacidad(incapacidad);
+
+                    if (resultado > 0) {
+                        util.mostrarMensaje("!! El registro fue realizado de manera exitosa !!");
+                        incapacidad = new Incapacidad();
+                    } else {
+                        util.mostrarMensaje("!! El registro no pudo ser almacenado !!");
+                    }
+            } else {
+                
+                    util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
+                }
+            } catch (Exception ex) {
+                util.mostrarMensaje(ex.getMessage());
+                util.mostrarMensaje("!! El registro no pudo ser almacenado !!");               
+            }
+    }   
+    
+ 
+    public void cargarCie10() throws Exception{
+        try {
+            gestorIncapacidad=new GestorIncapacidad();
+            incapacidad.setCie10(new Cie10());         
+            cie10=cie10.toUpperCase();
+            incapacidad.setCie10(gestorIncapacidad.cargarCie10(cie10));
+            if(incapacidad.getCie10()==null){                                
+                incapacidad.setCie10(new Cie10());           
+                incapacidad.getCie10().setNombre("Cie10 no encontrado");
+                incapacidad.getCie10().setGrupoCie10(new GrupoCie10());
+                incapacidad.getCie10().getGrupoCie10().setNombre("Cie10 no encontrado");
+            }
+            
+            
+        } catch (Exception ex) {
+        Logger.getLogger(UIIncapacidad.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     
     public ArrayList<SelectItem> getItemsMotivos() throws Exception{
             
             try {
-                gestorAusentismo = new GestorAusentismo();
+                gestorIncapacidad = new GestorIncapacidad();
                 ArrayList<Motivo> listaMotivos;
                 itemsMotivos.clear();
-                listaMotivos = gestorAusentismo.listarMotivos();                                
+                listaMotivos = gestorIncapacidad.listarMotivosIncapacidad();                                
                 
                 for (int i = 0; i < listaMotivos.size(); i++) {                    
                         itemsMotivos.add(new SelectItem(listaMotivos.get(i).getCodigo(), listaMotivos.get(i).getNombrem(), listaMotivos.get(i).getTipo()));
                     }                        
                 }
             catch (Exception ex) {
-                        Logger.getLogger(UIAusentismo.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(UIIncapacidad.class.getName()).log(Level.SEVERE, null, ex);
                 }
             
                 return itemsMotivos;    
+    }    
+
+    public String getCie10() {
+        return cie10;
+    }
+
+    public void setCie10(String cie10) {
+        this.cie10 = cie10;
+    }
+
+    public Motivo getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(Motivo motivo) {
+        this.motivo = motivo;
+    }
+
+    public GestorIncapacidad getGestorIncapacidad() {
+        return gestorIncapacidad;
+    }
+
+    public void setGestorIncapacidad(GestorIncapacidad gestorIncapacidad) {
+        this.gestorIncapacidad = gestorIncapacidad;
+    }
+
+    public List<Incapacidad> getListaIncapacidad() {
+        return listaIncapacidad;
+    }
+
+    public void setListaIncapacidad(List<Incapacidad> listaIncapacidad) {
+        this.listaIncapacidad = listaIncapacidad;
     }
 
     public String getMinutos() {
@@ -461,12 +588,12 @@ public class UIAusentismo implements Serializable {
         this.minutos = minutos;
     }    
 
-    public PieChartModel getPieausentismoanomesEmpleado() {
-        return pieausentismoanomesEmpleado;
+    public PieChartModel getPieincapacidadanomesEmpleado() {
+        return pieincapacidadanomesEmpleado;
     }
 
-    public void setPieausentismoanomesEmpleado(PieChartModel pieausentismoanomesEmpleado) {
-        this.pieausentismoanomesEmpleado = pieausentismoanomesEmpleado;
+    public void setPieincapacidadanomesEmpleado(PieChartModel pieincapacidadanomesEmpleado) {
+        this.pieincapacidadanomesEmpleado = pieincapacidadanomesEmpleado;
     }   
     
     public String getCedula() {
@@ -477,12 +604,12 @@ public class UIAusentismo implements Serializable {
         this.cedula = cedula;
     }
 
-    public List<Ausentismo> getListAusentismoEmpleado() {
-        return listAusentismoEmpleado;
+    public List<Incapacidad> getListIncapacidadEmpleado() {
+        return listIncapacidadEmpleado;
     }
 
-    public void setListAusentismoEmpleado(List<Ausentismo> listAusentismoEmpleado) {
-        this.listAusentismoEmpleado = listAusentismoEmpleado;
+    public void setListIncapacidadEmpleado(List<Incapacidad> listIncapacidadEmpleado) {
+        this.listIncapacidadEmpleado = listIncapacidadEmpleado;
     }
     
     public Empleado getEmpleado() {
@@ -501,35 +628,35 @@ public class UIAusentismo implements Serializable {
         this.util = util;
     }
 
-    public Ausentismo getAusentismo() {
-        return ausentismo;
+    public Incapacidad getIncapacidad() {
+        return incapacidad;
     }
 
-    public void setAusentismo(Ausentismo ausentismo) {
-        this.ausentismo = ausentismo;
+    public void setIncapacidad(Incapacidad incapacidad) {
+        this.incapacidad = incapacidad;
     }
 
-    public List<Ausentismo> getFilteredlistaAusentismo() {
-        return filteredlistaAusentismo;
+    public List<Incapacidad> getFilteredlistaIncapacidad() {
+        return filteredlistaIncapacidad;
     }
 
-    public void setFilteredlistaAusentismo(List<Ausentismo> filteredlistaAusentismo) {
-        this.filteredlistaAusentismo = filteredlistaAusentismo;
+    public void setFilteredlistaIncapacidad(List<Incapacidad> filteredlistaIncapacidad) {
+        this.filteredlistaIncapacidad = filteredlistaIncapacidad;
     }
     
-    public List<Ausentismo> getListaausentismoEmpresa() {
-        return listaausentismoEmpresa;
+    public List<Incapacidad> getListaincapacidadEmpresa() {
+        return listaincapacidadEmpresa;
     }
 
-    public void setListaausentismoEmpresa(List<Ausentismo> listaausentismoEmpresa) {
-        this.listaausentismoEmpresa = listaausentismoEmpresa;
+    public void setListaincapacidadEmpresa(List<Incapacidad> listaincapacidadEmpresa) {
+        this.listaincapacidadEmpresa = listaincapacidadEmpresa;
     }
 
-    public List<Ausentismo> getPieporSubempresa() {
+    public List<Incapacidad> getPieporSubempresa() {
         return pieporSubempresa;
     }
 
-    public void setPieporSubempresa(List<Ausentismo> pieporSubempresa) {
+    public void setPieporSubempresa(List<Incapacidad> pieporSubempresa) {
         this.pieporSubempresa = pieporSubempresa;
     }
 
@@ -557,12 +684,12 @@ public class UIAusentismo implements Serializable {
         this.todos = todos;
     }
 
-    public List<Ausentismo> getListaAusentismoanomes() {
-        return listaAusentismoanomes;
+    public List<Incapacidad> getListaIncapacidadanomes() {
+        return listaIncapacidadanomes;
     }
 
-    public void setListaAusentismoanomes(List<Ausentismo> listaAusentismoanomes) {
-        this.listaAusentismoanomes = listaAusentismoanomes;
+    public void setListaIncapacidadanomes(List<Incapacidad> listaIncapacidadanomes) {
+        this.listaIncapacidadanomes = listaIncapacidadanomes;
     }    
 
     public String getTotarl() {
@@ -645,20 +772,20 @@ public class UIAusentismo implements Serializable {
         this.totalem = totalem;
     }
 
-    public List<Ausentismo> getPieausentismoEmpresa() {
-        return pieausentismoEmpresa;
+    public List<Incapacidad> getPieincapacidadEmpresa() {
+        return pieincapacidadEmpresa;
     }
 
-    public void setPieausentismoEmpresa(List<Ausentismo> pieausentismoEmpresa) {
-        this.pieausentismoEmpresa = pieausentismoEmpresa;
+    public void setPieincapacidadEmpresa(List<Incapacidad> pieincapacidadEmpresa) {
+        this.pieincapacidadEmpresa = pieincapacidadEmpresa;
     }
 
-    public List<Ausentismo> getPieausentismoEmpleado() {
-        return pieausentismoEmpleado;
+    public List<Incapacidad> getPieincapacidadEmpleado() {
+        return pieincapacidadEmpleado;
     }
 
-    public void setPieausentismoEmpleado(List<Ausentismo> pieausentismoEmpleado) {
-        this.pieausentismoEmpleado = pieausentismoEmpleado;
+    public void setPieincapacidadEmpleado(List<Incapacidad> pieincapacidadEmpleado) {
+        this.pieincapacidadEmpleado = pieincapacidadEmpleado;
     }
     public SubEmpresa getSubempresa() {
         return subempresa;
@@ -676,12 +803,12 @@ public class UIAusentismo implements Serializable {
     public void setTotalsubt(float totalsubt) {
         this.totalsubt = totalsubt;
     }
-    public PieChartModel getPieausentismoanomesEmpresa() {
-        return pieausentismoanomesEmpresa;
+    public PieChartModel getPieincapacidadanomesEmpresa() {
+        return pieincapacidadanomesEmpresa;
     }
 
-    public void setPieausentismoanomesEmpresa(PieChartModel pieausentismoanomesEmpresa) {
-        this.pieausentismoanomesEmpresa = pieausentismoanomesEmpresa;
+    public void setPieincapacidadanomesEmpresa(PieChartModel pieincapacidadanomesEmpresa) {
+        this.pieincapacidadanomesEmpresa = pieincapacidadanomesEmpresa;
     } 
 
     public PieChartModel getPieSubempresa() {

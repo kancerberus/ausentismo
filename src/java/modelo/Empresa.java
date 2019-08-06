@@ -21,6 +21,11 @@ public class Empresa{
         this.municipio = new Municipio();
     }    
 
+    public Empresa(String nitempresa, String nombre) {
+        this.nitempresa = nitempresa;
+        this.nombre = nombre;
+    }
+
     public String getNitempresa() {
         return nitempresa;
     }

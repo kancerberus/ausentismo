@@ -39,14 +39,14 @@ public class EmpleadoDAO {
         try {
             consulta = new Consulta(getConexion());
             
-            sql = "select em.nombres nombres,em.apellidos apellidos,em.fecha_nacimiento fecha_nac, "
+            sql = "SELECT em.nombres nombres,em.apellidos apellidos,em.fecha_nacimiento fecha_nac, "
                     + "m.municipio municipio,c.cargo cargo,det1.nombre sexo,det2.nombre e_civil,estado "
-                    + "from empleado em "
-                    + "inner join municipio m using (cod_municipio) "
-                    + "inner join cargo c on (c.cod_cargo=em.cargo) "
-                    + "inner join det_lista det1 on (det1.cod_det_lista=em.cod_det_lista_sexo) "
-                    + "inner join det_lista det2 on (det2.cod_det_lista=em.cod_det_lista_ecivil) "
-                    + " where nitsubempresa ='" + nitsesion +"' and cedula='" + cedula.trim() +"'";
+                    + "FROM empleado em "
+                    + "INNER JOIN municipio m using (cod_municipio) "
+                    + "INNER JOIN cargo c on (c.cod_cargo=em.cargo) "
+                    + "INNER JOIN det_lista det1 on (det1.cod_det_lista=em.cod_det_lista_sexo) "
+                    + "INNER JOIN det_lista det2 on (det2.cod_det_lista=em.cod_det_lista_ecivil) "
+                    + " WHERE nitsubempresa ='" + nitsesion +"' and cedula='" + cedula.trim() +"'";
 
             rs = consulta.ejecutar(sql);
             if (rs.next()) {

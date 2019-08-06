@@ -14,7 +14,7 @@ and open the template in the editor.
     <head>
         <title>GESTION AUSENTISMO</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>        
-        <link href="resources/main.css" rel="stylesheet" type="text/css" />          
+        <link href="resources/main.css" rel="stylesheet" type="text/css" />
             
         <h:body>
             <div id="base">
@@ -137,6 +137,27 @@ and open the template in the editor.
                         <h:panelGroup rendered="#{gestorPrincipal.modificarUsuario}">
                             <ui:include src="modificarUsuario.xhtml"></ui:include>  
                         </h:panelGroup>
+                        
+                        <h:panelGroup rendered="#{gestorPrincipal.regIncapacidad}">
+                            <ui:include src="regIncapacidad.xhtml"></ui:include>  
+                        </h:panelGroup>
+                        
+                        <h:panelGroup rendered="#{gestorPrincipal.regAccidente}">
+                            <ui:include src="regAccidente.xhtml"></ui:include>  
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{gestorPrincipal.indAccidente}">
+                            <ui:include src="indicadoresAcc.xhtml"></ui:include>  
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{gestorPrincipal.crearConcurso}">                            
+                            <ui:include src="crearConcurso.xhtml"></ui:include>                                                          
+                        </h:panelGroup>                        
+                        <h:panelGroup rendered="#{gestorPrincipal.concursos}">
+                            <ui:include src="concursos.xhtml"></ui:include>                            
+                        </h:panelGroup> 
+                        <h:panelGroup rendered="#{gestorPrincipal.equipos}">
+                            <ui:include src="equipos.xhtml"></ui:include>                            
+                        </h:panelGroup> 
+                        
                     </h:panelGroup>                    
                   </h:form>
                 </td>

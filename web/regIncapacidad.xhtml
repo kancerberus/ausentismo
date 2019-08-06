@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:body>
+        <ui:composition>
+            <h:form id="regIncapacidad">
+               <p:growl id="avisoIncapacidad" showDetail="true" life="5000" />
+                <p:panel header="SOLICITUD Y REGISTRO DE INCAPACIDAD" id="pnlRegIncapacidad"  
+                         style="width:1080px;">
+                    <table>
+                        <tr><td>
+                            <p:fieldset legend="Datos de Inicio de Sesión" style="margin-bottom:10px; margin-top:10px;" >
+                                <table cellpadding="5">                        
+                                    <tr>
+                                        <td align="center">
+                                            <p:panelGrid id="tblDatosSesion" columns="4" style="width:1000px; font-size: 90%;">
+                                                <f:facet name="header">
+                                                    <h:outputText value="" />
+                                                </f:facet>
+                                                <h:outputText value="Nombre de la empresa" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.subEmpresa.nombre}" />                                                
+                                                <h:outputText value="Fecha" style="font-weight: bold;"/>
+                                                <h:outputText value="#{currentDate}">
+                                                    <f:convertDateTime pattern="MM/dd/yyyy" type="date"/> 
+                                                </h:outputText>                                                
+                                                <h:outputText value="Usuario de sesion" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.nomusuario}"/>
+                                                <h:outputText value="Nombre" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.nombre}"/>
+                                            </p:panelGrid>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </p:fieldset>
+                            <p:fieldset legend="Datos Empleado" style="margin-bottom:10px; margin-top:10px; width:auto" >                                       
+                                <h:panelGrid columns="4" cellpadding="5" style="width:auto; font-size: 90%;">                                    
+                                    <p:outputLabel value="Cedula:" for="cedula" />
+                                    <p:inputText id="cedula" value="#{incapacidadBean.cedula}" required="true" label="cedula">
+                                      <p:ajax event="blur" listener="#{incapacidadBean.BuscarEmpleado}" update="pnlRegIncapacidad"></p:ajax>
+                                    </p:inputText> 
+                                    <p:growl id="growl" life="3000"/>
+                                    <p:commandButton icon="ui-icon-search" value="Consultar" actionListener="#{incapacidadBean.BuscarEmpleado}" update="pnlRegIncapacidad"/>                                       
+                                </h:panelGrid>                                
+                                <table cellpadding="5">                                    
+                                    <p:panelGrid id="panel01" columns="10" style="width:1000px; font-size: 90%;">
+                                         <f:facet name="header">
+                                            <h:outputText value="" />
+                                        </f:facet>
+                                        <h:outputText value="Nombres: " style="font-weight: bold;" /><h:outputText value="#{incapacidadBean.incapacidad.empleado.nombres}"/>                                                                                            
+                                        <h:outputText id="apellidos" value="Apellidos: " style="font-weight: bold;" /><h:outputText value="#{incapacidadBean.incapacidad.empleado.apellidos}" /> 
+                                        <h:outputText value="Edad: " style="font-weight: bold;" /><h:outputText value="#{incapacidadBean.incapacidad.empleado.edad}" /> 
+                                        <h:outputText value="Cargo: " style="font-weight: bold;" /><h:outputText value="#{incapacidadBean.incapacidad.empleado.cargo.nombre}" /> 
+                                        <h:outputText value="Estado Civil: " style="font-weight: bold;" /><h:outputText value="#{incapacidadBean.incapacidad.empleado.ecivil.nombre}" /> 
+                                        <h:outputText value="Genero: " style="font-weight: bold;" /><h:outputText value="#{incapacidadBean.incapacidad.empleado.sexo.nombre}" />                                                                                         
+                                    </p:panelGrid>  
+                                </table>
+                            </p:fieldset>
+                            <p:fieldset legend="Registro Incapacidad" style="margin-bottom:10px; margin-top:10px; width:1000px" >     
+                                <table>
+                                <p:panelGrid id="registroIncapacidad" columns="6"  style="width:1030px; font-size: 90%;">                                             
+                                        <f:facet name="header">
+                                            <h:outputText value="" />
+                                        </f:facet>
+                                        Motivo<p:selectOneMenu value="#{incapacidadBean.incapacidad.motivoincapacidad}" id="motivos" >
+                                        <f:selectItem itemLabel="Seleccione..." itemValue=""  />
+                                        <f:selectItems   value="#{incapacidadBean.itemsMotivos}" />
+                                        </p:selectOneMenu>                                                                               
+                                        Tipo De Incapacidad<p:selectOneMenu value="#{incapacidadBean.incapacidad.tipoIncapacidad.codigo}" id="tipoIncapacidad">
+                                            <f:selectItem itemLabel="Seleccione..." itemValue=""  />
+                                            <f:selectItems   value="#{listasBean.itemsTipoIncapacidades}" />                                                                                                                        
+                                        </p:selectOneMenu>        
+                                        <p:outputLabel/>
+                                        <p:outputLabel/>
+                                        CIE10
+                                        <p:inputText id="cie10" value="#{incapacidadBean.cie10}" >
+                                            <p:ajax event="blur" listener="#{incapacidadBean.cargarCie10()}" update="dcie10, gcie10"/>                                            
+                                        </p:inputText> 
+                                        Diagnostico<p:outputLabel id="dcie10" value="#{incapacidadBean.incapacidad.cie10.nombre}" style="font-weight: bold"/>
+                                        Grupo<p:outputLabel id="gcie10" value="#{incapacidadBean.incapacidad.cie10.grupoCie10.nombre}" style="font-weight: bold"/>
+                                        
+                                        Fecha Inicial<p:calendar id="finical" value="#{incapacidadBean.incapacidad.fecha_inicial}" locale="de" navigator="true" pattern="dd-MM-yy"  mask="true">
+                                            <p:ajax event="dateSelect" listener="#{incapacidadBean.onDateSelect}" update="avisoIncapacidad,th"/>
+                                        </p:calendar>                                        
+                                        Fecha Final<p:calendar id="ffinal" value="#{incapacidadBean.incapacidad.fecha_final}" locale="de" navigator="true" pattern="dd-MM-yy" mask="true" >
+                                            <p:ajax event="dateSelect" listener="#{incapacidadBean.onDateSelect}" update="avisoIncapacidad,th" />
+                                        </p:calendar>
+                                        
+                                        
+                                        <p:outputLabel value="Tiempo en Dias:"/>
+                                        <p:outputLabel id="th" value="#{incapacidadBean.incapacidad.tiempoDias}"  style="margin-left: 5px;font-weight: bolder;" >                                            
+                                        </p:outputLabel>                                                 
+                                        Observaciones
+                                        <p:inputTextarea cols="50" value="#{incapacidadBean.incapacidad.observaciones}" queryDelay="750" minQueryLength="4" />                                                                                                               
+                                        <p:commandButton icon="ui-icon-disk" update="pnlRegIncapacidad, avisoIncapacidad" type="submit" id="registrarincapacidad" value="Registrar" actionListener="#{incapacidadBean.guardarRegistro()}"/>
+                            
+                                        
+                                        <p:commandButton icon="ui-icon-refresh" value="Limpiar" update="pnlRegIncapacidad, motivos" actionListener="#{incapacidadBean.limpiarAusentismo}" />
+                                    </p:panelGrid>
+                                </table>                                
+                            </p:fieldset> 
+                           </td>
+                        </tr> 
+                    </table>              
+                </p:panel>                                                
+            </h:form>
+        </ui:composition>
+    </h:body>
+</html>
+

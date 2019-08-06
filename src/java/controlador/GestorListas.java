@@ -8,6 +8,8 @@ package controlador;
 import bd.ListasDAO;
 import bd.SubempresaDAO;
 import java.util.ArrayList;
+import modelo.Accidente;
+import modelo.AgenteAccidente;
 import modelo.Cargo;
 import modelo.Ecivil;
 import modelo.Empresa;
@@ -17,6 +19,17 @@ import modelo.Sexo;
 import modelo.SubEmpresa;
 import modelo.Mes;
 import modelo.Año;
+import modelo.CausaBasica;
+import modelo.CausaInmediata;
+import modelo.Clasificacion;
+import modelo.IncapacidadSi;
+import modelo.Mecanismo;
+import modelo.ParteAfectada;
+import modelo.Riesgo;
+import modelo.TipoAccidente;
+import modelo.TipoEvento;
+import modelo.TipoIncapacidad;
+import modelo.TipoLesion;
 /**
  *
  * @author Andres
@@ -56,6 +69,128 @@ public class GestorListas extends Gestor{
             cerrarConexion();
         }        
     }
+    
+    public ArrayList<TipoIncapacidad> listarTipoIncapaciadades() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarTipoIncapaciadades();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<TipoEvento> listarTipoEventos() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarTipoEventos();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<Clasificacion> listarClasificaciones() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarClasificaciones();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<IncapacidadSi> listarIncapacidadesSi() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarIncapacidadesSis();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<TipoAccidente> listarTipoAccidente() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarTipoAccidentes();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<ParteAfectada> listarParteAfectada() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarParteAfectadas();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<TipoLesion> listarTipoLesiones() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarTipoLesiones();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<Riesgo> listarRiesgos() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarRiesgos();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<Mecanismo> listarMecanismos() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarMecanismos();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<AgenteAccidente> listarAgentesAccidente() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarAgenteAccidentes();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<CausaInmediata> listarCausaInmediatas() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarCausaInmediatas();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<CausaBasica> listarCausaBasicas() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarCausaBasicas();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    
  
     public ArrayList<Cargo> listarCargos() throws Exception {
         try {

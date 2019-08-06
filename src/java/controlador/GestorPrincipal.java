@@ -30,6 +30,12 @@ public class GestorPrincipal implements Serializable {
     private boolean actualizarRegistros=false;
     private boolean ausentismoEmpleado=false;
     private boolean modificarUsuario=false;
+    private boolean regIncapacidad=false;
+    private boolean regAccidente=false;
+    private boolean indAccidente=false;
+    private boolean crearConcurso=false;
+    private boolean concursos=false;
+    private boolean equipos=false;
     
     
     
@@ -56,7 +62,12 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
-                
+                setRegIncapacidad(false);
+                setRegAccidente(false);
+                setIndAccidente(false);
+                setCrearConcurso(false);
+                setConcursos(false);
+                setEquipos(false);
                 break;
                 
             case "consultar_ausentismo":
@@ -78,7 +89,12 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
-                
+                setRegIncapacidad(false);
+                setRegAccidente(false);
+                setIndAccidente(false);
+                setCrearConcurso(false);
+                setConcursos(false);
+                setEquipos(false);
                 break;                
 
             case "finalizar_reg":
@@ -100,7 +116,12 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
-                
+                setRegIncapacidad(false);
+                setRegAccidente(false);
+                setIndAccidente(false);
+                setCrearConcurso(false);
+                setConcursos(false);
+                setEquipos(false);
                 break;                 
             
             case "crear_empleado":
@@ -122,7 +143,12 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
-                
+                setRegIncapacidad(false);
+                setRegAccidente(false);
+                setIndAccidente(false);
+                setCrearConcurso(false); 
+                setConcursos(false);
+                setEquipos(false);
                 break;  
                 
             case "listar_empleado":
@@ -144,7 +170,12 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
-                
+                setRegIncapacidad(false);
+                setRegAccidente(false);
+                setIndAccidente(false);
+                setCrearConcurso(false);
+                setConcursos(false);
+                setEquipos(false);
                 break;  
                 
             case "crear_empresa":
@@ -166,7 +197,12 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
-                
+                setRegIncapacidad(false);
+                setRegAccidente(false);
+                setIndAccidente(false);
+                setCrearConcurso(false);
+                setConcursos(false);
+                setEquipos(false);
                 break;  
                 
             case "crear_usuario":
@@ -188,7 +224,12 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
-                
+                setRegIncapacidad(false);
+                setRegAccidente(false);
+                setIndAccidente(false);
+                setCrearConcurso(false);
+                setConcursos(false);
+                setEquipos(false);
                 break;  
                 
             case "cargosyepsbd":
@@ -210,7 +251,12 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false); 
-                
+                setRegIncapacidad(false);
+                setRegAccidente(false);
+                setIndAccidente(false);
+                setCrearConcurso(false);
+                setConcursos(false);
+                setEquipos(false);
                 break;  
                 
             case "crear_subempresa":
@@ -232,7 +278,12 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
-                
+                setRegIncapacidad(false);
+                setRegAccidente(false);
+                setIndAccidente(false);
+                setCrearConcurso(false);
+                setConcursos(false);
+                setEquipos(false);
                 break;
                 
             case "informe_ausentismo":
@@ -254,7 +305,12 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
-                
+                setRegIncapacidad(false);
+                setRegAccidente(false);
+                setIndAccidente(false);
+                setCrearConcurso(false);
+                setConcursos(false);
+                setEquipos(false);
                 break;
                 
             case "informe_por_empresa":
@@ -276,7 +332,12 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
-                
+                setRegIncapacidad(false);
+                setRegAccidente(false);
+                setIndAccidente(false);
+                setCrearConcurso(false);
+                setConcursos(false);
+                setEquipos(false);
                 break;
                 
             case "reporte_empleado":
@@ -298,7 +359,12 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
-                
+                setRegIncapacidad(false);
+                setRegAccidente(false);
+                setIndAccidente(false);
+                setCrearConcurso(false);
+                setConcursos(false);
+                setEquipos(false);
                 break;
                 
             case "modificar_empleado":
@@ -320,7 +386,12 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
-                
+                setRegIncapacidad(false);
+                setRegAccidente(false);
+                setIndAccidente(false);
+                setCrearConcurso(false);
+                setConcursos(false);
+                setEquipos(false);
                 break;                
 
                 
@@ -343,7 +414,12 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false); 
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
-                
+                setRegIncapacidad(false);
+                setRegAccidente(false);
+                setIndAccidente(false);
+                setCrearConcurso(false);
+                setConcursos(false);
+                setEquipos(false);
                 break;
                 
                 
@@ -366,7 +442,12 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
-                
+                setRegIncapacidad(false);
+                setRegAccidente(false);
+                setIndAccidente(false);
+                setCrearConcurso(false);
+                setConcursos(false);
+                setEquipos(false);
                 break;
                 
                 
@@ -389,7 +470,12 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(true);
                 setAusentismoEmpleado(false);
                 setModificarUsuario(false);
-                
+                setRegIncapacidad(false);
+                setRegAccidente(false);
+                setIndAccidente(false);
+                setCrearConcurso(false);
+                setConcursos(false);
+                setEquipos(false);
                 break;
                 
             case "ausentismo_empleado":
@@ -411,7 +497,12 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);                
                 setAusentismoEmpleado(true);
                 setModificarUsuario(false);
-                
+                setRegIncapacidad(false);
+                setRegAccidente(false);
+                setIndAccidente(false);
+                setCrearConcurso(false);
+                setConcursos(false);
+                setEquipos(false);
                 break;
                 
             case "modificar_usuario":
@@ -433,13 +524,227 @@ public class GestorPrincipal implements Serializable {
                 setActualizarRegistros(false);                
                 setAusentismoEmpleado(false);
                 setModificarUsuario(true);
-
+                setRegIncapacidad(false);
+                setRegAccidente(false);
+                setIndAccidente(false);
+                setCrearConcurso(false);
+                setConcursos(false);
+                setEquipos(false);
                 break;
                 
-            
+            case "reg_incapacidad":
+                setRegAusentismo(false);
+                setConsultaAusentismo(false); 
+                setFinAusentismo(false);                
+                setNuevoEmpleado(false);
+                setListarEmpleado(false);
+                setNuevaEmpresa(false);
+                setNuevoUsuario(false);
+                setCargosyEpsbd(false);
+                setNuevaSubEmpresa(false);
+                setInformeAusentismo(false);
+                setInformeausentismoEmpresa(false);
+                setReporteEmpleado(false);
+                setModificarEmpleado(false);                
+                setMoverEmpleado(false);
+                setReporteGrafica(false);
+                setActualizarRegistros(false);                
+                setAusentismoEmpleado(false);
+                setModificarUsuario(false);
+                setRegIncapacidad(true);
+                setRegAccidente(false);
+                setIndAccidente(false);
+                setCrearConcurso(false);
+                setConcursos(false);
+                setEquipos(false);
+                break;
+                
+            case "reg_accidente":
+                setRegAusentismo(false);
+                setConsultaAusentismo(false); 
+                setFinAusentismo(false);                
+                setNuevoEmpleado(false);
+                setListarEmpleado(false);
+                setNuevaEmpresa(false);
+                setNuevoUsuario(false);
+                setCargosyEpsbd(false);
+                setNuevaSubEmpresa(false);
+                setInformeAusentismo(false);
+                setInformeausentismoEmpresa(false);
+                setReporteEmpleado(false);
+                setModificarEmpleado(false);                
+                setMoverEmpleado(false);
+                setReporteGrafica(false);
+                setActualizarRegistros(false);                
+                setAusentismoEmpleado(false);
+                setModificarUsuario(false);
+                setRegIncapacidad(false);
+                setRegAccidente(true);   
+                setIndAccidente(false);
+                setCrearConcurso(false);
+                setConcursos(false);
+                setEquipos(false);
+                break;
+                
+            case "indicadores_accidente":
+                setRegAusentismo(false);
+                setConsultaAusentismo(false); 
+                setFinAusentismo(false);                
+                setNuevoEmpleado(false);
+                setListarEmpleado(false);
+                setNuevaEmpresa(false);
+                setNuevoUsuario(false);
+                setCargosyEpsbd(false);
+                setNuevaSubEmpresa(false);
+                setInformeAusentismo(false);
+                setInformeausentismoEmpresa(false);
+                setReporteEmpleado(false);
+                setModificarEmpleado(false);                
+                setMoverEmpleado(false);
+                setReporteGrafica(false);
+                setActualizarRegistros(false);                
+                setAusentismoEmpleado(false);
+                setModificarUsuario(false);
+                setRegIncapacidad(false);
+                setRegAccidente(false);                
+                setIndAccidente(true);
+                setCrearConcurso(false);
+                setConcursos(false);
+                setEquipos(false);
+                
+                break;
+                
+            case "crear_concurso":
+                setRegAusentismo(false);
+                setConsultaAusentismo(false); 
+                setFinAusentismo(false);                
+                setNuevoEmpleado(false);
+                setListarEmpleado(false);
+                setNuevaEmpresa(false);
+                setNuevoUsuario(false);
+                setCargosyEpsbd(false);
+                setNuevaSubEmpresa(false);
+                setInformeAusentismo(false);
+                setInformeausentismoEmpresa(false);
+                setReporteEmpleado(false);
+                setModificarEmpleado(false);                
+                setMoverEmpleado(false);
+                setReporteGrafica(false);
+                setActualizarRegistros(false);                
+                setAusentismoEmpleado(false);
+                setModificarUsuario(false);
+                setRegIncapacidad(false);
+                setRegAccidente(false);                
+                setIndAccidente(false);
+                setCrearConcurso(true);                
+                setConcursos(false);
+                setEquipos(false);
+                break;
+                
+                case "concursos":
+                setRegAusentismo(false);
+                setConsultaAusentismo(false); 
+                setFinAusentismo(false);                
+                setNuevoEmpleado(false);
+                setListarEmpleado(false);
+                setNuevaEmpresa(false);
+                setNuevoUsuario(false);
+                setCargosyEpsbd(false);
+                setNuevaSubEmpresa(false);
+                setInformeAusentismo(false);
+                setInformeausentismoEmpresa(false);
+                setReporteEmpleado(false);
+                setModificarEmpleado(false);                
+                setMoverEmpleado(false);
+                setReporteGrafica(false);
+                setActualizarRegistros(false);                
+                setAusentismoEmpleado(false);
+                setModificarUsuario(false);
+                setRegIncapacidad(false);
+                setRegAccidente(false);                
+                setIndAccidente(false);
+                setCrearConcurso(false); 
+                setConcursos(true);
+                setEquipos(false);
+                break;
+                
+                case "equipos":
+                setRegAusentismo(false);
+                setConsultaAusentismo(false); 
+                setFinAusentismo(false);                
+                setNuevoEmpleado(false);
+                setListarEmpleado(false);
+                setNuevaEmpresa(false);
+                setNuevoUsuario(false);
+                setCargosyEpsbd(false);
+                setNuevaSubEmpresa(false);
+                setInformeAusentismo(false);
+                setInformeausentismoEmpresa(false);
+                setReporteEmpleado(false);
+                setModificarEmpleado(false);                
+                setMoverEmpleado(false);
+                setReporteGrafica(false);
+                setActualizarRegistros(false);                
+                setAusentismoEmpleado(false);
+                setModificarUsuario(false);
+                setRegIncapacidad(false);
+                setRegAccidente(false);                
+                setIndAccidente(false);
+                setCrearConcurso(false); 
+                setConcursos(false);
+                setEquipos(true);
+                break;
+                
         }
-
         return "";
+    }
+
+    public boolean isEquipos() {
+        return equipos;
+    }
+
+    public void setEquipos(boolean equipos) {
+        this.equipos = equipos;
+    }
+
+    public boolean isConcursos() {
+        return concursos;
+    }
+
+    public void setConcursos(boolean concursos) {
+        this.concursos = concursos;
+    }
+
+    public boolean isCrearConcurso() {
+        return crearConcurso;
+    }
+
+    public void setCrearConcurso(boolean crearConcurso) {
+        this.crearConcurso = crearConcurso;
+    }
+
+    public boolean isIndAccidente() {
+        return indAccidente;
+    }
+
+    public void setIndAccidente(boolean indAccidente) {
+        this.indAccidente = indAccidente;
+    }
+
+    public boolean isRegAccidente() {
+        return regAccidente;
+    }
+
+    public void setRegAccidente(boolean regAccidente) {
+        this.regAccidente = regAccidente;
+    }
+
+    public boolean isRegIncapacidad() {
+        return regIncapacidad;
+    }
+
+    public void setRegIncapacidad(boolean regIncapacidad) {
+        this.regIncapacidad = regIncapacidad;
     }
 
     public boolean isModificarUsuario() {

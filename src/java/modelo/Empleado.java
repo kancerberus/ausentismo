@@ -37,6 +37,14 @@ public class Empleado {
         this.eps = new Eps();
     } 
 
+    public Empleado(String cedula, String nombres, String apellidos) {
+        this.cedula = cedula;
+        this.nombres = nombres;
+        this.apellidos = apellidos;
+    }
+    
+    
+
     public String getAnoacum() {
         return anoacum;
     }
