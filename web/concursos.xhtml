@@ -51,7 +51,7 @@ and open the template in the editor.
                                     <p:selectOneMenu id="gConcursos" value="#{concursoBean.grupoConcurso.codGrupo}">
                                     <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
                                     <f:selectItems   value="#{concursoBean.listGruposConcurso}" />  
-                                    <p:ajax update="actividadesEquipo" listener="#{concursoBean.cargarActividades()}"/>
+                                    <p:ajax update="actividadesEquipo" listener="#{concursoBean.listActividadesJuecess}"/>
                                     </p:selectOneMenu>
                                 </p:fieldset>  
                                 <p:fieldset legend="Basees De Concurso" style="margin-bottom:10px; margin-top:10px;" >
@@ -76,7 +76,7 @@ and open the template in the editor.
                                 </table>
                             </p:fieldset>
                                 <p:fieldset legend="Actividades Equipo" style="margin-bottom:10px; margin-top:10px;" >                                    
-                                    <p:dataTable id="actividadesEquipo" var="varActividades" value="#{concursoBean.listActividades}"
+                                    <p:dataTable id="actividadesEquipo" var="varActividades" value="#{concursoBean.listActividadesJuecess}"
                                                  rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">                                        
                                         <p:column headerText="Actividad">
                                             <h:outputText value="#{varActividades.nombre}"/>
@@ -86,7 +86,7 @@ and open the template in the editor.
                                         </p:column>                                     
                                         <p:column headerText="Fecha Limite">
                                             <h:outputText value="#{varActividades.fechaLimite}"/>
-                                        </p:column>                                     
+                                        </p:column>
                                         <p:column width="6%" headerText="Actividad">
                                             <p:commandButton id="openDialogLink"  icon="ui-icon-plus" value="Adjuntos" onclick="PF('dlg').show();" 
                                                              oncomplete="PF('dlg').show();" actionListener="#{concursoBean.subirItemActividad()}"  update="@none" process="@this"/>
@@ -129,10 +129,14 @@ and open the template in the editor.
                                             <p:fileUpload value="#{concursoBean.adjuntoActividad5.adj}" mode="simple" skinSimple="true" label="Cargar"/>                                            
                                         </p:column>
                                         <p:column>
-                                            <p:commandButton value="Submit" ajax="false"   actionListener="#{concursoBean.cargarLogo(event)}" />
+                                            <p:commandButton value="Submit" ajax="false"   actionListener="#{concursoBean}" />
                                         </p:column>
                                     </h:panelGrid>
                                 </p:dialog>
+                                
+                                
+                                
+                                            
                            </td>
                         </tr>   
                     </table> 

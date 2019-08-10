@@ -7,10 +7,13 @@ package controlador;
 import bd.ConcursoDAO;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import modelo.Actividad;
+import modelo.CalificacionActividad;
 import modelo.Concurso;
 import modelo.GrupoConcurso;
 import modelo.GrupoConcursoParticipantes;
+import modelo.SubEmpresa;
 
 /**
  *
@@ -68,11 +71,31 @@ public class GestorConcurso extends Gestor implements Serializable{
         }    
     }
     
+    public Integer guardarCalificacion(CalificacionActividad calificacion) throws Exception {            
+        try {
+            abrirConexion();
+            ConcursoDAO concursoDAO = new ConcursoDAO(conexion);
+            return concursoDAO.guardarCalificacion(calificacion);
+        } finally {
+            cerrarConexion();
+        }    
+    }
+    
     public Integer guardarGrupoConcurso(GrupoConcurso grupoConcurso) throws Exception {            
         try {
             abrirConexion();
             ConcursoDAO concursoDAO = new ConcursoDAO(conexion);
             return concursoDAO.guardarGrupoConcurso(grupoConcurso);
+        } finally {
+            cerrarConexion();
+        }    
+    }
+    
+    public String cargarNitEmpresa(String nitsubempresa) throws Exception {            
+        try {
+            abrirConexion();
+            ConcursoDAO concursoDAO = new ConcursoDAO(conexion);
+            return concursoDAO.cargarNitEmpresa(nitsubempresa);
         } finally {
             cerrarConexion();
         }    
@@ -139,6 +162,26 @@ public class GestorConcurso extends Gestor implements Serializable{
             }
     }
     
+    public ArrayList<Actividad> cargarActividadesJueces(String codGrupo) throws Exception {
+        try {
+                abrirConexion();
+                ConcursoDAO concursoDAO = new ConcursoDAO(conexion);
+                return concursoDAO.cargarActividadesJueces(codGrupo);
+            } finally {
+                cerrarConexion();
+            }
+    }
+    
+    public ArrayList<CalificacionActividad> cargarLIstaCalificacionesEquipo(String codGrupo) throws Exception {
+        try {
+                abrirConexion();
+                ConcursoDAO concursoDAO = new ConcursoDAO(conexion);
+                return concursoDAO.cargarLIstaCalificacionesEquipo(codGrupo);
+            } finally {
+                cerrarConexion();
+            }
+    }
+    
     public ArrayList<GrupoConcursoParticipantes> cargarListaGrupoParticipantes(String codConcurso) throws Exception {
         try {
                 abrirConexion();
@@ -148,6 +191,27 @@ public class GestorConcurso extends Gestor implements Serializable{
                 cerrarConexion();
             }
     }
+    
+    public ArrayList<GrupoConcurso> cargarListaEquiposSubempresa(String nitsesion) throws Exception {
+        try {
+                abrirConexion();
+                ConcursoDAO concursoDAO = new ConcursoDAO(conexion);
+                return concursoDAO.cargarListaEquiposSubempresa(nitsesion);
+            } finally {
+                cerrarConexion();
+            }
+    }
+    
+    public ArrayList<SubEmpresa> cargarListaSubempresas(String nitem) throws Exception {
+        try {
+                abrirConexion();
+                ConcursoDAO concursoDAO = new ConcursoDAO(conexion);
+                return concursoDAO.cargarListaSubempresas(nitem);
+            } finally {
+                cerrarConexion();
+            }
+    }
+    
 
     public static String getCAMPAÑA_GRUPO_CONCURSO_COD_GRUPO_SEQ() {
         return CAMPAÑA_GRUPO_CONCURSO_COD_GRUPO_SEQ;
@@ -164,5 +228,7 @@ public class GestorConcurso extends Gestor implements Serializable{
     public static void setCAMPAÑA_CONCURSO_COD_CONCURSO_SEQ(String CAMPAÑA_CONCURSO_COD_CONCURSO_SEQ) {
         GestorConcurso.CAMPAÑA_CONCURSO_COD_CONCURSO_SEQ = CAMPAÑA_CONCURSO_COD_CONCURSO_SEQ;
     }
+
+    
     
 }

@@ -46,7 +46,7 @@ and open the template in the editor.
                                     <p:selectOneMenu value="#{concursoBean.concurso.codConcurso}">
                                     <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
                                     <f:selectItems   value="#{concursoBean.listaConcursosEmpresas}"/>                                      
-                                    <p:ajax listener="#{concursoBean.getListaConcursosEmpresas}" update="equipos"/>
+                                    <p:ajax listener="#{concursoBean.listaGruposConcursos}" update="equipos"/>
                                     </p:selectOneMenu>
                                     Nombre Equipo
                                     <p:inputText value="#{concursoBean.grupoConcurso.nombre}" />                                                        
@@ -57,7 +57,7 @@ and open the template in the editor.
                                     <br/>
                                     <h:panelGrid>
                                         <p:column width="60%">
-                                            <p:dataTable id="gruposConcurso" var="varEquipos" value="#{concursoBean.listaGruposConcursos}"
+                                            <p:dataTable id="gruposConcurso" var="varEquipos" value="#{concursoBean.listaGrupoConcursoss}"
                                                          rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">                                    
                                                 <p:column headerText="Opciones">
                                                     <p:commandButton id="openDialogLink"  icon="ui-icon-plus" value="Crear Participantes" onclick="PF('dlg').show();" 
@@ -90,7 +90,7 @@ and open the template in the editor.
                                         
                                         Capitan
                                         <p:selectBooleanCheckbox id="capitan" value="#{concursoBean.grupoParticipantes.capitan}" disabled="#{concursoBean.captain eq true}">
-                                            <p:ajax oncomplete="PF('dlg').show();"  listener="#{concursoBean.cargarListaGrupoParticipantes()}"/>
+                                            <p:ajax oncomplete="PF('dlg').show();"  listener="#{concursoBean.listGrupoParticipantess}"/>
                                         </p:selectBooleanCheckbox>
                                         <p:commandButton icon="ui-icon-newwin" oncomplete="PF('dlg').show();" onclick="PF('dlg').show();"
                                                 type="submit" value="Agregar"  actionListener="#{concursoBean.agregarEmpleado()}"/>
@@ -98,7 +98,7 @@ and open the template in the editor.
                                     
                                     <h:panelGrid>
                                         <p:column width="60%">
-                                            <p:dataTable id="grupoParticipantes" var="varPartiipantes" value="#{concursoBean.listGruposParticipantes}"
+                                            <p:dataTable id="grupoParticipantes" var="varPartiipantes" value="#{concursoBean.listGrupoParticipantess}"
                                                          rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
                                                 <p:column headerText="Cedula">
                                                     <h:outputText value="#{varPartiipantes.empleado.nombres}"/>

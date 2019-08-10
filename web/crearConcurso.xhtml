@@ -13,7 +13,7 @@ and open the template in the editor.
 
     <h:body >
         <ui:composition > 
-            <h:form id="concurso">
+            <h:form id="concurso"  enctype="multipart/form-data">
                <p:growl id="avisoConcurso" showDetail="true" life="5000" />
                 <p:panel header="CONCURSO" id="pnlConcurso"  
                          style="width:1080px;">
@@ -58,12 +58,19 @@ and open the template in the editor.
                                     </p:selectBooleanCheckbox>
                                     Fecha Limite Inscripcion
                                     <p:calendar value="#{concursoBean.concurso.fecha_limite_insc}"/>
+                                    
+                                    Logo
+                                    <p:fileUpload value="#{concursoBean.file}" mode="advanced" skinSimple="true" label="logo" fileUploadListener="#{concursoBean.cargarLogo}"
+                                    auto="true"  update="concursos,avisoConcurso" process="@this concursos,avisoConcurso">
+                                        <p:outputLabel style="font-weight: bolder;" value="#{concursoBean.file.fileName}"/>
+                                    </p:fileUpload>                                    
+                                     
                                     <p:commandButton icon="ui-icon-newwin" update="avisoConcurso, concursos"
                                             type="submit" value="Generar"  actionListener="#{concursoBean.crearConcurso()}"/>
                                 </h:panelGrid>   
                                 <br/>
                                 <h:panelGrid columns="1" cellpadding="5" style="width:auto; font-size: 90%;">
-                                    <p:dataTable id="concursos" var="varConcursos" value="#{concursoBean.listaConcurso}"
+                                    <p:dataTable id="concursos" var="varConcursos" value="#{concursoBean.listaConcursoss}"
                                         rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
                                         <p:column headerText="Opciones" style="font-weight: bolder">
                                             <p:commandButton id="openDialogLink"  icon="ui-icon-plus" value="Crear Actividades" onclick="PF('dlg').show();" 
@@ -88,10 +95,14 @@ and open the template in the editor.
                                 </h:panelGrid>
                             </p:fieldset>
                                 <h:panelGrid columns="4" cellpadding="5" style="width:auto; font-size: 90%;">                                  
-                                    <p:dialog id="picture" width="60%" height="60%" widgetVar="dlg" header="Actividades" resizable="false" >                                        
+                                    <p:dialog id="picture" width="60%" height="60%" widgetVar="dlg" header="Actividades" resizable="false"
+                                              
+                                              >                                        
+                                        
                                         <p:autoUpdate/>
                                         <p:ajax event="close" update="avisoConcurso" listener="#{concursoBean.handleClose}" />
                                         <p:ajax event="move" update="avisoConcurso" listener="#{concursoBean.handleMove}" />                                        
+                                        <p:scrollPanel style="width:auto;height:600px">
                                         <h:panelGrid columns="6" cellpadding="5" style="width:auto; font-size: 90%;">
                                             Nombre Actividad
                                             <p:inputText value="#{concursoBean.actividad.nombre}" />
@@ -104,7 +115,7 @@ and open the template in the editor.
                                         </h:panelGrid>
                                         <h:panelGrid>
                                             <p:column width="60%">
-                                                <p:dataTable id="actividadesConcurso" var="varActividades" value="#{concursoBean.listActividades}"
+                                                <p:dataTable id="actividadesConcurso" var="varActividades" value="#{concursoBean.listActividadess}"
                                                              rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
                                                     <p:column headerText="Nombre">
                                                         <h:outputText value="#{varActividades.nombre}"/>
@@ -118,7 +129,7 @@ and open the template in the editor.
                                                 </p:dataTable>
                                             </p:column>
                                         </h:panelGrid>
-                                        
+                                        </p:scrollPanel>
                                     </p:dialog>
                                     
                                 </h:panelGrid>                               

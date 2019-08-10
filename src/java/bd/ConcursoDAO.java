@@ -9,12 +9,15 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import modelo.Actividad;
+import modelo.CalificacionActividad;
 import modelo.Concurso;
 import modelo.Empleado;
 import modelo.Empresa;
 import modelo.GrupoConcurso;
 import modelo.GrupoConcursoParticipantes;
+import modelo.SubEmpresa;
 /**
  *
  * @author Andres
@@ -121,6 +124,29 @@ public class ConcursoDAO {
     }
     
     
+    public Integer guardarCalificacion(CalificacionActividad calificacion) throws SQLException {
+        Consulta consulta = null;        
+        Integer resultado;
+        
+        try {
+            consulta = new Consulta(getConexion());                
+            
+            //Sentencia SQL para guardar el registro
+                String sql = " UPDATE campaña.calificacion_actividad " +
+                            " SET calificacion = '"+calificacion.getCalificacion()+"' "+
+                            " WHERE cod_actividad='"+calificacion.getCodActividad()+"' and cod_grupo='"+calificacion.getCodGrupo()+"'";                        
+                        
+
+            resultado = consulta.actualizar(sql);
+            return resultado;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
+    
+    
     public Long nextval(String secuencia) throws SQLException {
 
         ResultSet rs = null;
@@ -145,19 +171,58 @@ public class ConcursoDAO {
     public Integer guardarGrupoConcurso(GrupoConcurso grupoConcurso) throws SQLException {
         Consulta consulta = null;        
         Integer resultado;
-        
+        Actividad actividad;
+        ArrayList<Actividad> listActividades=new ArrayList<>();
+        ResultSet rs;
         try {
             consulta = new Consulta(getConexion());                
             
             //Sentencia SQL para guardar el registro
                 String sql = "INSERT INTO campaña.grupo_concurso ("
-                        + " cod_grupo, cod_concurso, nombre) "                        
+                        + " cod_grupo, cod_concurso, nombre, fk_nitsubempresa) "                        
                         + "VALUES ("
-                        + "'" + grupoConcurso.getCodGrupo() + "', "
+                        + "'" + grupoConcurso.getCodGrupo() + "', "                        
                         + "'" + grupoConcurso.getConcurso().getCodConcurso()+ "',"
-                        + "'" + grupoConcurso.getNombre() + "' )";
+                        + "'" + grupoConcurso.getNombre() + "', "
+                        + "'" + grupoConcurso.getSubempresa().getNitsubempresa()+ "'"
+                        + " )";
 
             resultado = consulta.actualizar(sql);
+            
+            
+            consulta = new Consulta(getConexion());                
+            
+            //Sentencia SQL para 
+                String sql1 = " select cod_actividad, nombre, observacion, fecha_limite " +
+                            " from campaña.actividad " +
+                            " where fk_cod_concurso='"+grupoConcurso.getConcurso().getCodConcurso()+"'";
+
+           
+            rs = consulta.ejecutar(sql1);
+
+            while (rs.next()) {
+                actividad=new Actividad();
+                actividad.setCodActividad(rs.getString("cod_actividad"));
+                actividad.setNombre(rs.getString("nombre"));
+                actividad.setObservacion(rs.getString("observacion"));
+                actividad.setFechaLimite(rs.getDate("fecha_limite"));                
+                listActividades.add(actividad);                
+            }
+            
+            
+            for(int i=0;i<=listActividades.size()-1;i++){
+                consulta = new Consulta(getConexion());                
+
+                String sql2 = "INSERT INTO campaña.calificacion_actividad ("
+                        + " cod_actividad, cod_grupo, calificacion) "                        
+                        + "VALUES ("
+                        + "'" + listActividades.get(i).getCodActividad() + "', "                        
+                        + "'" + grupoConcurso.getCodGrupo()+ "',"
+                        + "0"
+                        + " )";
+
+            resultado = consulta.actualizar(sql2);
+            }
             return resultado;
         } catch (SQLException ex) {
             throw ex;
@@ -192,6 +257,31 @@ public class ConcursoDAO {
                 listaConcursos.add(concurso);
             }
             return listaConcursos;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
+    
+    public String cargarNitEmpresa(String nitsesion) throws SQLException {
+        String nitempresa="";
+        ResultSet rs;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(getConexion());
+            String sql
+                    = " SELECT fk_nitempresa "
+                    + " from subempresa "
+                    + " where nitsubempresa='"+nitsesion+"'";
+
+            rs = consulta.ejecutar(sql);
+
+            while (rs.next()) {
+                nitempresa=rs.getString("fk_nitempresa");
+            }
+            return nitempresa;
 
         } catch (SQLException ex) {
             throw ex;
@@ -286,6 +376,7 @@ public class ConcursoDAO {
                 concurso.setParticipantes(dt.getInt("participantes"));
                 concurso.setEstado(dt.getBoolean("estado"));
                 concurso.setFecha_limite_insc(dt.getDate("fecha_limite_insc"));
+                concurso.setEmpresa(new Empresa(nit, ""));
                 
                 listaConcursos.add(concurso);
             }
@@ -416,6 +507,74 @@ public class ConcursoDAO {
     }
     
     
+    public ArrayList<Actividad> cargarActividadesJueces(String codGrupo) throws SQLException {
+        Actividad actividad;
+        ArrayList<Actividad> listaActividades = new ArrayList<>();
+        ResultSet rs;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(getConexion());
+            String sql
+                    = " SELECT cod_actividad, act.nombre nomact , observacion,fecha_limite, con.cod_concurso codcon, con.nombre nomcon " +
+                        "FROM campaña.actividad act " +
+                        "JOIN campaña.concurso con on(con.cod_concurso=act.fk_cod_concurso) "+
+                        " WHERE cod_concurso='"+codGrupo+"'" +
+                        "ORDER BY cod_actividad";
+
+            rs = consulta.ejecutar(sql);
+
+            while (rs.next()) {
+                actividad =new Actividad();
+                actividad.setCodActividad(rs.getString("cod_actividad"));
+                actividad.setNombre(rs.getString("nomact"));
+                actividad.setObservacion(rs.getString("observacion"));
+                actividad.setFechaLimite(rs.getDate("fecha_limite"));
+                actividad.setConcurso(new Concurso(rs.getString("codcon"), rs.getString("nomcon"), null, 0, false, null));
+                listaActividades.add(actividad);
+            }
+            return listaActividades;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
+    
+    
+    public ArrayList<CalificacionActividad> cargarLIstaCalificacionesEquipo(String codGrupo) throws SQLException {
+        CalificacionActividad calificacion;
+        ArrayList<CalificacionActividad> listaCalificaciones = new ArrayList<>();
+        ResultSet rs;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(getConexion());
+            String sql
+                    = " select cact.cod_actividad codact, cact.calificacion calificacion, act.nombre nomact" +
+                    " from campaña.calificacion_actividad cact " +
+                    " join campaña.actividad act on (act.cod_actividad=cact.cod_actividad) " +
+                    " where cod_grupo='"+codGrupo+"' ";
+
+            rs = consulta.ejecutar(sql);
+
+            while (rs.next()) {
+                calificacion =new CalificacionActividad();
+                calificacion.setCodActividad(rs.getString("codact"));
+                calificacion.setCalificacion(rs.getInt("calificacion"));
+                calificacion.setActividad(new Actividad(rs.getString("codact"), rs.getString("nomact")));
+                calificacion.setCodGrupo(codGrupo);
+                listaCalificaciones.add(calificacion);
+            }
+            return listaCalificaciones;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
+    
+    
     public ArrayList<GrupoConcursoParticipantes> cargarListaGrupoParticipantes(String codConcurso) throws SQLException {
         GrupoConcursoParticipantes grupoParticipantes;
         ArrayList<GrupoConcursoParticipantes> listaGrupoParticipantes = new ArrayList<>();
@@ -440,6 +599,68 @@ public class ConcursoDAO {
                 listaGrupoParticipantes.add(grupoParticipantes);
             }
             return listaGrupoParticipantes;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
+
+    public  ArrayList<GrupoConcurso> cargarListaEquiposSubempresa(String nitsesion) throws SQLException {
+        GrupoConcurso grupoConcurso;
+        ArrayList<GrupoConcurso> listaGrupoConcursosSubempresa=new ArrayList<>();
+        ResultSet rs;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(getConexion());
+            String sql
+                    = " select cod_grupo, cod_concurso, nombre " +
+                        "from campaña.grupo_concurso " +
+                        "where fk_nitsubempresa='"+nitsesion+"'";
+
+            rs = consulta.ejecutar(sql);
+
+            while (rs.next()) {
+                grupoConcurso=new GrupoConcurso();                
+                grupoConcurso.setCodGrupo(rs.getString("cod_grupo"));
+                grupoConcurso.setConcurso(new Concurso(rs.getString("nombre"), "", 0));
+                grupoConcurso.setNombre(rs.getString("nombre"));                
+                grupoConcurso.setSubempresa(new SubEmpresa(nitsesion, ""));
+                listaGrupoConcursosSubempresa.add(grupoConcurso);                
+            }
+            return listaGrupoConcursosSubempresa;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
+    
+    public ArrayList<SubEmpresa> cargarListaSubempresas(String nitem) throws SQLException {
+        SubEmpresa subempresas;
+        ArrayList<SubEmpresa> listaSubempresas=new ArrayList<>();
+        ResultSet rs;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(getConexion());
+            String sql
+                    = " select nombre, nitsubempresa"
+                    + " from subempresa "
+                    + " where fk_nitempresa='"+nitem+"'";
+
+            rs = consulta.ejecutar(sql);
+
+            while (rs.next()) {
+                subempresas=new SubEmpresa();
+                subempresas.setNombre(rs.getString("nombre"));
+                subempresas.setNitsubempresa(rs.getString("nitsubempresa"));
+                subempresas.setEmpresa(new Empresa(nitem, ""));
+                listaSubempresas.add(subempresas);
+                
+            }
+            return listaSubempresas;
 
         } catch (SQLException ex) {
             throw ex;

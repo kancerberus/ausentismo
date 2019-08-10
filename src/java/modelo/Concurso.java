@@ -22,6 +22,7 @@ public class Concurso implements Serializable{
     private Integer participantes;
     private boolean estado=true;
     private Date fecha_limite_insc;
+    private Concurso concurso;
 
     public Concurso(String codConcurso, String nombre, Empresa empresa, Integer participantes, boolean estado, Date fecha_limite_insc) {
         this.codConcurso = codConcurso;
@@ -46,6 +47,14 @@ public class Concurso implements Serializable{
 
     public boolean isEstado() {
         return estado;
+    }
+
+    public Concurso getConcurso() {
+        return concurso;
+    }
+
+    public void setConcurso(Concurso concurso) {
+        this.concurso = concurso;
     }
 
     public void setEstado(boolean estado) {

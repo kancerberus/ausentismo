@@ -36,6 +36,7 @@ public class GestorPrincipal implements Serializable {
     private boolean crearConcurso=false;
     private boolean concursos=false;
     private boolean equipos=false;
+    private boolean jueces=false;
     
     
     
@@ -68,6 +69,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false);
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;
                 
             case "consultar_ausentismo":
@@ -95,6 +97,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false);
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;                
 
             case "finalizar_reg":
@@ -122,6 +125,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false);
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;                 
             
             case "crear_empleado":
@@ -149,6 +153,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false); 
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;  
                 
             case "listar_empleado":
@@ -176,6 +181,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false);
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;  
                 
             case "crear_empresa":
@@ -203,6 +209,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false);
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;  
                 
             case "crear_usuario":
@@ -230,6 +237,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false);
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;  
                 
             case "cargosyepsbd":
@@ -257,6 +265,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false);
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;  
                 
             case "crear_subempresa":
@@ -284,6 +293,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false);
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;
                 
             case "informe_ausentismo":
@@ -311,6 +321,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false);
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;
                 
             case "informe_por_empresa":
@@ -338,6 +349,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false);
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;
                 
             case "reporte_empleado":
@@ -365,6 +377,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false);
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;
                 
             case "modificar_empleado":
@@ -392,6 +405,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false);
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;                
 
                 
@@ -420,6 +434,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false);
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;
                 
                 
@@ -448,6 +463,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false);
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;
                 
                 
@@ -476,6 +492,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false);
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;
                 
             case "ausentismo_empleado":
@@ -503,6 +520,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false);
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;
                 
             case "modificar_usuario":
@@ -530,6 +548,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false);
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;
                 
             case "reg_incapacidad":
@@ -557,6 +576,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false);
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;
                 
             case "reg_accidente":
@@ -584,6 +604,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false);
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;
                 
             case "indicadores_accidente":
@@ -611,6 +632,7 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false);
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 
                 break;
                 
@@ -639,9 +661,10 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(true);                
                 setConcursos(false);
                 setEquipos(false);
+                setJueces(false);
                 break;
                 
-                case "concursos":
+            case "concursos":
                 setRegAusentismo(false);
                 setConsultaAusentismo(false); 
                 setFinAusentismo(false);                
@@ -666,9 +689,10 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false); 
                 setConcursos(true);
                 setEquipos(false);
+                setJueces(false);
                 break;
                 
-                case "equipos":
+            case "equipos":
                 setRegAusentismo(false);
                 setConsultaAusentismo(false); 
                 setFinAusentismo(false);                
@@ -693,10 +717,47 @@ public class GestorPrincipal implements Serializable {
                 setCrearConcurso(false); 
                 setConcursos(false);
                 setEquipos(true);
+                setJueces(false);
+                break;
+                
+            case "jueces":
+                setRegAusentismo(false);
+                setConsultaAusentismo(false); 
+                setFinAusentismo(false);                
+                setNuevoEmpleado(false);
+                setListarEmpleado(false);
+                setNuevaEmpresa(false);
+                setNuevoUsuario(false);
+                setCargosyEpsbd(false);
+                setNuevaSubEmpresa(false);
+                setInformeAusentismo(false);
+                setInformeausentismoEmpresa(false);
+                setReporteEmpleado(false);
+                setModificarEmpleado(false);                
+                setMoverEmpleado(false);
+                setReporteGrafica(false);
+                setActualizarRegistros(false);                
+                setAusentismoEmpleado(false);
+                setModificarUsuario(false);
+                setRegIncapacidad(false);
+                setRegAccidente(false);                
+                setIndAccidente(false);
+                setCrearConcurso(false); 
+                setConcursos(false);
+                setEquipos(false);
+                setJueces(true);
                 break;
                 
         }
         return "";
+    }
+
+    public boolean isJueces() {
+        return jueces;
+    }
+
+    public void setJueces(boolean jueces) {
+        this.jueces = jueces;
     }
 
     public boolean isEquipos() {

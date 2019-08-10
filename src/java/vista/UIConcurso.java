@@ -10,10 +10,7 @@ import bd.UtilJSF;
 import controlador.GestorConcurso;
 import controlador.GestorEmpleado;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,18 +26,22 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import modelo.Actividad;
-import modelo.AdjuntosActividad;
+import modelo.CalificacionActividad;
 import util.Utilidades;
 import modelo.Concurso;
 import modelo.Empleado;
 import modelo.Empresa;
 import modelo.GrupoConcurso;
 import modelo.GrupoConcursoParticipantes;
+import modelo.Propiedades;
+import modelo.SubEmpresa;
 import org.primefaces.event.CloseEvent;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.MoveEvent;
 import org.primefaces.model.UploadedFile;
 import util.UtilArchivo;
+
+
 
 
 /**
@@ -53,31 +54,36 @@ public class UIConcurso implements Serializable {
     private FacesContext contextoJSF;
     private ELContext contextoEL;
     private String cedula;
-    private Concurso concurso= new Concurso();
-    private AdjuntosActividad adjuntoActividad1=new AdjuntosActividad();
-    private AdjuntosActividad adjuntoActividad2=new AdjuntosActividad();
-    private AdjuntosActividad adjuntoActividad3=new AdjuntosActividad();
-    private AdjuntosActividad adjuntoActividad4=new AdjuntosActividad();
-    private AdjuntosActividad adjuntoActividad5=new AdjuntosActividad();
+    private Concurso concurso= new Concurso();    
     private GrupoConcurso grupoConcurso=new GrupoConcurso();    
     private GrupoConcursoParticipantes grupoParticipantes=new GrupoConcursoParticipantes();
     private String codGrupo;    
     private Empleado empleado=new Empleado();
-    private Actividad actividad;
+    private Actividad actividad;    
     private Empresa empresa=new Empresa();  
+    private CalificacionActividad calificacionActividad= new CalificacionActividad();
     private UploadedFile file;
-    private Boolean captain;    
+    private Boolean captain;        
+    private String nitSubemrpesa;
     
     
-    private List<Actividad> listActividades=new ArrayList<>();
-    private List<Concurso> listaConcurso=new ArrayList<>();
-    private List<Concurso> listaConcursosGerente=new ArrayList<>();
+    
+    private ArrayList<SelectItem> listActividades=new ArrayList<>();
+    private ArrayList<Actividad> listActividadess=new ArrayList<>();
+    private ArrayList<SelectItem> listActividadesJueces=new ArrayList<>();
+    private ArrayList<Actividad> listActividadesJuecess=new ArrayList<>();
+    private ArrayList<SelectItem> listaConcurso=new ArrayList<>();    
+    private ArrayList<Concurso> listaConcursoss =new ArrayList<>();
+    private ArrayList<SelectItem> listaConcursosGerente=new ArrayList<>();
     private ArrayList<SelectItem> listaConcursosEmpresas=new ArrayList<>();
     private ArrayList<SelectItem> listGruposConcurso=new ArrayList<>();
-    private List<GrupoConcurso> listaGruposConcursos=new ArrayList<>();
-    private List<GrupoConcursoParticipantes> listGruposParticipantes=new ArrayList<>();        
-    private List<GrupoConcurso> listaEquipos=new ArrayList<>();
-    
+    private ArrayList<SelectItem> listaGruposConcursos=new ArrayList<>();
+    private ArrayList<GrupoConcurso> listaGrupoConcursoss=new ArrayList<>();
+    private ArrayList<SelectItem> listaGruposConcursosSubempresa=new ArrayList<>();
+    private ArrayList<SelectItem> listaSubEmpresas=new ArrayList<>();
+    private ArrayList<SelectItem> listGruposParticipantes=new ArrayList<>();
+    private ArrayList<GrupoConcursoParticipantes> listGrupoParticipantess=new ArrayList<>();
+    private ArrayList<CalificacionActividad> listCalificacionesActividad=new ArrayList<>();
     private GestorConcurso gestorConcurso;
     
     public Utilidades util = new Utilidades();    
@@ -86,18 +92,24 @@ public class UIConcurso implements Serializable {
        concurso=new Concurso();
        concurso.setEmpresa(new Empresa());      
        grupoConcurso=new GrupoConcurso();
-       grupoParticipantes.setEmpleado(new Empleado());
+       grupoConcurso.setSubempresa(new SubEmpresa());
+       grupoParticipantes.setEmpleado(new Empleado());       
        grupoParticipantes.setGrupoConcurso(new GrupoConcurso());
        actividad=new Actividad();                 
        listaConcursosEmpresas=new ArrayList<>();
        contextoJSF = FacesContext.getCurrentInstance();
        contextoEL = contextoJSF.getELContext(); 
+       
     }  
     
     @PostConstruct
     public void init() {
-        this.cargarConcursos();
-        this.cargarConcursosGerente();           
+        try {            
+            this.getListaConcurso();
+            this.getListaGruposConcursos();
+        } catch (Exception ex) {
+            Logger.getLogger(UIConcurso.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void handleClose(CloseEvent event) {                
@@ -132,13 +144,13 @@ public class UIConcurso implements Serializable {
                     carpeta=new File("C:/Concursos/"+concurso.getEmpresa().getNitempresa());
                     carpeta.mkdir();
                     
-                    carpeta=new File("C:/Concursos/"+concurso.getNombre());
+                    carpeta=new File("C:/Concursos/"+concurso.getEmpresa().getNitempresa()+"/"+concurso.getNombre());
                     carpeta.mkdir();
 
                     if (resultado > 0) {
                         util.mostrarMensaje("!! Concurso guardado !!");
-                        concurso = new Concurso();
-                        this.cargarConcursos();
+                        this.getListaConcurso();
+                        concurso = new Concurso();                        
                     } else {
                         util.mostrarMensaje("!! El concurso no pudo ser almacenado !!");
                     }
@@ -152,6 +164,21 @@ public class UIConcurso implements Serializable {
         }
     }
     
+    
+    public void cargarLogo(FileUploadEvent event) {
+        try {
+            String ruta = Propiedades.getInstancia().getPropiedades().getProperty("uploadDirectory");           
+
+            UtilArchivo.guardarStream(ruta, file.getInputstream());                     
+        } catch (IOException ex) {
+             Logger.getLogger(UIConcurso.class.getName()).log(Level.SEVERE, null, ex);
+            util.mostrarMensaje(ex.getMessage());
+            util.mostrarMensaje("!! El Equipo no pudo ser almacenado !!");       
+        }
+    }
+
+    
+
     public void crearGrupoConcurso() throws Exception{        
         Boolean invalido = false;
         String msg = null;
@@ -162,7 +189,11 @@ public class UIConcurso implements Serializable {
          
         Date hoy =new Date();
         try {
+            String nitsesion = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);        
+            
+            grupoConcurso.setSubempresa(new SubEmpresa());
             grupoConcurso.setConcurso(concurso);
+            grupoConcurso.getSubempresa().setNitsubempresa(nitsesion);
             //verificar que todas las cajas este llenas           
             if (grupoConcurso.getNombre().equals("") || grupoConcurso.getConcurso().getCodConcurso().equals("")) {
                 util.mostrarMensaje("Grupo sin nombre!");
@@ -182,15 +213,19 @@ public class UIConcurso implements Serializable {
                     Long codGrupoSeq= gestorConcurso.nextval(GestorConcurso.CAMPAÑA_GRUPO_CONCURSO_COD_GRUPO_SEQ);
                     grupoConcurso.setCodGrupo(codGrupoSeq.toString());
                     Integer resultado = gestorConcurso.guardarGrupoConcurso(grupoConcurso);
+                    
                                         
-                    carpeta=new File("C:/Concursos/"+concurso.getEmpresa().getNitempresa()+"/"+concurso.getNombre()+"/"+grupoConcurso.getNombre());
+                    carpeta=new File("C:/Concursos/"+concurso.getEmpresa().getNitempresa()+"/"+concurso.getNombre()+"/"+grupoConcurso.getSubempresa().getNitsubempresa());                                                
                     carpeta.mkdir();
+                    
+                    carpeta=new File("C:/Concursos/"+concurso.getEmpresa().getNitempresa()+"/"+concurso.getNombre()+"/"+grupoConcurso.getSubempresa().getNitsubempresa()+"/"+grupoConcurso.getNombre());                                                
+                    carpeta.mkdir();
+                            
+                    
                     if (resultado > 0) {
                         util.mostrarMensaje("!! Equipo guardado !!");
+                        this.getListaGruposConcursos();
                         grupoConcurso = new GrupoConcurso();
-                        this.cargarGruposConcursos();
-                        this.cargarConcursosGerente();
-                        concurso=new Concurso();
                         this.getListaConcursosEmpresas();
                     } else {
                         util.mostrarMensaje("!! El Equipo no pudo ser almacenado !!");
@@ -206,21 +241,59 @@ public class UIConcurso implements Serializable {
     }
     
     
-    public void subirItemConcurso() {         
+    public void subirItemConcurso() throws Exception {         
         concurso = (Concurso) UtilJSF.getBean("varConcursos");            
-        this.cargarActividades();
+        this.getListActividades();
     }
     
-    public void subirItemGrupoConcurso() {         
+    public void subirItemGrupoConcurso() throws Exception {         
         grupoParticipantes.setGrupoConcurso((GrupoConcurso) UtilJSF.getBean("varEquipos")); 
         codGrupo=grupoParticipantes.getGrupoConcurso().getCodGrupo();
         concurso=grupoParticipantes.getGrupoConcurso().getConcurso();
-        this.cargarListaGrupoParticipantes();
+        this.getListGruposParticipantes();
         
     }    
     
     public void subirItemActividad() {         
         actividad= (Actividad) UtilJSF.getBean("varActividades");       
+    }
+    
+    public void guardarCalificacion() throws Exception{        
+        Boolean invalido = false;
+        String msg = null;
+        File carpeta;
+
+        //ingreso de informacion al gestor
+        gestorConcurso = new GestorConcurso();
+        
+        try {
+            //verificar que todas las cajas este llenas           
+                    
+
+            if (invalido == false) {       
+                                        
+                    Integer resultado = gestorConcurso.guardarCalificacion(calificacionActividad);
+                    
+                    if (resultado > 0) {                       
+                        this.cargarCalificaciones();
+                        util.mostrarMensaje("!! Calificacion guardada !!");
+                        
+                      
+                    } else {
+                        util.mostrarMensaje("!! El Calificacion no pudo ser almacenado !!");
+                    }
+            } else {                
+                    util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
+            }            
+        } catch (Exception e) {
+            Logger.getLogger(UIConcurso.class.getName()).log(Level.SEVERE, null, e);
+            util.mostrarMensaje(e.getMessage());
+            util.mostrarMensaje("!! El concurso no pudo ser almacenado !!");               
+        }
+    }
+    
+    public void subirItemCalificacion() {         
+        calificacionActividad= (CalificacionActividad) UtilJSF.getBean("varCalificaciones");       
     }
     
     public void agregarEmpleado() throws Exception{        
@@ -253,7 +326,7 @@ public class UIConcurso implements Serializable {
                     if (resultado > 0) {
                         util.mostrarMensaje("!! Participante agregado !!");
                         empleado = new Empleado();
-                        this.cargarListaGrupoParticipantes();                        
+                        this.getListGruposParticipantes();
                     } else {
                         util.mostrarMensaje("!! El participante no se pudo agregar !!");
                     }
@@ -268,22 +341,29 @@ public class UIConcurso implements Serializable {
         }
     }   
     
-    public void cargarConcursos(){
+    public ArrayList<SelectItem> getListaConcurso() throws Exception{    
         try {
             
             listaConcurso=new ArrayList<>();
             gestorConcurso=new GestorConcurso();
+            listaConcursoss=new ArrayList<>();
+            listaConcursoss = gestorConcurso.cargarConcursos();
+            listaConcurso.clear();
             
-            listaConcurso.addAll(gestorConcurso.cargarConcursos());            
+            for (int i = 0; i < listaConcursoss.size(); i++) {                    
+                        listaConcurso.add(new SelectItem(listaConcursoss.get(i).getCodConcurso(), listaConcursoss.get(i).getNombre()));
+                    }                                   
             
         } catch (Exception e) {
             Logger.getLogger(UIConcurso.class.getName()).log(Level.SEVERE, null, e);
             util.mostrarMensaje(e.getMessage());
             util.mostrarMensaje("!! La actividad no pudo ser almacenado !!");               
         }   
+        return listaConcurso;
     }
     
-    public void cargarGruposConcursos(){
+    public ArrayList<SelectItem> getListaGruposConcursos() throws Exception{
+        
         try {
             listaGruposConcursos=new ArrayList<>();
             gestorConcurso=new GestorConcurso();            
@@ -291,20 +371,30 @@ public class UIConcurso implements Serializable {
             contextoJSF = FacesContext.getCurrentInstance();
             contextoEL = contextoJSF.getELContext();
             ef = contextoJSF.getApplication().getExpressionFactory();
-            String nitsesion = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);        
-            listaGruposConcursos.addAll(gestorConcurso.cargarGruposConcursos(nitsesion));
+            String nitsesion = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);  
+            listaGrupoConcursoss=new ArrayList<>();
+            listaGrupoConcursoss=gestorConcurso.cargarGruposConcursos(nitsesion);           
             
-        } catch (Exception e) {
+            listaGruposConcursos.clear();
+            
+            for (int i = 0; i < listaGrupoConcursoss.size(); i++) {                    
+                        listaGruposConcursos.add(new SelectItem(listaGrupoConcursoss.get(i).getCodGrupo(), listaGrupoConcursoss.get(i).getNombre()));
+                    }                        
+                }
+         catch (Exception e) {
             Logger.getLogger(UIConcurso.class.getName()).log(Level.SEVERE, null, e);
             util.mostrarMensaje(e.getMessage());
             util.mostrarMensaje("!! La actividad no pudo ser almacenado !!");               
-        }   
-    } 
+        } 
+        return listaGruposConcursos;
+    }
+
     
     
     
     
-    public void cargarConcursosGerente(){
+    public ArrayList<SelectItem> getListaConcursosGerente() throws Exception{
+        
         try {
             
             listaConcursosGerente=new ArrayList<>();
@@ -314,39 +404,93 @@ public class UIConcurso implements Serializable {
             contextoEL = contextoJSF.getELContext();
             ef = contextoJSF.getApplication().getExpressionFactory();
             String nitsesion = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);        
-            listaConcursosGerente.addAll(gestorConcurso.cargarConcursosGerente(nitsesion));
             
+            ArrayList<Concurso> listaConcursosG;
+            listaConcursosG=gestorConcurso.cargarConcursosGerente(nitsesion);
+            listaConcursosGerente.clear();
+            for (int i = 0; i < listaConcursosG.size(); i++) {                    
+                        listaConcursosGerente.add(new SelectItem(listaConcursosG.get(i).getCodConcurso(), listaConcursosG.get(i).getNombre()));
+                    }                        
+                
         } catch (Exception e) {
             Logger.getLogger(UIConcurso.class.getName()).log(Level.SEVERE, null, e);
             util.mostrarMensaje(e.getMessage());
             util.mostrarMensaje("!! La actividad no pudo ser almacenado !!");               
-        }   
+        }
+        return listaConcursosGerente;
     }
     
-    public void cargarActividades(){
+    public ArrayList<SelectItem> getListActividades() throws Exception{
         try {
             
             listActividades=new ArrayList<>();
-            gestorConcurso=new GestorConcurso();            
+            gestorConcurso=new GestorConcurso();     
+            listActividadess=new ArrayList<>();
+                   
+            listActividadess=gestorConcurso.cargarActividades(concurso.getCodConcurso());
+            listActividades.clear();
             
-            listActividades.addAll(gestorConcurso.cargarActividades(concurso.getCodConcurso()));                        
+            for (int i = 0; i < listActividadess.size(); i++) {                    
+                        listActividades.add(new SelectItem(listActividadess.get(i).getCodActividad(), listActividadess.get(i).getNombre()));
+                    }
+            
         } catch (Exception e) {
             Logger.getLogger(UIConcurso.class.getName()).log(Level.SEVERE, null, e);
             util.mostrarMensaje(e.getMessage());
             util.mostrarMensaje("!! La actividad no pudo ser almacenado !!");               
         }   
+        return listActividades;
     }
     
-    public void cargarListaGrupoParticipantes(){
+    public ArrayList<SelectItem> getListActividadesJueces() throws Exception{
+        try {
+            
+            listActividadesJueces=new ArrayList<>();
+            gestorConcurso=new GestorConcurso();            
+            listActividadesJuecess=new ArrayList<>();
+            listActividadesJuecess=gestorConcurso.cargarActividadesJueces(grupoConcurso.getCodGrupo());
+            listActividadesJueces.clear();
+            for (int i = 0; i < listActividadesJueces.size(); i++) {                    
+                listActividadesJueces.add(new SelectItem(listActividadesJuecess.get(i).getCodActividad(), listActividadesJuecess.get(i).getNombre()));
+            }
+            
+            
+        } catch (Exception e) {
+            Logger.getLogger(UIConcurso.class.getName()).log(Level.SEVERE, null, e);
+            util.mostrarMensaje(e.getMessage());
+            util.mostrarMensaje("!! La actividad no pudo ser almacenado !!");               
+        }  
+        return listActividadesJueces;
+    }
+    
+    public void cargarCalificaciones(){
+        try {
+            listCalificacionesActividad=new ArrayList<>();
+            gestorConcurso=new GestorConcurso();
+            
+            listCalificacionesActividad.addAll(gestorConcurso.cargarLIstaCalificacionesEquipo(grupoConcurso.getCodGrupo()));
+        } catch (Exception e) {
+            Logger.getLogger(UIConcurso.class.getName()).log(Level.SEVERE, null, e);
+            util.mostrarMensaje(e.getMessage());
+        }
+    }
+    
+    public ArrayList<SelectItem> getListGruposParticipantes() throws Exception{
         try {
             captain=false;
             listGruposParticipantes=new ArrayList<>();
             gestorConcurso=new GestorConcurso();            
             grupoConcurso.setCodGrupo(codGrupo);
-            listGruposParticipantes.addAll(gestorConcurso.cargarListaGrupoParticipantes(grupoConcurso.getCodGrupo()));     
+            listGrupoParticipantess=new ArrayList<>();
+            listGrupoParticipantess=gestorConcurso.cargarListaGrupoParticipantes(grupoConcurso.getCodGrupo());
+            listGruposParticipantes.clear();
             
-            for(int i=0;i<=listGruposParticipantes.size()-1;i++){
-                if(listGruposParticipantes.get(i).isCapitan()==true){
+            for (int i = 0; i < listGrupoParticipantess.size(); i++) {                    
+                        listGruposParticipantes.add(new SelectItem(listGrupoParticipantess.get(i).getCodGrupoParticipantes()));
+                    }
+                        
+            for(int i=0;i<=listGrupoParticipantess.size()-1;i++){
+                if(listGrupoParticipantess.get(i).isCapitan()==true){
                     captain=true;
                 }
                         
@@ -357,6 +501,7 @@ public class UIConcurso implements Serializable {
             util.mostrarMensaje(e.getMessage());
             util.mostrarMensaje("!! La actividad no pudo ser almacenado !!");               
         }   
+        return listGruposParticipantes;
     }
     
     public void addMessage() {
@@ -386,7 +531,7 @@ public class UIConcurso implements Serializable {
 
             if (invalido == false) {                                    
                     Integer resultado = gestorConcurso.guardarActividad(actividad);
-                    this.cargarActividades();
+                    this.getListActividades();
                     if (resultado > 0) {
                         util.mostrarMensaje("!! Activdad guardada !!");
                         actividad = new Actividad();                        
@@ -423,7 +568,7 @@ public class UIConcurso implements Serializable {
                 util.mostrarMensaje("La cedula no existe....");
                 empleado =new Empleado();
             }
-            this.cargarListaGrupoParticipantes();
+            this.getListGruposParticipantes();
         } catch (Exception ex) {
         Logger.getLogger(UIIncapacidad.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -440,16 +585,30 @@ public class UIConcurso implements Serializable {
                 contextoJSF = FacesContext.getCurrentInstance();
                 contextoEL = contextoJSF.getELContext();
                 ef = contextoJSF.getApplication().getExpressionFactory();
+
                 String nitsesion = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);                        
                 
                 
-                ArrayList<Concurso> listaConcursos;
-                listaConcursos = gestorConcurso.listarConcursos(nitsesion);
+                listaConcursoss=new ArrayList<>();
+                listaConcursoss = gestorConcurso.listarConcursos(nitsesion);
                 listaConcursosEmpresas.clear();                
                 
-                for (int i = 0; i < listaConcursos.size(); i++) {
-                        listaConcursosEmpresas.add(new SelectItem(listaConcursos.get(i).getCodConcurso(), listaConcursos.get(i).getNombre(), listaConcursos.get(i).getFecha_limite_insc().toString()));                        
+                for (int i = 0; i < listaConcursoss.size(); i++) {
+                        listaConcursosEmpresas.add(new SelectItem(listaConcursoss.get(i).getCodConcurso(), listaConcursoss.get(i).getNombre(), listaConcursoss.get(i).getFecha_limite_insc().toString()));                        
                     }
+                
+                if(concurso.getCodConcurso()!=null){
+                    for(int i=0;i<=listaConcurso.size()-1;i++){
+                        if(concurso.getCodConcurso().equals(listaConcursoss.get(i).getCodConcurso())){                    
+                        concurso.setCodConcurso(listaConcursoss.get(i).getCodConcurso());
+                        concurso.setEmpresa(listaConcursoss.get(i).getEmpresa());
+                        concurso.setFecha_limite_insc(listaConcursoss.get(i).getFecha_limite_insc());
+                        concurso.setParticipantes(listaConcursoss.get(i).getParticipantes());
+                        concurso.setNombre(listaConcursoss.get(i).getNombre());
+                        this.getListaGrupoConcurso();
+                        }
+                    }
+                } 
                 
                 }
             catch (Exception ex) {
@@ -457,20 +616,59 @@ public class UIConcurso implements Serializable {
                         util.mostrarMensaje(ex.getMessage()); 
                 }  
             
-                if(concurso.getCodConcurso()!=null){
-                    for(int i=0;i<=listaConcurso.size()-1;i++){
-                        if(concurso.getCodConcurso().equals(listaConcurso.get(i).getCodConcurso())){                    
-                        concurso.setCodConcurso(listaConcurso.get(i).getCodConcurso());
-                        concurso.setEmpresa(listaConcurso.get(i).getEmpresa());
-                        concurso.setFecha_limite_insc(listaConcurso.get(i).getFecha_limite_insc());
-                        concurso.setParticipantes(listaConcurso.get(i).getParticipantes());
-                        concurso.setNombre(listaConcurso.get(i).getNombre());
-                        this.getListaGrupoConcurso();
-                        }
-                    }
-                }            
+                           
                 return listaConcursosEmpresas;                
                 
+    }
+    
+    public ArrayList<SelectItem> getListaGruposConcursosSubempresa() throws Exception{
+        try {
+            contextoJSF = FacesContext.getCurrentInstance();
+            contextoEL = contextoJSF.getELContext();
+            ef = contextoJSF.getApplication().getExpressionFactory();
+            gestorConcurso = new GestorConcurso();
+            listaGruposConcursosSubempresa = new ArrayList<>(); 
+            ArrayList<GrupoConcurso> listaEquiposSubempresas;
+            listaEquiposSubempresas=gestorConcurso.cargarListaEquiposSubempresa(nitSubemrpesa);
+            listaGruposConcursos.clear();
+            
+            for (int i = 0; i < listaEquiposSubempresas.size(); i++) {                    
+                        listaGruposConcursosSubempresa.add(new SelectItem(listaEquiposSubempresas.get(i).getCodGrupo(), listaEquiposSubempresas.get(i).getNombre()));
+                    }
+                    
+        } catch (Exception ex) {
+              Logger.getLogger(UIConcurso.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return listaGruposConcursosSubempresa;
+    }
+    
+    
+    
+    public ArrayList<SelectItem> getListaSubEmpresas() throws Exception{
+        try {
+            contextoJSF = FacesContext.getCurrentInstance();
+            contextoEL = contextoJSF.getELContext();
+            ef = contextoJSF.getApplication().getExpressionFactory();
+            gestorConcurso = new GestorConcurso();
+                                    
+            String nitsesion = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);                                    
+            
+            String nitem=gestorConcurso.cargarNitEmpresa(nitsesion);  
+            
+            ArrayList<SubEmpresa> listaSubEmpresasnit;
+            listaSubEmpresasnit=gestorConcurso.cargarListaSubempresas(nitem);
+            listaSubEmpresas.clear();
+            
+            
+            for (int i = 0; i < listaSubEmpresasnit.size(); i++) {
+                listaSubEmpresas.add(new SelectItem(listaSubEmpresasnit.get(i).getNitsubempresa(), listaSubEmpresasnit.get(i).getNombre()));                        
+            }
+            
+        } catch (Exception ex) {
+              Logger.getLogger(UIConcurso.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        return listaSubEmpresas;
+        
     }
     
     public ArrayList<SelectItem> getListaGrupoConcurso() throws Exception{
@@ -495,21 +693,48 @@ public class UIConcurso implements Serializable {
                 return listGruposConcurso;
                 
     }
-    
-    
-    public void cargarLogo(FileUploadEvent event) {
-        try {
-            String ruta="C:/Concursos/"+actividad.getConcurso().getEmpresa().getNitempresa()+"/"+actividad.getConcurso().getNombre()+"/"+actividad.getGrupoConcurso().getNombre()+"/"+actividad.getNombre();                                    
 
-            UtilArchivo.guardarStream(ruta + File.separator + event.getFile().getFileName(), event.getFile().getInputstream());
-            this.file = event.getFile();
-        } catch (IOException ex) {
-            Logger.getLogger(UIConcurso.class.getName()).log(Level.SEVERE, null, ex);
-           util.mostrarMensaje(ex.getMessage()); 
-        }
-
+    public ArrayList<CalificacionActividad> getListCalificacionesActividad() {
+        return listCalificacionesActividad;
     }
 
+    public void setListCalificacionesActividad(ArrayList<CalificacionActividad> listCalificacionesActividad) {
+        this.listCalificacionesActividad = listCalificacionesActividad;
+    }
+
+    public ArrayList<Concurso> getListaConcursoss() {
+        return listaConcursoss;
+    } 
+
+    public void setListaConcursoss(ArrayList<Concurso> listaConcursoss) {
+        this.listaConcursoss = listaConcursoss;
+    }
+
+    public void setListaGruposConcursosSubempresa(ArrayList<SelectItem> listaGruposConcursosSubempresa) {
+        this.listaGruposConcursosSubempresa = listaGruposConcursosSubempresa;
+    }
+
+    public void setListaSubEmpresas(ArrayList<SelectItem> listaSubEmpresas) {
+        this.listaSubEmpresas = listaSubEmpresas;
+    }
+
+    public ArrayList<GrupoConcursoParticipantes> getListGrupoParticipantess() {
+        return listGrupoParticipantess;
+    }
+
+    public void setListGrupoParticipantess(ArrayList<GrupoConcursoParticipantes> listGrupoParticipantess) {
+        this.listGrupoParticipantess = listGrupoParticipantess;
+    }
+    
+
+    public String getNitSubemrpesa() {
+        return nitSubemrpesa;
+    }
+
+    public void setNitSubemrpesa(String nitSubemrpesa) {
+        this.nitSubemrpesa = nitSubemrpesa;
+    }  
+    
     public Boolean getCaptain() {
         return captain;
     }
@@ -522,49 +747,35 @@ public class UIConcurso implements Serializable {
         return file;
     }
 
+    public ArrayList<Actividad> getListActividadesJuecess() {
+        return listActividadesJuecess;
+    }
+
+    public void setListActividadesJuecess(ArrayList<Actividad> listActividadesJuecess) {
+        this.listActividadesJuecess = listActividadesJuecess;
+    }
+
+    public ArrayList<GrupoConcurso> getListaGrupoConcursoss() {
+        return listaGrupoConcursoss;
+    }
+
+    public void setListaGrupoConcursoss(ArrayList<GrupoConcurso> listaGrupoConcursoss) {
+        this.listaGrupoConcursoss = listaGrupoConcursoss;
+    }
+
+
+
     public void setFile(UploadedFile file) {
         this.file = file;
     }
 
-    public AdjuntosActividad getAdjuntoActividad1() {
-        return adjuntoActividad1;
+    public CalificacionActividad getCalificacionActividad() {
+        return calificacionActividad;
     }
 
-    public void setAdjuntoActividad1(AdjuntosActividad adjuntoActividad1) {
-        this.adjuntoActividad1 = adjuntoActividad1;
-    }
-
-    public AdjuntosActividad getAdjuntoActividad2() {
-        return adjuntoActividad2;
-    }
-
-    public void setAdjuntoActividad2(AdjuntosActividad adjuntoActividad2) {
-        this.adjuntoActividad2 = adjuntoActividad2;
-    }
-
-    public AdjuntosActividad getAdjuntoActividad3() {
-        return adjuntoActividad3;
-    }
-
-    public void setAdjuntoActividad3(AdjuntosActividad adjuntoActividad3) {
-        this.adjuntoActividad3 = adjuntoActividad3;
-    }
-
-    public AdjuntosActividad getAdjuntoActividad4() {
-        return adjuntoActividad4;
-    }
-
-    public void setAdjuntoActividad4(AdjuntosActividad adjuntoActividad4) {
-        this.adjuntoActividad4 = adjuntoActividad4;
-    }
-
-    public AdjuntosActividad getAdjuntoActividad5() {
-        return adjuntoActividad5;
-    }
-
-    public void setAdjuntoActividad5(AdjuntosActividad adjuntoActividad5) {
-        this.adjuntoActividad5 = adjuntoActividad5;
-    }
+    public void setCalificacionActividad(CalificacionActividad calificacionActividad) {
+        this.calificacionActividad = calificacionActividad;
+    }    
 
     public FacesContext getContextoJSF() {
         return contextoJSF;
@@ -580,6 +791,14 @@ public class UIConcurso implements Serializable {
 
     public void setContextoEL(ELContext contextoEL) {
         this.contextoEL = contextoEL;
+    }
+
+    public ArrayList<Actividad> getListActividadess() {
+        return listActividadess;
+    }
+
+    public void setListActividadess(ArrayList<Actividad> listActividadess) {
+        this.listActividadess = listActividadess;
     }
 
     public Utilidades getUtil() {
@@ -618,28 +837,12 @@ public class UIConcurso implements Serializable {
         this.empleado = empleado;
     }
 
-    public List<GrupoConcursoParticipantes> getListGruposParticipantes() {
-        return listGruposParticipantes;
-    }
-
-    public void setListGruposParticipantes(List<GrupoConcursoParticipantes> listGruposParticipantes) {
-        this.listGruposParticipantes = listGruposParticipantes;
-    }
-
     public Empresa getEmpresa() {
         return empresa;
     }
 
     public void setEmpresa(Empresa empresa) {
         this.empresa = empresa;
-    }
-
-    public List<GrupoConcurso> getListaEquipos() {
-        return listaEquipos;
-    }
-
-    public void setListaEquipos(List<GrupoConcurso> listaEquipos) {
-        this.listaEquipos = listaEquipos;
     }
 
     public ArrayList<SelectItem> getListGruposConcurso() {
@@ -649,15 +852,6 @@ public class UIConcurso implements Serializable {
     public void setListGruposConcurso(ArrayList<SelectItem> listGruposConcurso) {
         this.listGruposConcurso = listGruposConcurso;
     }
-
-    public List<GrupoConcurso> getListaGruposConcursos() {
-        return listaGruposConcursos;
-    }
-
-    public void setListaGruposConcursos(List<GrupoConcurso> listaGruposConcursos) {
-        this.listaGruposConcursos = listaGruposConcursos;
-    }
-
 
     public GrupoConcursoParticipantes getGrupoParticipantes() {
         return grupoParticipantes;
@@ -675,36 +869,12 @@ public class UIConcurso implements Serializable {
         this.grupoConcurso = grupoConcurso;
     }
 
-    public List<Concurso> getListaConcursosGerente() {
-        return listaConcursosGerente;
-    }
-
-    public void setListaConcursosGerente(List<Concurso> listaConcursosGerente) {
-        this.listaConcursosGerente = listaConcursosGerente;
-    }
-
-    public List<Concurso> getListaConcurso() {
-        return listaConcurso;
-    }
-
-    public void setListaConcurso(List<Concurso> listaConcurso) {
-        this.listaConcurso = listaConcurso;
-    }
-
     public GestorConcurso getGestorConcurso() {
         return gestorConcurso;
     }
 
     public void setGestorConcurso(GestorConcurso gestorConcurso) {
         this.gestorConcurso = gestorConcurso;
-    }
-
-    public List<Actividad> getListActividades() {
-        return listActividades;
-    }
-
-    public void setListActividades(List<Actividad> listActividades) {
-        this.listActividades = listActividades;
     }
 
     public Actividad getActividad() {

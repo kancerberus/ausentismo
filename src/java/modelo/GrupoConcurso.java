@@ -16,17 +16,18 @@ public class GrupoConcurso implements Serializable{
     private String codGrupo;
     private Concurso concurso;
     private String nombre;    
+    private SubEmpresa subempresa;
 
-    public GrupoConcurso(String codGrupo, Concurso concurso, String nombre) {
+    public GrupoConcurso(String codGrupo, Concurso concurso, String nombre, SubEmpresa subempresa) {
         this.codGrupo = codGrupo;
         this.concurso = concurso;
-        this.nombre = nombre;        
+        this.nombre = nombre;     
+        this.subempresa = subempresa;
     }      
 
     public GrupoConcurso() {
 
-    }  
-    
+    }
 
     /**
      * @return the nombre
@@ -40,6 +41,14 @@ public class GrupoConcurso implements Serializable{
      */
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public SubEmpresa getSubempresa() {
+        return subempresa;
+    }
+
+    public void setSubempresa(SubEmpresa subempresa) {
+        this.subempresa = subempresa;
     }
 
     public String getCodGrupo() {

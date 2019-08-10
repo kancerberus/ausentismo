@@ -28,6 +28,11 @@ public class Actividad {
         this.concurso = concurso;
     }
 
+    public Actividad(String codActividad, String nombre) {
+        this.codActividad = codActividad;
+        this.nombre = nombre;
+    }
+
     
 
     public Actividad() {

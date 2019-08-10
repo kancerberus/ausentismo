@@ -23,6 +23,11 @@ public class SubEmpresa{
         this.municipio = new Municipio();
     }    
 
+    public SubEmpresa(String nitsubempresa, String nombre) {
+        this.nitsubempresa = nitsubempresa;
+        this.nombre = nombre;
+    }
+
     public String getNitsubempresa() {
         return nitsubempresa;
     }
