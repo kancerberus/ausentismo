@@ -72,11 +72,11 @@ public class GestorEmpleado extends Gestor {
         }
     }
     
-    public Integer validarEmpleadoActualizacion(String cedula, String nitsesion) throws Exception {
+    public Integer validarEmpleadoActualizacion(String cedula, String nitsesion, String anoActualizador) throws Exception {
         try {
             abrirConexion();
             EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
-            return empleadoDAO.validarEmpleadoActualizacion(cedula,nitsesion);
+            return empleadoDAO.validarEmpleadoActualizacion(cedula,nitsesion,anoActualizador);
         } finally {
             cerrarConexion();
         }

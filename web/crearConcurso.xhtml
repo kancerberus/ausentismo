@@ -9,7 +9,8 @@ and open the template in the editor.
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      >
 
     <h:body >
         <ui:composition > 
@@ -60,11 +61,9 @@ and open the template in the editor.
                                     <p:calendar value="#{concursoBean.concurso.fecha_limite_insc}"/>
                                     
                                     Logo
-                                    <p:fileUpload value="#{concursoBean.file}" mode="advanced" skinSimple="true" label="logo" fileUploadListener="#{concursoBean.cargarLogo}"
-                                    auto="true"  update="concursos,avisoConcurso" process="@this concursos,avisoConcurso">
-                                        <p:outputLabel style="font-weight: bolder;" value="#{concursoBean.file.fileName}"/>
-                                    </p:fileUpload>                                    
-                                     
+                                    <h:inputFile value="#{concursoBean.uploadedFile}"  />
+                                    <h:commandButton value="Save" type="submit" action="#{concursoBean.saveFile}" style="color: red;"></h:commandButton>
+                                            
                                     <p:commandButton icon="ui-icon-newwin" update="avisoConcurso, concursos"
                                             type="submit" value="Generar"  actionListener="#{concursoBean.crearConcurso()}"/>
                                 </h:panelGrid>   
@@ -95,10 +94,8 @@ and open the template in the editor.
                                 </h:panelGrid>
                             </p:fieldset>
                                 <h:panelGrid columns="4" cellpadding="5" style="width:auto; font-size: 90%;">                                  
-                                    <p:dialog id="picture" width="60%" height="60%" widgetVar="dlg" header="Actividades" resizable="false"
-                                              
-                                              >                                        
-                                        
+                                    <p:dialog id="picture" width="60%" height="60%" widgetVar="dlg" header="Actividades" resizable="false"                                              
+                                              > 
                                         <p:autoUpdate/>
                                         <p:ajax event="close" update="avisoConcurso" listener="#{concursoBean.handleClose}" />
                                         <p:ajax event="move" update="avisoConcurso" listener="#{concursoBean.handleMove}" />                                        

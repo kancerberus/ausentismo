@@ -45,6 +45,13 @@ and open the template in the editor.
                                     <p:inputText id="cedula" value="#{ausentismoBean.cedula}" required="true" label="cedula">
                                         <p:ajax event="blur" listener="#{ausentismoBean.buscarEActualizacion}" update="pnlActAusentismo"></p:ajax>
                                     </p:inputText> 
+                                    <p:outputLabel value="año"/>
+                                    <p:selectOneMenu id="console" value="#{ausentismoBean.anoActualizador}" style="width:125px">
+                                        <f:selectItem itemLabel="2018" itemValue="2018" />
+                                        <f:selectItem itemLabel="2019" itemValue="2019" />
+                                        <f:selectItem itemLabel="2020" itemValue="2020" />
+                                        <f:selectItem itemLabel="2021" itemValue="2021" />
+                                    </p:selectOneMenu>
                                     <p:growl id="growl" life="3000"/>
                                     <p:commandButton icon="ui-icon-search" value="Consultar" actionListener="#{ausentismoBean.buscarEActualizacion}" update="pnlActAusentismo"/>                                       
                                 </h:panelGrid>                                

@@ -100,7 +100,7 @@ public class EmpleadoDAO {
         }
     }
     
-    public Integer validarEmpleadoActualizacion(String cedula, String nitsesion) throws SQLException {
+    public Integer validarEmpleadoActualizacion(String cedula, String nitsesion, String anoActualizador) throws SQLException {
         Consulta consulta = null;
         ResultSet rs;
         String sql;
@@ -122,6 +122,11 @@ public class EmpleadoDAO {
                 Integer resultado=0;               
                 double thacum=0;
                 double tp=24;
+                String selfecha;
+                String queryfecha;
+                selfecha = anoActualizador;
+                queryfecha = "to_char(fechapermiso,'yyyy')";
+                
                                                
             
                 //Consulta la información a actualizar item a item
@@ -129,7 +134,9 @@ public class EmpleadoDAO {
                         +"from registro_ausentismo re "
                         +"inner join empleado e on (e.cedula=re.fk_cedula) "
                         +"inner join motivopermiso mo on (mo.cod_motivo=re.fk_cod_motivo) "
-                        +"where fk_cedula = '"+cedula.trim()+"' and mo.tipo = 'EM-TR' order by cod_regausentismo";
+                        +"where fk_cedula = '"+cedula.trim()+"' and mo.tipo = 'EM-TR'  "
+                        +" and "+queryfecha+" = '"+selfecha+"'"
+                        + " order by cod_regausentismo ";
                 
                 rs = consulta.ejecutar(sql);
                                 

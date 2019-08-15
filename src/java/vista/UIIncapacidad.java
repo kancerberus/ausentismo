@@ -42,7 +42,7 @@ import org.primefaces.event.SelectEvent;
  */
 public class UIIncapacidad implements Serializable {
 
-    private String cedula;
+    private String cedula;    
     private Empleado empleado;
     private Incapacidad incapacidad;
     private Mes mes;
@@ -122,20 +122,6 @@ public class UIIncapacidad implements Serializable {
         }
     }
     
-    public void buscarEActualizacion() throws Exception {
-    
-        contextoJSF = FacesContext.getCurrentInstance();
-        contextoEL = contextoJSF.getELContext();
-        ef = contextoJSF.getApplication().getExpressionFactory();
-        String nitsesion = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);        
-        GestorEmpleado gestorEmpleado = new GestorEmpleado();
-        Integer resultado = gestorEmpleado.validarEmpleadoActualizacion(cedula,nitsesion); 
-        
-        //mensaje si resultado viene con 0 error en la consulta
-
-    }
-    
-
         
     /*public void buscarIncapacidad() throws Exception {
     

@@ -9,7 +9,8 @@ and open the template in the editor.
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"     
       xmlns:f="http://java.sun.com/jsf/core"      
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      >
     
     
     <h:body>
@@ -42,7 +43,7 @@ and open the template in the editor.
                             </p:fieldset> 
                                 
                             <p:fieldset legend="Concursos" style="margin-bottom:10px; margin-top:10px;" >                                    
-                                    Centro Trabajo *
+                                    Centro Trabajo *:
                                     <p:selectOneMenu id="subempresas" value="#{concursoBean.nitSubemrpesa}" > 
                                     <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
                                     <f:selectItems   value="#{concursoBean.listaSubEmpresas}" />                                      
@@ -55,6 +56,8 @@ and open the template in the editor.
                                     <f:selectItems   value="#{concursoBean.listaGruposConcursosSubempresa}" />                                      
                                     <p:ajax update="actividadesEquipo" listener="#{concursoBean.cargarCalificaciones()}"/>
                                     </p:selectOneMenu>
+                                    
+                                    
                             </p:fieldset>
                                 
                             <p:fieldset legend="Actividades Equipo" style="margin-bottom:10px; margin-top:10px;" >                                    
@@ -63,10 +66,10 @@ and open the template in the editor.
                                     <p:column headerText="Actividad">
                                         <h:outputText value="#{varCalificaciones.actividad.nombre}"/>
                                     </p:column>                                                                                            
-                                    <p:column headerText="Calificacion">
+                                    <p:column width="20%" headerText="Calificacion">
                                         <h:outputText value="#{varCalificaciones.calificacion}"/>
-                                    </p:column>                           
-                                    <p:column width="6%" headerText="Calificacion Actividad">
+                                    </p:column>
+                                    <p:column width="7%" headerText="Calificacion Actividad">
                                             <p:commandButton id="openDialogCalificacion"  icon="ui-icon-plus" value="Calificacion" onclick="PF('dlg2').show();" 
                                                              oncomplete="PF('dlg2').show();" actionListener="#{concursoBean.subirItemCalificacion()}"  update="@none" process="@this"/>
                                     </p:column>

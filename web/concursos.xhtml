@@ -9,7 +9,9 @@ and open the template in the editor.
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"     
       xmlns:f="http://java.sun.com/jsf/core"      
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets"        
+            
+      >
     
     
     <h:body>
@@ -51,8 +53,10 @@ and open the template in the editor.
                                     <p:selectOneMenu id="gConcursos" value="#{concursoBean.grupoConcurso.codGrupo}">
                                     <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
                                     <f:selectItems   value="#{concursoBean.listGruposConcurso}" />  
-                                    <p:ajax update="actividadesEquipo" listener="#{concursoBean.listActividadesJuecess}"/>
-                                    </p:selectOneMenu>
+                                    <p:ajax update="actividadesEquipo,acum" listener="#{concursoBean.getListActividades}"/>
+                                    </p:selectOneMenu>                                    
+                                    Calificacion Acumulada
+                                    <p:outputLabel id="acum" style="font-size: 15px;font-weight: bolder; color: darkgreen" value="#{concursoBean.puntajeAcum}"/>
                                 </p:fieldset>  
                                 <p:fieldset legend="Basees De Concurso" style="margin-bottom:10px; margin-top:10px;" >
                                 <table cellpadding="5">                        
@@ -76,7 +80,7 @@ and open the template in the editor.
                                 </table>
                             </p:fieldset>
                                 <p:fieldset legend="Actividades Equipo" style="margin-bottom:10px; margin-top:10px;" >                                    
-                                    <p:dataTable id="actividadesEquipo" var="varActividades" value="#{concursoBean.listActividadesJuecess}"
+                                    <p:dataTable id="actividadesEquipo" var="varActividades" value="#{concursoBean.listActividadess}"
                                                  rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">                                        
                                         <p:column headerText="Actividad">
                                             <h:outputText value="#{varActividades.nombre}"/>
@@ -88,7 +92,7 @@ and open the template in the editor.
                                             <h:outputText value="#{varActividades.fechaLimite}"/>
                                         </p:column>
                                         <p:column width="6%" headerText="Actividad">
-                                            <p:commandButton id="openDialogLink"  icon="ui-icon-plus" value="Adjuntos" onclick="PF('dlg').show();" 
+                                            <p:commandButton id="openDialogLink" disabled="true" icon="ui-icon-plus" value="Adjuntos" onclick="PF('dlg').show();" 
                                                              oncomplete="PF('dlg').show();" actionListener="#{concursoBean.subirItemActividad()}"  update="@none" process="@this"/>
                                         </p:column>
                                     </p:dataTable>
@@ -102,31 +106,31 @@ and open the template in the editor.
                                             <p:outputLabel value="Adjunto 1: "/>                                            
                                         </p:column>
                                         <p:column>
-                                            <p:fileUpload mode="simple" value="#{concursoBean.adjuntoActividad1.adj}" />
+                                            <h:inputFile/>
                                         </p:column>
                                         <p:column width="60%">                                            
                                             <p:outputLabel value="Adjunto 2: "/>                                                                                        
                                         </p:column>
                                         <p:column width="60%">
-                                            <p:fileUpload value="#{concursoBean.adjuntoActividad2.adj}" mode="simple" skinSimple="true" label="Cargar"/>                                            
+                                            <h:inputFile/>
                                         </p:column>
                                         <p:column width="60%">
                                             <p:outputLabel value="Adjunto 3: "/>                                                                                        
                                         </p:column>
                                         <p:column width="60%">
-                                            <p:fileUpload value="#{concursoBean.adjuntoActividad3.adj}" mode="simple" skinSimple="true" label="Cargar"/>                                            
+                                            <h:inputFile/>
                                         </p:column>
                                         <p:column width="60%">
                                             <p:outputLabel value="Adjunto 4: "/>                                                                                        
                                         </p:column>
                                         <p:column width="60%">
-                                            <p:fileUpload value="#{concursoBean.adjuntoActividad4.adj}" mode="simple" skinSimple="true" label="Cargar"/>                                            
+                                            <h:inputFile/>
                                         </p:column>
                                         <p:column width="60%">
                                             <p:outputLabel value="Adjunto 5: "/>                                                                                        
                                         </p:column>
                                         <p:column width="60%">
-                                            <p:fileUpload value="#{concursoBean.adjuntoActividad5.adj}" mode="simple" skinSimple="true" label="Cargar"/>                                            
+                                            <h:inputFile/>
                                         </p:column>
                                         <p:column>
                                             <p:commandButton value="Submit" ajax="false"   actionListener="#{concursoBean}" />

@@ -64,11 +64,11 @@
     <managed-bean-name>accidenteBean</managed-bean-name>
         <managed-bean-class>vista.UIAccidente</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
-    </managed-bean>
-    
+    </managed-bean>    
     <managed-bean>   
     <managed-bean-name>concursoBean</managed-bean-name>
         <managed-bean-class>vista.UIConcurso</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
+
 </faces-config>

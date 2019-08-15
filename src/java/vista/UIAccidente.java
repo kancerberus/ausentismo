@@ -533,18 +533,8 @@ public class UIAccidente implements Serializable {
             Logger.getLogger(UIAccidente.class.getName()).log(Level.SEVERE, null, e);
             util.mostrarMensaje(e.getMessage());
         }
-    } 
-    
-    public void buscarEActualizacion() throws Exception {    
-        contextoJSF = FacesContext.getCurrentInstance();
-        contextoEL = contextoJSF.getELContext();
-        ef = contextoJSF.getApplication().getExpressionFactory();
-        String nitsesion = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);        
-        GestorEmpleado gestorEmpleado = new GestorEmpleado();
-        Integer resultado = gestorEmpleado.validarEmpleadoActualizacion(cedula,nitsesion);
-        //mensaje si resultado viene con 0 error en la consulta
-    }
-    
+    }     
+
     public void limpiarIncapacidad() {       
         accidente = new Accidente(); 
         empleado = new Empleado();        

@@ -54,6 +54,7 @@ public class UIAusentismo implements Serializable {
     private float totaltrabajador=0;
     private float totalem=0;    
     private float totalsubt=0;
+    private String anoActualizador;
     
     
     Boolean todos;
@@ -122,7 +123,7 @@ public class UIAusentismo implements Serializable {
         ef = contextoJSF.getApplication().getExpressionFactory();
         String nitsesion = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);        
         GestorEmpleado gestorEmpleado = new GestorEmpleado();
-        Integer resultado = gestorEmpleado.validarEmpleadoActualizacion(cedula,nitsesion); 
+        Integer resultado = gestorEmpleado.validarEmpleadoActualizacion(cedula,nitsesion,anoActualizador); 
         
         //mensaje si resultado viene con 0 error en la consulta
 
@@ -451,6 +452,14 @@ public class UIAusentismo implements Serializable {
                 }
             
                 return itemsMotivos;    
+    }
+
+    public String getAnoActualizador() {
+        return anoActualizador;
+    }
+
+    public void setAnoActualizador(String anoActualizador) {
+        this.anoActualizador = anoActualizador;
     }
 
     public String getMinutos() {

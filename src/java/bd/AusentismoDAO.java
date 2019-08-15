@@ -1462,6 +1462,7 @@ public class AusentismoDAO {
             consulta.desconectar();
         }
     }
+    
     //Acumulador de horas de ausentismo tipo EM-TR
     public Integer horasAcumuladas(String cedula) throws SQLException {
         int thacum =0 ;         
