@@ -262,7 +262,7 @@ public class UIAccidente implements Serializable {
                selmeshasta = (ano.getAño()+"/"+(mes.getHasta()));           
             }        
             if(nitsubem == ""){
-             nitsubem = null;         
+                nitsubem = null;
             }            
             
             distribucionTipoEventos.addAll(gestorAccidente.cargarDistribucionTipoEventos(nitem, nitsubem,selmesdesde,selmeshasta,selano));

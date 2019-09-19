@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.List;
 import modelo.Empleado;
 import modelo.Empresa;
+import modelo.Sexo;
+import modelo.TipoIncapacidad;
 import org.primefaces.model.chart.PieChartModel;
 import vista.UIListas;
 
@@ -38,12 +40,477 @@ public class AusentismoDAO {
         this.uilistas = new UIListas();
     }
     
+    public ArrayList<Ausentismo> cargarDistribucionLabora(String nitem,String nitsubem,String selmesdesde,String selmeshasta,String selano) throws Exception{
+        Ausentismo au;
+        ArrayList<Ausentismo> listaAusentismo = new ArrayList<>();
+        ResultSet rs;
+        Consulta consulta = null;        
+        String selfecha = null;
+        String selfecha2 = null;
+        String queryfecha = null;
+        String queryfechainc = null;        
+
+        if ((selmesdesde == null) && (selmeshasta == null)){
+            selfecha = selano;
+            queryfecha = "to_char(fechapermiso,'yyyy')";             
+            queryfechainc = "to_char(fecha_inicial,'yyyy')"; 
+        }else{
+            selfecha = selmesdesde;
+            selfecha2 = selmeshasta;
+            queryfecha = "to_char(fechapermiso,'yyyy/mm')";
+            queryfechainc = "to_char(fecha_inicial,'yyyy/mm')"; 
+        }
+        
+        try {
+            
+            //nitempresa y año 
+            if(nitem!=null && selano!=null && nitsubem==null){
+                
+                consulta = new Consulta(getConexion());
+                String sql
+                        = " select e.cod_det_lista_sexo codsexo, dl.nombre nomsexo,  count(ra.cod_regausentismo) casos " +
+                            " from registro_ausentismo ra  " +
+                            " inner join empleado e on (e.cedula=fk_cedula) " +
+                            " inner join det_lista dl on (dl.cod_det_lista=e.cod_det_lista_sexo) " +
+                            " inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "+                            
+                            " inner join empresa em on(em.nitempresa=se.fk_nitempresa) " +                               
+                            " where em.nitempresa='"+nitem+"' and " + queryfecha + " = '" + selfecha + "' " +
+                            " group by e.cod_det_lista_sexo, dl.nombre";
+
+                rs = consulta.ejecutar(sql);
+
+                while (rs.next()) {
+                    au = new Ausentismo(rs.getInt("casos"), new Sexo(rs.getString("codsexo"), rs.getString("nomsexo")), 0);                                                                     
+                    listaAusentismo.add(au);
+                }            
+            }
+            
+            if (selmesdesde != null && selmeshasta != null && nitem != null && nitsubem==null ) {                                        
+                
+                consulta = new Consulta(getConexion());
+                String sql
+                        = " select e.cod_det_lista_sexo codsexo, dl.nombre nomsexo,  count(ra.cod_regausentismo) casos " +
+                            " from registro_ausentismo ra  " +
+                            " inner join empleado e on (e.cedula=fk_cedula) " +
+                            " inner join det_lista dl on (dl.cod_det_lista=e.cod_det_lista_sexo) " +
+                            " inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "+                            
+                            " inner join empresa em on(em.nitempresa=se.fk_nitempresa) " +                               
+                            " where em.nitempresa='"+nitem+"' "+
+                            " and " + queryfecha + " between '" + selfecha + "' and '" + selfecha2 + "' "+ 
+                            " group by e.cod_det_lista_sexo, dl.nombre";                            
+
+                rs = consulta.ejecutar(sql);
+
+                while (rs.next()) {
+                    au = new Ausentismo(rs.getInt("casos"), new Sexo(rs.getString("codsexo"), rs.getString("nomsexo")), 0);                                                                     
+                    listaAusentismo.add(au);
+                }            
+                
+                
+            }
+            
+            if (nitem != null && nitsubem!=null && selano!=null) {
+                
+                consulta = new Consulta(getConexion());
+                String sql
+                        = " select e.cod_det_lista_sexo codsexo, dl.nombre nomsexo,  count(ra.cod_regausentismo) casos " +
+                            " from registro_ausentismo ra  " +
+                            " inner join empleado e on (e.cedula=fk_cedula) " +
+                            " inner join det_lista dl on (dl.cod_det_lista=e.cod_det_lista_sexo) " +
+                            " inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "+                            
+                            " inner join empresa em on(em.nitempresa=se.fk_nitempresa) " +                               
+                            " where e.nitsubempresa = '"+nitsubem+"' and " + queryfecha + " = '" + selfecha + "' " +
+                            " group by e.cod_det_lista_sexo, dl.nombre";                        
+
+                rs = consulta.ejecutar(sql);
+
+                while (rs.next()) {
+                    au = new Ausentismo(rs.getInt("casos"), new Sexo(rs.getString("codsexo"), rs.getString("nomsexo")), 0);                                                                     
+                    listaAusentismo.add(au);
+                }            
+                
+                
+            }
+            
+            if (nitem != null && nitsubem!=null && selano==null && selmesdesde != null && selmeshasta != null) {
+                
+                consulta = new Consulta(getConexion());
+                String sql
+                       = " select e.cod_det_lista_sexo codsexo, dl.nombre nomsexo,  count(ra.cod_regausentismo) casos " +
+                            " from registro_ausentismo ra  " +
+                            " inner join empleado e on (e.cedula=fk_cedula) " +
+                            " inner join det_lista dl on (dl.cod_det_lista=e.cod_det_lista_sexo) " +
+                            " inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "+                            
+                            " inner join empresa em on(em.nitempresa=se.fk_nitempresa) " +                               
+                            " where e.nitsubempresa = '"+nitsubem+"' "+
+                            " and " + queryfecha + " between '" + selfecha + "' and '" + selfecha2 + "' "+ 
+                            " group by e.cod_det_lista_sexo, dl.nombre";                        
+
+                rs = consulta.ejecutar(sql);
+
+                while (rs.next()) {
+                    au = new Ausentismo(rs.getInt("casos"), new Sexo(rs.getString("codsexo"), rs.getString("nomsexo")), 0);                                                                     
+                    listaAusentismo.add(au);
+                }            
+                
+            }
+            
+            return listaAusentismo;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+            
+    }
+    
+    
+    public ArrayList<Ausentismo> cargarDistribucionTipoIncapacidad(String nitem,String nitsubem,String selmesdesde,String selmeshasta,String selano) throws Exception{
+        Ausentismo au;
+        ArrayList<Ausentismo> listaAusentismo = new ArrayList<>();
+        ResultSet rs;
+        Consulta consulta = null;        
+        String selfecha = null;
+        String selfecha2 = null;
+        String queryfecha = null;
+        String queryfechainc = null;    
+        Integer totCasos=0;
+
+        if ((selmesdesde == null) && (selmeshasta == null)){
+            selfecha = selano;
+            queryfecha = "to_char(fecha_registro,'yyyy')";             
+            queryfechainc = "to_char(fecha_inicial,'yyyy')"; 
+        }else{
+            selfecha = selmesdesde;
+            selfecha2 = selmeshasta;
+            queryfecha = "to_char(fecha_registro,'yyyy/mm')";
+            queryfechainc = "to_char(fecha_inicial,'yyyy/mm')"; 
+        }
+        
+        try {
+            
+            //nitempresa y año 
+            if(nitem!=null && selano!=null && nitsubem==null){
+                
+                consulta = new Consulta(getConexion());
+                String sql
+                        = "  select dl.nombre nombre, count(ri.cod_reg_incapacidad) casos  " +
+                            " from registro_incapacidad ri  " +
+                            " inner join det_lista dl on(dl.cod_det_lista=ri.cod_det_lista_tipo_incapacidad)  " +
+                            " inner join empleado e on (e.cedula=fk_cedula)   " +
+                            " inner join subempresa se on (se.nitsubempresa=e.nitsubempresa)  " +
+                            " inner join empresa em on(em.nitempresa=se.fk_nitempresa)  " +
+                            " where cod_det_lista_tipo_incapacidad in ('8','9','10') and em.nitempresa='"+nitem+"' and to_char(fecha_registro,'yyyy') = '"+selfecha+"'  " +
+                            " group by dl.nombre  ";
+
+                rs = consulta.ejecutar(sql);
+
+                while (rs.next()) {
+                    au = new Ausentismo(new TipoIncapacidad("", rs.getString("nombre")), rs.getInt("casos"),0);
+                    totCasos+=au.getCasos();
+                    au.setTotCasos(totCasos);
+                    au.setPorcentaje((au.getCasos()/totCasos)*100);
+                    listaAusentismo.add(au);                    
+                }                   
+                
+                
+            }
+            
+            if (selmesdesde != null && selmeshasta != null && nitem != null && nitsubem==null ) {                                        
+                
+                consulta = new Consulta(getConexion());
+                String sql
+                        = "  select dl.nombre nombre, count(ri.cod_reg_incapacidad) casos  " +
+                            " from registro_incapacidad ri  " +
+                            " inner join det_lista dl on(dl.cod_det_lista=ri.cod_det_lista_tipo_incapacidad)  " +
+                            " inner join empleado e on (e.cedula=fk_cedula)   " +
+                            " inner join subempresa se on (se.nitsubempresa=e.nitsubempresa)  " +
+                            " inner join empresa em on(em.nitempresa=se.fk_nitempresa)  " +
+                            " where cod_det_lista_tipo_incapacidad in ('8','9','10') and em.nitempresa='"+nitem+"' "+
+                            " and " + queryfecha + " between '" + selfecha + "' and '" + selfecha2 + "' "+ 
+                            " group by dl.nombre  ";
+                        
+                        
+                                                    
+
+                rs = consulta.ejecutar(sql);
+
+                while (rs.next()) {
+                    au = new Ausentismo(new TipoIncapacidad("", rs.getString("nombre")), rs.getInt("casos"),0);
+                    totCasos+=au.getCasos();
+                    au.setTotCasos(totCasos);
+                    au.setPorcentaje((au.getCasos()/totCasos)*100);
+                    listaAusentismo.add(au);                    
+                }                   
+                
+                
+            }
+            
+            if (nitem != null && nitsubem!=null && selano!=null) {
+                
+                consulta = new Consulta(getConexion());
+                String sql
+                        = "  select dl.nombre nombre, count(ri.cod_reg_incapacidad) casos  " +
+                            " from registro_incapacidad ri  " +
+                            " inner join det_lista dl on(dl.cod_det_lista=ri.cod_det_lista_tipo_incapacidad)  " +
+                            " inner join empleado e on (e.cedula=fk_cedula)   " +
+                            " inner join subempresa se on (se.nitsubempresa=e.nitsubempresa)  " +
+                            " inner join empresa em on(em.nitempresa=se.fk_nitempresa)  " +
+                            " where cod_det_lista_tipo_incapacidad in ('8','9','10') and e.nitsubempresa = '"+nitsubem+"' and " + queryfecha + " = '" + selfecha + "' " +
+                            " group by dl.nombre  ";
+
+                rs = consulta.ejecutar(sql);
+
+                while (rs.next()) {
+                    au = new Ausentismo(new TipoIncapacidad("", rs.getString("nombre")), rs.getInt("casos"),0);
+                    totCasos+=au.getCasos();
+                    au.setTotCasos(totCasos);
+                    au.setPorcentaje((au.getCasos()/totCasos)*100);
+                    listaAusentismo.add(au);                    
+                }                   
+                
+                
+            }
+            
+            if (nitem != null && nitsubem!=null && selano==null && selmesdesde != null && selmeshasta != null) {
+                
+                consulta = new Consulta(getConexion());
+                String sql
+                       = "  select dl.nombre nombre, count(ri.cod_reg_incapacidad) casos  " +
+                            " from registro_incapacidad ri  " +
+                            " inner join det_lista dl on(dl.cod_det_lista=ri.cod_det_lista_tipo_incapacidad)  " +
+                            " inner join empleado e on (e.cedula=fk_cedula)   " +
+                            " inner join subempresa se on (se.nitsubempresa=e.nitsubempresa)  " +
+                            " inner join empresa em on(em.nitempresa=se.fk_nitempresa)  " +
+                            " where cod_det_lista_tipo_incapacidad in ('8','9','10') and e.nitsubempresa = '"+nitsubem+"' " +
+                            " and " + queryfecha + " between '" + selfecha + "' and '" + selfecha2 + "' "+ 
+                            " group by dl.nombre  ";                       
+                        
+                                              
+
+                rs = consulta.ejecutar(sql);
+
+                while (rs.next()) {
+                    au = new Ausentismo(new TipoIncapacidad("", rs.getString("nombre")), rs.getInt("casos"),0);
+                    totCasos+=au.getCasos();
+                    au.setTotCasos(totCasos);
+                    au.setPorcentaje((au.getCasos()/totCasos)*100);
+                    listaAusentismo.add(au);
+                }            
+                
+            }
+            
+            return listaAusentismo;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+            
+    }
+    
+    
+    public Integer eliminarRegistro(String codReg) throws Exception{
+       Consulta consulta = null;
+        Integer resultado;  
+        Date hoy =new Date();
+        //Sentencia SQL para guardar el registro
+        String sql ;    
+        
+   
+        try {
+            consulta = new Consulta(getConexion());
+            
+                sql = " DELETE "
+                        + " from registro_ausentismo "
+                        + " where cod_regausentismo='"+codReg+"'";
+                
+            resultado = consulta.actualizar(sql);
+            return resultado;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }            
+                
+    }
+    
+    
+    public String cargarFechaActualizadoSalario()throws Exception{
+        ResultSet rs;
+        Consulta consulta = null;
+        String ano="";
+        try {
+            consulta = new Consulta(getConexion());
+                String sql
+                       = "select to_char(fecha_actualizado,'yyyy') as fecActualizado"
+                        + " from configuracion ";
+
+                rs = consulta.ejecutar(sql);
+
+                while (rs.next()) {
+                 ano=rs.getString("fecActualizado");
+                }          
+                return ano;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+        
+    }
+    
+    
+    
+    
+    
+    public ArrayList<Ausentismo> cargarDistribucionPorOrigen(String nitem,String nitsubem,String selmesdesde,String selmeshasta,String selano) throws Exception{
+        Ausentismo au;
+        ArrayList<Ausentismo> listaAusentismo = new ArrayList<>();
+        ResultSet rs;
+        Consulta consulta = null;        
+        String selfecha = null;
+        String selfecha2 = null;
+        String queryfecha = null;
+        String queryfechainc = null;        
+
+        if ((selmesdesde == null) && (selmeshasta == null)){
+            selfecha = selano;
+            queryfecha = "to_char(fechapermiso,'yyyy')";             
+            queryfechainc = "to_char(fecha_inicial,'yyyy')"; 
+        }else{
+            selfecha = selmesdesde;
+            selfecha2 = selmeshasta;
+            queryfecha = "to_char(fechapermiso,'yyyy/mm')";
+            queryfechainc = "to_char(fecha_inicial,'yyyy/mm')"; 
+        }
+        
+        try {
+            
+            //nitempresa y año 
+            if(nitem!=null && selano!=null && nitsubem==null){
+                consulta = new Consulta(getConexion());
+                String sql
+                        = " select ra.fk_cod_motivo codmotivo, mp.nombre_motivo nommotivo, count (ra.cod_regausentismo) casos,  sum(cast(ra.tiempohoras as float)) dias " +
+                            " from registro_ausentismo ra "+
+                            "inner join motivopermiso mp on(mp.cod_motivo=ra.fk_cod_motivo) " +
+                            " inner join empleado e on (e.cedula=fk_cedula) " +
+                            " inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) " +
+                            " inner join empresa em on(em.nitempresa=se.fk_nitempresa) " +                            
+                            " where fk_cod_motivo in ('1','5','2')  and  em.nitempresa='"+nitem+"' and " + queryfecha + " = '" + selfecha + "' " +
+                            " group by ra.fk_cod_motivo, mp.nombre_motivo " +
+                            " order by ra.fk_cod_motivo ";
+
+                rs = consulta.ejecutar(sql);
+
+                while (rs.next()) {
+                    au = new Ausentismo(new Motivo(rs.getString("codmotivo"), rs.getString("nommotivo")), rs.getInt("casos"), rs.getFloat("dias"));                        
+
+                    float dias=au.getDiasIncapacidad()/24;                                
+
+                    listaAusentismo.add(new Ausentismo(au.getMotivo(), au.getCasos(), dias));
+                }            
+            }
+            
+            if (selmesdesde != null && selmeshasta != null && nitem != null && nitsubem==null ) {                                        
+                
+                consulta = new Consulta(getConexion());
+                String sql
+                        = " select ra.fk_cod_motivo codmotivo, mp.nombre_motivo nommotivo, count (ra.cod_regausentismo) casos,  sum(cast(ra.tiempohoras as float)) dias " +
+                            " from registro_ausentismo ra " +
+                            " inner join motivopermiso mp on(mp.cod_motivo=ra.fk_cod_motivo) " +
+                            " inner join empleado e on (e.cedula=fk_cedula) " +
+                            " inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) " +
+                            " inner join empresa em on(em.nitempresa=se.fk_nitempresa) " +                            
+                            " where fk_cod_motivo in ('1','5','2')  and  em.nitempresa='"+nitem+"' "+
+                            " and " + queryfecha + " between '" + selfecha + "' and '" + selfecha2 + "' "+ 
+                            " group by ra.fk_cod_motivo, mp.nombre_motivo " +
+                            " order by ra.fk_cod_motivo ";
+
+                rs = consulta.ejecutar(sql);
+
+                while (rs.next()) {
+                    au = new Ausentismo(new Motivo(rs.getString("codmotivo"), rs.getString("nommotivo")), rs.getInt("casos"), rs.getFloat("dias"));                        
+
+                    float dias=au.getDiasIncapacidad()/24;                                
+
+                    listaAusentismo.add(new Ausentismo(au.getMotivo(), au.getCasos(), dias));
+                }
+                
+                
+            }
+            
+            if (nitem != null && nitsubem!=null && selano!=null) {
+                
+                consulta = new Consulta(getConexion());
+                String sql
+                        = " select ra.fk_cod_motivo codmotivo, mp.nombre_motivo nommotivo, count (ra.cod_regausentismo) casos,  sum(cast(ra.tiempohoras as float)) dias " +
+                            " from registro_ausentismo ra "+
+                            " inner join motivopermiso mp on(mp.cod_motivo=ra.fk_cod_motivo) " +
+                            " inner join empleado e on (e.cedula=fk_cedula) " +
+                            " inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "+                            
+                            " where fk_cod_motivo in ('1','5','2')  and e.nitsubempresa = '"+nitsubem+"' and " + queryfecha + " = '" + selfecha + "' " +
+                            " group by ra.fk_cod_motivo, mp.nombre_motivo " +
+                            " order by ra.fk_cod_motivo ";
+
+                rs = consulta.ejecutar(sql);
+
+                while (rs.next()) {
+                    au = new Ausentismo(new Motivo(rs.getString("codmotivo"), rs.getString("nommotivo")), rs.getInt("casos"), rs.getFloat("dias"));                        
+
+                    float dias=au.getDiasIncapacidad()/24;                                
+
+                    listaAusentismo.add(new Ausentismo(au.getMotivo(), au.getCasos(), dias));
+                }            
+                
+                
+            }
+            
+            if (nitem != null && nitsubem!=null && selano==null && selmesdesde != null && selmeshasta != null) {
+                
+                consulta = new Consulta(getConexion());
+                String sql
+                        = " select ra.fk_cod_motivo codmotivo, mp.nombre_motivo nommotivo, count (ra.cod_regausentismo) casos,  sum(cast(ra.tiempohoras as float)) dias " +
+                            " from registro_ausentismo ra " +
+                            " inner join motivopermiso mp on(mp.cod_motivo=ra.fk_cod_motivo) " +
+                            " inner join empleado e on (e.cedula=fk_cedula) " +
+                            " inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) " +                            
+                            " where fk_cod_motivo in ('1','5','2')  and e.nitsubempresa = '"+nitsubem+"' "+
+                            " and " + queryfecha + " between '" + selfecha + "' and '" + selfecha2 + "' "+ 
+                            " group by ra.fk_cod_motivo, mp.nombre_motivo " +
+                            " order by ra.fk_cod_motivo ";
+
+                rs = consulta.ejecutar(sql);
+
+                while (rs.next()) {
+                    au = new Ausentismo(new Motivo(rs.getString("codmotivo"), rs.getString("nommotivo")), rs.getInt("casos"), rs.getFloat("dias"));                        
+
+                    float dias=au.getDiasIncapacidad()/24;                                
+
+                    listaAusentismo.add(new Ausentismo(au.getMotivo(), au.getCasos(), dias));
+                }
+                
+            }
+            
+            return listaAusentismo;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+            
+    }
     
     public ArrayList<Ausentismo> listarAusentismos(String nitsesion) throws SQLException {
         Ausentismo au;
         ArrayList<Ausentismo> listaAusentismo = new ArrayList<>();
         ResultSet rs;
         Consulta consulta = null;           
+        
+        
         
         try {
             consulta = new Consulta(getConexion());

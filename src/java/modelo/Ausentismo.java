@@ -32,7 +32,11 @@ public class Ausentismo {
     private Double trabajador;
     private Double total;
     private TipoIncapacidad tipoIncapacidad;
-    
+    private Integer casos;
+    private float diasIncapacidad; 
+    private Sexo sexo;
+    private float porcentaje=0.2f;
+    private Integer totCasos;
     
     private Double totalsube;
     
@@ -46,12 +50,82 @@ public class Ausentismo {
         this.empresa = new Empresa();
     } 
 
+
+    public Ausentismo(Motivo motivo, Integer casos, float diasIncapacidad) {
+        this.motivo = motivo;
+        this.casos = casos;
+        this.diasIncapacidad = diasIncapacidad;        
+    }
+
+    public Ausentismo(Integer casos, Sexo sexo, float porcentaje) {
+        this.casos = casos;
+        this.sexo = sexo;
+        this.porcentaje = porcentaje;
+    }
+
+    public Ausentismo(String cod_registro, Empleado empleado, String tiempo_horas) {
+        this.cod_registro = cod_registro;
+        this.empleado = empleado;
+        this.tiempo_horas=tiempo_horas;
+    }
+
+    public Ausentismo(TipoIncapacidad tipoIncapacidad, Integer casos, Integer totCasos ) {
+        this.tipoIncapacidad = tipoIncapacidad;
+        this.casos = casos;
+        this.totCasos=totCasos;
+        
+    }
+ 
+    public float getPorcentaje() {
+        return porcentaje;
+    }
+
+    public void setPorcentaje(float porcentaje) {
+        this.porcentaje = porcentaje;
+    }
+
+    public Integer getTotCasos() {
+        return totCasos;
+    }
+
+    public void setTotCasos(Integer totCasos) {
+        this.totCasos = totCasos;
+    }
+    
+    
+
+    public Sexo getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(Sexo sexo) {
+        this.sexo = sexo;
+    }
+
+    public Integer getCasos() {
+        return casos;
+    }
+
+    public void setCasos(Integer casos) {
+        this.casos = casos;
+    }
+    
+    
+
     public TipoIncapacidad getTipoIncapacidad() {
         return tipoIncapacidad;
     }
 
     public void setTipoIncapacidad(TipoIncapacidad tipoIncapacidad) {
         this.tipoIncapacidad = tipoIncapacidad;
+    }
+
+    public float getDiasIncapacidad() {
+        return diasIncapacidad;
+    }
+
+    public void setDiasIncapacidad(float diasIncapacidad) {
+        this.diasIncapacidad = diasIncapacidad;
     }
 
     public Empresa getEmpresa() {

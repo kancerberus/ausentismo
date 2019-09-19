@@ -145,22 +145,18 @@ and open the template in the editor.
                         <h:panelGroup rendered="#{gestorPrincipal.regAccidente}">
                             <ui:include src="regAccidente.xhtml"></ui:include>  
                         </h:panelGroup>
+                        
                         <h:panelGroup rendered="#{gestorPrincipal.indAccidente}">
                             <ui:include src="indicadoresAcc.xhtml"></ui:include>  
                         </h:panelGroup>
-                        <h:panelGroup rendered="#{gestorPrincipal.crearConcurso}">                            
-                            <ui:include src="crearConcurso.xhtml"></ui:include>                        
-                        </h:panelGroup>                        
-                        <h:panelGroup rendered="#{gestorPrincipal.concursos}">
-                            <ui:include src="concursos.xhtml"></ui:include>                            
-                        </h:panelGroup> 
-                        <h:panelGroup rendered="#{gestorPrincipal.equipos}">
-                            <ui:include src="equipos.xhtml"></ui:include>                            
-                        </h:panelGroup> 
-                        <h:panelGroup rendered="#{gestorPrincipal.jueces}">                                                        
-                            <ui:include src="jueces.xhtml"></ui:include>                                                    
-                        </h:panelGroup> 
                         
+                        <h:panelGroup rendered="#{gestorPrincipal.indAusentismo}">
+                            <ui:include src="indAusentismo.xhtml"></ui:include>  
+                        </h:panelGroup>
+                        
+                        <h:panelGroup rendered="#{gestorPrincipal.modificarMinimo}">
+                            <ui:include src="modificarMinimo.xhtml"></ui:include>  
+                        </h:panelGroup>
                     </h:panelGroup>                    
                   </h:form>
                 </td>
