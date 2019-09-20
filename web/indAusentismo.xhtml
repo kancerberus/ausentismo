@@ -57,7 +57,7 @@
                                 </table>
                             </p:fieldset>
                             <p:fieldset style= "margin-top:10px;" >                                    
-                                <p:commandButton icon="ui-icon-newwin" update="auOrigenDias,piePorOrigen,piePorDias,auLaboral,pieGenero,auPorTipoIncapacidad,pieTipoIncapacidad" 
+                                <p:commandButton icon="ui-icon-newwin" update="auOrigenDias,piePorOrigen,piePorDias,auLaboral,pieGenero,auPorTipoIncapacidad,pieTipoIncapacidad,barGrupoc10,barCargo,barCentroTrabajo" 
                                                  type="submit" value="Generar"  actionListener="#{ausentismoBean.indicadoresAusentismo()}"/>
                             </p:fieldset>
                                 <br/>
@@ -165,10 +165,25 @@
                                     </p:panel>
                                 
                                 <p:panel header="DISTRIBUCIÓN POR GRUPO DIAGNOSTICO" >
-                                    <p:column >
-                                        <p:chart id="pieGrupoDiagnostico" type="pie" model="#{ausentismoBean.distribucionGrupoDiagnostico}" style="width: 500px;height:400px"/>
-                                    </p:column>
-                                    
+                                        <p:column width="50%">
+                                            <p:chart id="barGrupoc10" type="bar" model="#{ausentismoBean.horizontalBarGrupoDiagnostico}" style="margin-left: 15%;width: 600px;height:400px"/>
+                                        </p:column>                                    
+                                </p:panel>
+                                
+                                <p:panel header="DISTRIBUCIÓN DE AUSENSITSMO POR CARGO">
+                                        <h:panelGrid columns="2" cellpadding="10" >                                        
+                                        <p:column width="50%">
+                                            <p:chart id="barCargo" type="bar" model="#{ausentismoBean.horizontalBarCargos}" style="width: 600px;height:400px"/>
+                                        </p:column>
+                                    </h:panelGrid>
+                                </p:panel>
+                                
+                                <p:panel header="DISTRIBUCIÓN DE AUSENTISMO POR CENTRO TRABAJO">
+                                        <h:panelGrid columns="2" cellpadding="10" >                                        
+                                        <p:column width="70%">
+                                            <p:chart id="barCentroTrabajo" type="bar" model="#{ausentismoBean.horizontalBarCentrosTrabajo}" style="width: 600px;height:400px"/>
+                                        </p:column>
+                                    </h:panelGrid>
                                 </p:panel>
                                 
                             </td>

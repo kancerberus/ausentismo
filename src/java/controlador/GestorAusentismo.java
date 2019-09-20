@@ -12,6 +12,7 @@ import java.util.List;
 import javafx.scene.chart.PieChart;
 import modelo.Ausentismo;
 import modelo.Empleado;
+import modelo.Incapacidad;
 import modelo.Mes;
 import modelo.Motivo;
 import org.primefaces.model.chart.PieChartModel;
@@ -68,7 +69,7 @@ public class GestorAusentismo extends Gestor implements Serializable{
         }
     }
     
-    /*public List<Ausentismo> cargarDistribucionGrupoDiagnostico(String nitem,String nitsubem,String selmesdesde,String selmeshasta,String selano) throws Exception{
+    public ArrayList<Incapacidad> cargarDistribucionGrupoDiagnostico(String nitem,String nitsubem,String selmesdesde,String selmeshasta,String selano) throws Exception{
         try {
             abrirConexion();
             AusentismoDAO ausentismoDAO = new AusentismoDAO(conexion);
@@ -76,7 +77,17 @@ public class GestorAusentismo extends Gestor implements Serializable{
         } finally {
             cerrarConexion();
         }
-    }*/
+    }
+    
+    public ArrayList<Ausentismo> cargarDistribucionPorCentroTrabajo(String nitem,String selmesdesde,String selmeshasta,String selano) throws Exception{
+        try {
+            abrirConexion();
+            AusentismoDAO ausentismoDAO = new AusentismoDAO(conexion);
+            return ausentismoDAO.cargarDistribucionPorCentroTrabajo(nitem,selmesdesde,selmeshasta,selano);
+        } finally {
+            cerrarConexion();
+        }
+    }
     
     public List<Ausentismo> listarAusentismos(String nitsesion) throws Exception {
        try {

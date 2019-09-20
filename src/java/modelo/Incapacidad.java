@@ -33,6 +33,7 @@ public class Incapacidad {
     private Double trabajador;
     private Double total;
     private TipoIncapacidad tipoIncapacidad;
+    private Integer casos;
     
     
     private Double totalsube;
@@ -67,6 +68,14 @@ public class Incapacidad {
         this.total = total;
         this.tipoIncapacidad = tipoIncapacidad;
         this.totalsube = totalsube;
+    }
+
+    public Integer getCasos() {
+        return casos;
+    }
+
+    public void setCasos(Integer casos) {
+        this.casos = casos;
     }
 
     public String getTiempoHoras() {

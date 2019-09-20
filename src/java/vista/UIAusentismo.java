@@ -5,6 +5,7 @@
  */
 package vista;
 
+import controlador.GestorAccidente;
 import controlador.GestorAusentismo;
 import controlador.GestorEmpleado;
 import java.io.Serializable;
@@ -24,11 +25,16 @@ import util.UtilJSF;
 import javax.el.ExpressionFactory;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import modelo.Accidente;
 import modelo.Año;
+import modelo.Incapacidad;
 import modelo.Mes;
 import modelo.SubEmpresa;
 import org.primefaces.model.chart.PieChartModel;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.chart.Axis;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.HorizontalBarChartModel;
 
 
@@ -71,6 +77,7 @@ public class UIAusentismo implements Serializable {
     private ELContext contextoEL;
     private ExpressionFactory reg;
     private GestorAusentismo gestorAusentismo;
+    private GestorAccidente gestorAccidente;
     private ArrayList<SelectItem> itemsMotivos = new ArrayList<>();
     private List<Ausentismo> listaAusentismo;
     private List<Ausentismo> listaAusentismoanomes;
@@ -81,15 +88,19 @@ public class UIAusentismo implements Serializable {
     
     
     private List<Ausentismo> distribucionPorOrigen=new ArrayList<>();
-    private List<Ausentismo> distribucionGrupoDiagnostico=new ArrayList<>();
+    private ArrayList<Incapacidad> distribucionGrupoDiagnostico=new ArrayList<>();    
     private PieChartModel piePorOrigen=new PieChartModel();    
     private PieChartModel piePorDias=new PieChartModel();
     private PieChartModel pieGenero=new PieChartModel();
     private PieChartModel pieTipoIncapacidad=new PieChartModel();
     private HorizontalBarChartModel horizontalBarGrupoDiagnostico=new HorizontalBarChartModel();
+    private HorizontalBarChartModel horizontalBarCargos=new HorizontalBarChartModel();
+    private HorizontalBarChartModel horizontalBarCentrosTrabajo=new HorizontalBarChartModel();
     
     private List<Ausentismo> distribucionAuLaboralGenero=new ArrayList<>();
     private List<Ausentismo> distribucionTipoIncapacidad=new ArrayList<>();
+    private List<Accidente> distribucionCargos=new ArrayList<>();
+    private List<Ausentismo> distribucionPorCentroTrabajo=new ArrayList<>();
     
     private List<Ausentismo> pieporSubempresa;
     private List<Ausentismo> filteredlistaAusentismo;
@@ -546,7 +557,7 @@ public class UIAusentismo implements Serializable {
                 nitsubem = null;
             }
             
-            
+            gestorAccidente=new GestorAccidente();
             gestorAusentismo=new GestorAusentismo();
             distribucionPorOrigen=new ArrayList<>();
             
@@ -600,9 +611,91 @@ public class UIAusentismo implements Serializable {
             pieTipoIncapacidad.isShowDataLabels();
             pieTipoIncapacidad.setLegendPosition("w");
             
-            //distribucionGrupoDiagnostico.addAll(gestorAusentismo.cargarDistribucionGrupoDiagnostico(nitem, nitsubem,selmesdesde,selmeshasta,selano));
+            distribucionGrupoDiagnostico=new ArrayList<>();
+            distribucionGrupoDiagnostico.addAll(gestorAusentismo.cargarDistribucionGrupoDiagnostico(nitem, nitsubem,selmesdesde,selmeshasta,selano));
         
             horizontalBarGrupoDiagnostico=new HorizontalBarChartModel();
+            
+            for(int i=0;i<=distribucionGrupoDiagnostico.size()-1;i++){
+                ChartSeries serie=new ChartSeries();                                
+                serie.setLabel(distribucionGrupoDiagnostico.get(i).getGrupoCie10().getNombre());
+                serie.set(distribucionGrupoDiagnostico.get(i).getGrupoCie10().getNombre(), distribucionGrupoDiagnostico.get(i).getCasos());                
+                horizontalBarGrupoDiagnostico.addSeries(serie);
+            }                        
+            
+            horizontalBarGrupoDiagnostico.setLegendPosition("ne");
+            horizontalBarGrupoDiagnostico.setAnimate(true);
+            horizontalBarGrupoDiagnostico.setDatatipFormat("%.0f");            
+            horizontalBarGrupoDiagnostico.setBarWidth(10);
+            
+            
+            Axis xAxis = horizontalBarGrupoDiagnostico.getAxis(AxisType.X);
+            xAxis.setLabel("Cantidad");
+            xAxis.setMin(0);
+            xAxis.setMax(50);
+            xAxis.setTickInterval("5");
+
+            Axis yAxis = horizontalBarGrupoDiagnostico.getAxis(AxisType.Y);
+            yAxis.setLabel("Grupo Diagnostico");   
+            
+            
+            distribucionCargos=new ArrayList<>();
+            distribucionCargos.addAll(gestorAccidente.cargarDistribucionCargos(nitem,nitsubem,selmesdesde, selmeshasta,selano));
+            
+            horizontalBarCargos=new HorizontalBarChartModel();
+            
+            for(int i=0;i<=distribucionCargos.size()-1;i++){                
+                ChartSeries serie=new ChartSeries();                                
+                serie.setLabel(distribucionCargos.get(i).getCargo().getNombre());
+                serie.set(distribucionCargos.get(i).getCargo().getNombre(), distribucionCargos.get(i).getTotCargos());
+                horizontalBarCargos.addSeries(serie);                      
+            }
+            
+            horizontalBarCargos.setTitle("Distribucion Por Cargos");
+            horizontalBarCargos.setLegendPosition("ne");
+            horizontalBarCargos.setAnimate(true);
+            horizontalBarCargos.setDatatipFormat("%.0f");            
+            horizontalBarCargos.setBarWidth(40);
+            
+            Axis xAxisC = horizontalBarCargos.getAxis(AxisType.X);
+            xAxisC.setLabel("Cantidad");
+            xAxisC.setMin(0);
+            xAxisC.setMax(50);
+            xAxisC.setTickInterval("10");
+
+            Axis yAxisC= horizontalBarCargos.getAxis(AxisType.Y);
+            yAxisC.setLabel("Cargo");
+            
+            
+            distribucionPorCentroTrabajo=new ArrayList<>();
+            horizontalBarCentrosTrabajo=new HorizontalBarChartModel();
+            if(nitsubem==null){
+                distribucionPorCentroTrabajo.addAll(gestorAusentismo.cargarDistribucionPorCentroTrabajo(nitem, selmesdesde, selmeshasta, selano));
+
+
+
+                for(int i=0;i<=distribucionPorCentroTrabajo.size()-1;i++){                
+                    ChartSeries serie=new ChartSeries();                                
+                    serie.setLabel(distribucionPorCentroTrabajo.get(i).getSubempresa().getNombre());
+                    serie.set(distribucionPorCentroTrabajo.get(i).getSubempresa().getNombre(), distribucionPorCentroTrabajo.get(i).getCasos());
+                    horizontalBarCentrosTrabajo.addSeries(serie);                      
+                }
+
+                horizontalBarCentrosTrabajo.setTitle("Distribucion Por Centro Trabajo");
+                horizontalBarCentrosTrabajo.setLegendPosition("ne");
+                horizontalBarCentrosTrabajo.setAnimate(true);
+                horizontalBarCentrosTrabajo.setDatatipFormat("%.0f");            
+                horizontalBarCentrosTrabajo.setBarWidth(20);
+
+                Axis xAxisCe = horizontalBarCentrosTrabajo.getAxis(AxisType.X);
+                xAxisCe.setLabel("Cantidad");
+                xAxisCe.setMin(0);
+                xAxisCe.setMax(800);
+                xAxisCe.setTickInterval("40");
+
+                Axis yAxisCe=horizontalBarCentrosTrabajo.getAxis(AxisType.Y);
+                yAxisCe.setLabel("Centro Trabajo");
+            }
             
             
         } catch (Exception e) {
@@ -610,11 +703,43 @@ public class UIAusentismo implements Serializable {
         }
     }
 
-    public List<Ausentismo> getDistribucionGrupoDiagnostico() {
+    public HorizontalBarChartModel getHorizontalBarCentrosTrabajo() {
+        return horizontalBarCentrosTrabajo;
+    }
+
+    public void setHorizontalBarCentrosTrabajo(HorizontalBarChartModel horizontalBarCentrosTrabajo) {
+        this.horizontalBarCentrosTrabajo = horizontalBarCentrosTrabajo;
+    }
+
+    public List<Ausentismo> getDistribucionPorCentroTrabajo() {
+        return distribucionPorCentroTrabajo;
+    }
+
+    public void setDistribucionPorCentroTrabajo(List<Ausentismo> distribucionPorCentroTrabajo) {
+        this.distribucionPorCentroTrabajo = distribucionPorCentroTrabajo;
+    }
+
+    public HorizontalBarChartModel getHorizontalBarCargos() {
+        return horizontalBarCargos;
+    }
+
+    public void setHorizontalBarCargos(HorizontalBarChartModel horizontalBarCargos) {
+        this.horizontalBarCargos = horizontalBarCargos;
+    }
+
+    public List<Accidente> getDistribucionCargos() {
+        return distribucionCargos;
+    }
+
+    public void setDistribucionCargos(List<Accidente> distribucionCargos) {
+        this.distribucionCargos = distribucionCargos;
+    }
+
+    public ArrayList<Incapacidad> getDistribucionGrupoDiagnostico() {
         return distribucionGrupoDiagnostico;
     }
 
-    public void setDistribucionGrupoDiagnostico(List<Ausentismo> distribucionGrupoDiagnostico) {
+    public void setDistribucionGrupoDiagnostico(ArrayList<Incapacidad> distribucionGrupoDiagnostico) {
         this.distribucionGrupoDiagnostico = distribucionGrupoDiagnostico;
     }
 
@@ -625,8 +750,6 @@ public class UIAusentismo implements Serializable {
     public void setHorizontalBarGrupoDiagnostico(HorizontalBarChartModel horizontalBarGrupoDiagnostico) {
         this.horizontalBarGrupoDiagnostico = horizontalBarGrupoDiagnostico;
     }
-
-
 
     public PieChartModel getPieTipoIncapacidad() {
         return pieTipoIncapacidad;
