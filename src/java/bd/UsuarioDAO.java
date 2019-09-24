@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import modelo.Menu;
 import modelo.Perfil;
@@ -38,10 +39,10 @@ public class UsuarioDAO {
         SubEmpresa e = null;
         try {
             consulta = new Consulta(getConexion());
-            sql = "select u.usuario,u.nombre,u.cod_perfil,p.nombre perfil,e.nombre nom_empresa,u.fk_nitsubempresa, u.estado as estado from "
-                    + " usuario u "
+            sql = "select u.usuario,u.nombre,u.cod_perfil,p.nombre perfil,e.nombre nom_empresa,u.fk_nitsubempresa, u.estado as estado ,(select sal_min from configuracion ) as salmin,(select to_char(fecha_actualizado,'yyyy') from configuracion ) as fecActualizado"
+                    + " from usuario u "
                     + " inner join perfil p using (cod_perfil) "  
-                    + " inner join subempresa e on (nitsubempresa=fk_nitsubempresa) "
+                    + " inner join subempresa e on (nitsubempresa=fk_nitsubempresa) "                    
                     + " where usuario='" + usuario.trim() + "' and clave=md5('" + clave.trim() + "');";
             rs = consulta.ejecutar(sql);
             if (rs.next()) {
@@ -49,6 +50,8 @@ public class UsuarioDAO {
                 u.setNomusuario(rs.getString("usuario"));
                 u.setNombre(rs.getString("nombre"));
                 u.setEstado(rs.getBoolean("estado"));
+                u.setSalarioMin(rs.getFloat("salmin"));
+                u.setFechaActualizado(rs.getString("fecActualizado"));
                 
                 p = new Perfil();
                 p.setCodigo(rs.getInt("cod_perfil"));
@@ -216,6 +219,28 @@ public class UsuarioDAO {
             consulta.desconectar();
         }
     }
+    
+    public Integer modificarSalarioBase(Float salmin) throws SQLException{
+        Consulta consulta = null;
+        Integer resultado;  
+        Date hoy =new Date();
+        //Sentencia SQL para guardar el registro
+        String sql ;    
+        
+   
+        try {
+            consulta = new Consulta(getConexion());
+            
+                sql = "UPDATE configuracion  "                         
+                    +" set sal_min = "+salmin+" , fecha_actualizado='"+hoy+"'" ;
+            resultado = consulta.actualizar(sql);
+            return resultado;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }     
+    }
 
     public List<Menu> listarOpcionesMenu(String usuario) throws SQLException {
         Consulta consulta = null;
@@ -233,7 +258,7 @@ public class UsuarioDAO {
                     + " inner join menu m using (cod_menu) "
                     + " inner join submenu s using (cod_menu,cod_submenu) "
                     + " where "
-                    + " usuario='" + usuario + "' "
+                    + " usuario='" + usuario + "' and cod_menu<>'2' "
                     + " order by m.orden,s.orden ";
             rs = consulta.ejecutar(sql);
             if (rs.next()) {

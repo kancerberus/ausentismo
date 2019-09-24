@@ -12,6 +12,7 @@ import java.util.List;
 import javafx.scene.chart.PieChart;
 import modelo.Ausentismo;
 import modelo.Empleado;
+import modelo.Incapacidad;
 import modelo.Mes;
 import modelo.Motivo;
 import org.primefaces.model.chart.PieChartModel;
@@ -28,6 +29,65 @@ public class GestorAusentismo extends Gestor implements Serializable{
         super();
     }
     
+    public String cargarFechaActualizadoSalario() throws Exception{
+        try {
+            abrirConexion();
+            AusentismoDAO ausentismoDAO = new AusentismoDAO(conexion);
+            return ausentismoDAO.cargarFechaActualizadoSalario();
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public List<Ausentismo> cargarDistribucionPorOrigen(String nitem,String nitsubem,String selmesdesde,String selmeshasta,String selano) throws Exception{
+        try {
+            abrirConexion();
+            AusentismoDAO ausentismoDAO = new AusentismoDAO(conexion);
+            return ausentismoDAO.cargarDistribucionPorOrigen(nitem, nitsubem,selmesdesde,selmeshasta,selano);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public List<Ausentismo> cargarDistribucionLabora(String nitem,String nitsubem,String selmesdesde,String selmeshasta,String selano) throws Exception{
+        try {
+            abrirConexion();
+            AusentismoDAO ausentismoDAO = new AusentismoDAO(conexion);
+            return ausentismoDAO.cargarDistribucionLabora(nitem, nitsubem,selmesdesde,selmeshasta,selano);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public List<Ausentismo> cargarDistribucionTipoIncapacidad(String nitem,String nitsubem,String selmesdesde,String selmeshasta,String selano) throws Exception{
+        try {
+            abrirConexion();
+            AusentismoDAO ausentismoDAO = new AusentismoDAO(conexion);
+            return ausentismoDAO.cargarDistribucionTipoIncapacidad(nitem, nitsubem,selmesdesde,selmeshasta,selano);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public ArrayList<Incapacidad> cargarDistribucionGrupoDiagnostico(String nitem,String nitsubem,String selmesdesde,String selmeshasta,String selano) throws Exception{
+        try {
+            abrirConexion();
+            AusentismoDAO ausentismoDAO = new AusentismoDAO(conexion);
+            return ausentismoDAO.cargarDistribucionGrupoDiagnostico(nitem, nitsubem,selmesdesde,selmeshasta,selano);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public ArrayList<Ausentismo> cargarDistribucionPorCentroTrabajo(String nitem,String selmesdesde,String selmeshasta,String selano) throws Exception{
+        try {
+            abrirConexion();
+            AusentismoDAO ausentismoDAO = new AusentismoDAO(conexion);
+            return ausentismoDAO.cargarDistribucionPorCentroTrabajo(nitem,selmesdesde,selmeshasta,selano);
+        } finally {
+            cerrarConexion();
+        }
+    }
     
     public List<Ausentismo> listarAusentismos(String nitsesion) throws Exception {
        try {
@@ -117,6 +177,16 @@ public class GestorAusentismo extends Gestor implements Serializable{
             abrirConexion();
             AusentismoDAO ausentismoDAO = new AusentismoDAO(conexion);
             return ausentismoDAO.guardarAusentismo(ausentismo);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public Integer eliminarRegistro(String codReg)throws Exception{
+        try {
+            abrirConexion();
+            AusentismoDAO ausentismoDAO = new AusentismoDAO(conexion);
+            return ausentismoDAO.eliminarRegistro(codReg);
         } finally {
             cerrarConexion();
         }

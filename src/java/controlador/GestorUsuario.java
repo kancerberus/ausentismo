@@ -82,4 +82,13 @@ public class GestorUsuario extends Gestor {
             cerrarConexion();
         }        
     }
+    public Integer modificarSalarioBase(Float salmin) throws Exception{
+        try {
+            abrirConexion();
+            UsuarioDAO usuarioDAO = new UsuarioDAO(conexion);
+            return usuarioDAO.modificarSalarioBase(salmin);
+        } finally {
+            cerrarConexion();
+        }   
+    }
 }

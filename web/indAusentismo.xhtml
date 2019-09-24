@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"     
+      xmlns:f="http://java.sun.com/jsf/core"      
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    
+    <h:body>
+        <ui:composition>
+            <h:form id="indAusensimo">
+                <p:growl id="avisoIndAusensismo" showDetail="true" life="50000" />
+                <p:panel header="INDICADORES ACCIDENTES" id="pnlInformeaccidenteEmpresa"
+                         style="width:auto;">
+                    <table>
+                        <tr><td>
+                            <p:fieldset legend="DATOS AUSENTISMOS" style="margin-bottom:10px; margin-top:10px; width:auto; font-size: 90%; " >
+                                <table cellpadding="5">
+                                    <tr>
+                                        <td align="center">
+                                            <p:panelGrid id="tblInformeaccidentesEmpresa" columns="4" style="width:1030px; font-size: 90%;">
+                                                <f:facet name="header">
+                                                    <h:outputText value="" />
+                                                </f:facet>
+                                                Empresa:<p:selectOneMenu value="#{listasBean.empresa.nitempresa}" >}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
+                                                <f:selectItems   value="#{listasBean.itemsEmpresas}"/>  
+                                                <p:ajax update="subempresas"/>
+                                                </p:selectOneMenu>
+                                                
+                                                SubEmpresa:<p:selectOneMenu id="subempresas" value="#{listasBean.subempresa.nitsubempresa}" >}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                  	
+                                                <f:selectItems   value="#{listasBean.itemsSubEmpresas}"/>
+                                                </p:selectOneMenu>   
+                                                
+                                                Mes Desde:<p:selectOneMenu value="#{ausentismoBean.mes.desde}" >}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
+                                                <f:selectItems   value="#{listasBean.itemsMeses}"/>
+                                                </p:selectOneMenu>
+                                                
+                                                Mes Hasta:<p:selectOneMenu value="#{ausentismoBean.mes.hasta}" >}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
+                                                <f:selectItems   value="#{listasBean.itemsMeses}"/>
+                                                </p:selectOneMenu>
+                                                
+                                                Año:<p:selectOneMenu value="#{ausentismoBean.ano.año}" >}
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
+                                                <f:selectItems   value="#{listasBean.itemsAños}"/>                                                   
+                                                </p:selectOneMenu>   
+                                                
+                                                <h:outputText value="Anual: " />
+                                                <p:selectBooleanButton value="#{ausentismoBean.todos}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">                                                    
+                                                </p:selectBooleanButton>
+                                            </p:panelGrid>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </p:fieldset>
+                            <p:fieldset style= "margin-top:10px;" >                                    
+                                <p:commandButton icon="ui-icon-newwin" update="auOrigenDias,piePorOrigen,piePorDias,auLaboral,pieGenero,auPorTipoIncapacidad,pieTipoIncapacidad,barGrupoc10,barCargo,barCentroTrabajo" 
+                                                 type="submit" value="Generar"  actionListener="#{ausentismoBean.indicadoresAusentismo()}"/>
+                            </p:fieldset>
+                                <br/>
+                            <p:panel header="DISTRIBUCIÓN DEL AUSENTISMO LABORAL POR CASOS Y DÍAS PERDIDOS"  >
+                                <h:panelGrid  columns="2" cellspacing="30" >
+                                    <p:column >
+                                        <p:chart id="piePorOrigen" type="pie" model="#{ausentismoBean.piePorOrigen}" style="width: 500px;height:400px"/>
+                                    </p:column>
+                                    <p:column >
+                                        <p:chart id="piePorDias" type="pie" model="#{ausentismoBean.piePorDias}" style="width: 500px;height:400px"/>
+                                    </p:column>                                    
+                                </h:panelGrid>
+                                
+                                <p:dataTable id="auOrigenDias" var="varAuOrigenDias" value="#{ausentismoBean.distribucionPorOrigen}"
+                                        rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 70%;margin-left: 10%">
+                                            <p:column headerText="Origen">
+                                                <h:outputText value="#{varAuOrigenDias.motivo.nombrem}" />
+                                            </p:column>
+
+                                             <p:column headerText="Casos" >
+                                                 <h:outputText value="#{varAuOrigenDias.casos}" />
+                                            </p:column>
+
+                                             <p:column headerText="Dias Incapacidad" >
+                                                 <h:outputText value="#{varAuOrigenDias.diasIncapacidad}" />
+                                            </p:column>
+                                             
+                                             <p:columnGroup type="footer">
+                                                <p:row>
+                                                    <p:column style="text-align:left" footerText="TOTALES" />
+                                                    <p:column footerText="#{ausentismoBean.totCasos}" />
+                                                    <p:column footerText="#{ausentismoBean.totDiasIncapacidad}" />                                                    
+                                                </p:row>
+                                            </p:columnGroup>
+                                            
+                                         </p:dataTable>
+                                     
+                                    </p:panel>
+
+                                    <p:panel header="DISTRIBUCIÓN DEL AUSENTISMO LABORAL" >
+                                    <h:panelGrid  columns="2" cellspacing="30" >
+                                        <p:column width="50%" >
+                                            <p:panel header="DISTRIBUCIÓN POR GENERO" >
+                                            <p:column >
+                                                <p:chart id="pieGenero" type="pie" model="#{ausentismoBean.pieGenero}" style="width: 500px;height:400px"/>
+                                            </p:column>
+                                            
+                                                <p:dataTable id="auLaboral" var="varLaboralGenero" value="#{ausentismoBean.distribucionAuLaboralGenero}"
+                                                    rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 70%;margin-left: 10%">
+                                                    <p:column headerText="Genero">
+                                                        <h:outputText value="#{varLaboralGenero.sexo.nombre}" />
+                                                    </p:column>
+
+                                                     <p:column headerText="Casos" >
+                                                         <h:outputText value="#{varLaboralGenero.casos}" />
+                                                    </p:column>
+
+                                                     <p:column headerText="Porcentaje" >
+                                                         <h:outputText value="#{varLaboralGenero.porcentaje} %" />
+                                                    </p:column>
+
+                                                     <p:columnGroup type="footer">
+                                                        <p:row>
+                                                            <p:column style="text-align:left" footerText="TOTALES" />
+                                                            <p:column footerText="#{ausentismoBean.totCasosGenero}" />
+                                                            <p:column footerText="100%" />                                                    
+                                                        </p:row>
+                                                    </p:columnGroup>                                            
+                                                </p:dataTable>
+                                            </p:panel>
+                                                
+                                                
+                                            
+                                        </p:column>
+                                        <p:column width="50%"  >
+                                            <p:panel header="DISTRIBUCIÓN POR TIPO DE INCAPACIDAD" >
+                                                <p:column >
+                                                    <p:chart id="pieTipoIncapacidad" type="pie" model="#{ausentismoBean.pieTipoIncapacidad}" style="width: 500px;height:400px"/>
+                                                </p:column>
+                                                <p:dataTable id="auPorTipoIncapacidad" var="varTipoIncapacidad" value="#{ausentismoBean.distribucionTipoIncapacidad}"
+                                                    rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 70%;margin-left: 10%">
+                                                    <p:column headerText="Genero">
+                                                        <h:outputText value="#{varTipoIncapacidad.tipoIncapacidad.nombre}" />
+                                                    </p:column>
+
+                                                     <p:column headerText="Casos" >
+                                                         <h:outputText value="#{varTipoIncapacidad.casos}" />
+                                                    </p:column>
+
+                                                     <p:column headerText="Porcentaje" >
+                                                         <h:outputText value="#{varTipoIncapacidad.porcentaje} %" />
+                                                    </p:column>
+
+                                                     <p:columnGroup type="footer">
+                                                        <p:row>
+                                                            <p:column style="text-align:left" footerText="TOTALES" />
+                                                            <p:column footerText="#{ausentismoBean.totCasosTipoIncapacidad}" />
+                                                            <p:column footerText="100%" />                                                    
+                                                        </p:row>
+                                                    </p:columnGroup>                                            
+                                                </p:dataTable>
+                                            </p:panel>
+                                        </p:column>                                    
+                                    </h:panelGrid>
+                                    </p:panel>
+                                
+                                <p:panel header="DISTRIBUCIÓN POR GRUPO DIAGNOSTICO" >
+                                        <p:column width="50%">
+                                            <p:chart id="barGrupoc10" type="bar" model="#{ausentismoBean.horizontalBarGrupoDiagnostico}" style="margin-left: 15%;width: 600px;height:400px"/>
+                                        </p:column>                                    
+                                </p:panel>
+                                
+                                <p:panel header="DISTRIBUCIÓN DE AUSENSITSMO POR CARGO">
+                                        <h:panelGrid columns="2" cellpadding="10" >                                        
+                                        <p:column width="50%">
+                                            <p:chart id="barCargo" type="bar" model="#{ausentismoBean.horizontalBarCargos}" style="width: 600px;height:400px"/>
+                                        </p:column>
+                                    </h:panelGrid>
+                                </p:panel>
+                                
+                                <p:panel header="DISTRIBUCIÓN DE AUSENTISMO POR CENTRO TRABAJO">
+                                        <h:panelGrid columns="2" cellpadding="10" >                                        
+                                        <p:column width="70%">
+                                            <p:chart id="barCentroTrabajo" type="bar" model="#{ausentismoBean.horizontalBarCentrosTrabajo}" style="width: 600px;height:400px"/>
+                                        </p:column>
+                                    </h:panelGrid>
+                                </p:panel>
+                                
+                            </td>
+                        </tr>                        
+                    </table>                   
+                </p:panel>                                                
+            </h:form>
+        </ui:composition>
+    </h:body>
+</html>

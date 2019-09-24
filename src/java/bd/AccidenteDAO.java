@@ -246,7 +246,7 @@ public class AccidenteDAO {
                 StringBuilder sql1 = new StringBuilder(
                         "SELECT count(cod_regaccidente) cantidad " +
                         " FROM registro_accidente " +
-                        "inner join empleado e on (e.cedula=fk_cedula) "+
+                        " inner join empleado e on (e.cedula=fk_cedula) "+
                         " WHERE cod_det_lista_tipo_evento='"+listaDistribucionTiposAccidente.get(i).getTipoEvento().getCodigo()+"'"+
                         " and "+queryfecha+"='"+selano+"'"
                         + " and e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"

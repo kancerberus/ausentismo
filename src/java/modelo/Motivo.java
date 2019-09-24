@@ -15,6 +15,15 @@ public class Motivo {
     private String nombrem;
     private String tipo;
 
+    public Motivo() {
+    
+    }    
+    
+    public Motivo(String codigo, String nombrem) {
+        this.codigo = codigo;
+        this.nombrem = nombrem;
+    }    
+    
     public String getNombrem() {
         return nombrem;
     }

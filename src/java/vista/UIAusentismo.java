@@ -5,11 +5,14 @@
  */
 package vista;
 
+import controlador.GestorAccidente;
 import controlador.GestorAusentismo;
 import controlador.GestorEmpleado;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,14 +21,21 @@ import modelo.Ausentismo;
 import modelo.Empleado;
 import modelo.Motivo;
 import util.Utilidades;
+import util.UtilJSF;
 import javax.el.ExpressionFactory;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import modelo.Accidente;
 import modelo.Año;
+import modelo.Incapacidad;
 import modelo.Mes;
 import modelo.SubEmpresa;
 import org.primefaces.model.chart.PieChartModel;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.chart.Axis;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.ChartSeries;
+import org.primefaces.model.chart.HorizontalBarChartModel;
 
 
 /**
@@ -55,7 +65,10 @@ public class UIAusentismo implements Serializable {
     private float totalem=0;    
     private float totalsubt=0;
     private String anoActualizador;
-    
+    private float totCasos;
+    private float totDiasIncapacidad;
+    private Integer totCasosGenero;
+    private Integer totCasosTipoIncapacidad;
     
     Boolean todos;
     Boolean selec;
@@ -64,6 +77,7 @@ public class UIAusentismo implements Serializable {
     private ELContext contextoEL;
     private ExpressionFactory reg;
     private GestorAusentismo gestorAusentismo;
+    private GestorAccidente gestorAccidente;
     private ArrayList<SelectItem> itemsMotivos = new ArrayList<>();
     private List<Ausentismo> listaAusentismo;
     private List<Ausentismo> listaAusentismoanomes;
@@ -71,6 +85,22 @@ public class UIAusentismo implements Serializable {
     private List<Ausentismo> listAusentismoEmpleado;
     private List<Ausentismo> pieausentismoEmpresa;
     private List<Ausentismo> pieausentismoEmpleado;
+    
+    
+    private List<Ausentismo> distribucionPorOrigen=new ArrayList<>();
+    private ArrayList<Incapacidad> distribucionGrupoDiagnostico=new ArrayList<>();    
+    private PieChartModel piePorOrigen=new PieChartModel();    
+    private PieChartModel piePorDias=new PieChartModel();
+    private PieChartModel pieGenero=new PieChartModel();
+    private PieChartModel pieTipoIncapacidad=new PieChartModel();
+    private HorizontalBarChartModel horizontalBarGrupoDiagnostico=new HorizontalBarChartModel();
+    private HorizontalBarChartModel horizontalBarCargos=new HorizontalBarChartModel();
+    private HorizontalBarChartModel horizontalBarCentrosTrabajo=new HorizontalBarChartModel();
+    
+    private List<Ausentismo> distribucionAuLaboralGenero=new ArrayList<>();
+    private List<Ausentismo> distribucionTipoIncapacidad=new ArrayList<>();
+    private List<Accidente> distribucionCargos=new ArrayList<>();
+    private List<Ausentismo> distribucionPorCentroTrabajo=new ArrayList<>();
     
     private List<Ausentismo> pieporSubempresa;
     private List<Ausentismo> filteredlistaAusentismo;
@@ -129,6 +159,18 @@ public class UIAusentismo implements Serializable {
 
     }
     
+    public void buscarEActualizacionEPS() throws Exception {
+    
+        contextoJSF = FacesContext.getCurrentInstance();
+        contextoEL = contextoJSF.getELContext();
+        ef = contextoJSF.getApplication().getExpressionFactory();
+        String nitsesion = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);        
+        GestorEmpleado gestorEmpleado = new GestorEmpleado();
+        Integer resultado = gestorEmpleado.validarEmpleadoActualizacionEPS();
+        //mensaje si resultado viene con 0 error en la consulta
+
+    }
+    
 
         
     public void buscarAusentismo() throws Exception {
@@ -161,11 +203,21 @@ public class UIAusentismo implements Serializable {
 
         Boolean invalido = false;
         String msg = null;
+        
 
         //ingreso de informacion al gestor
         gestorAusentismo = new GestorAusentismo();
-
         try {
+            
+            String fechaActualizado = gestorAusentismo.cargarFechaActualizadoSalario();
+            
+            Calendar fecha = Calendar.getInstance();
+
+            
+            int año=fecha.get(Calendar.YEAR);
+            String añohoy=String.valueOf(año);
+            if(fechaActualizado.equals(añohoy)){                
+            
             //verificar que todas las cajas este llenas           
             if (ausentismo.getEmpleado().getCedula() == null) {
                 msg = "La cédula esta vacía!";
@@ -194,11 +246,37 @@ public class UIAusentismo implements Serializable {
                 
                     util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
                 }
+            
+            }else{
+                    util.mostrarMensaje("Actualice Salario Basico del Año.");                
+            }
             } catch (Exception ex) {
                 util.mostrarMensaje(ex.getMessage());
                 util.mostrarMensaje("!! El registro no pudo ser almacenado !!");               
             }
     }
+    
+    public void eliminarRegisroAusentismo() throws Exception{
+        
+        gestorAusentismo=new GestorAusentismo();
+        
+        try {
+            
+                ausentismo= (Ausentismo) UtilJSF.getBean("itemAusentismo");
+            
+                Integer resultado=gestorAusentismo.eliminarRegistro(ausentismo.getCod_registro());
+
+                if (resultado > 0) {
+                    util.mostrarMensaje("!! Se elimino el registro correctamente.");                        
+                }else{
+                    util.mostrarMensaje("!! No se pudo eliminar.");                
+                }            
+            
+        } catch (Exception e) {
+            Logger.getLogger(UIAusentismo.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+    
     
     public void modificarAusentismo() throws Exception{    
 
@@ -452,6 +530,313 @@ public class UIAusentismo implements Serializable {
                 }
             
                 return itemsMotivos;    
+    }
+    
+    public void indicadoresAusentismo(){
+        try {
+            
+            contextoJSF = FacesContext.getCurrentInstance();
+            contextoEL = contextoJSF.getELContext();
+            ef = contextoJSF.getApplication().getExpressionFactory();
+            String nitem = (String) ef.createValueExpression(contextoEL, "#{listasBean.empresa.nitempresa}", String.class).getValue(contextoEL);  
+            String nitsubem = (String) ef.createValueExpression(contextoEL, "#{listasBean.subempresa.nitsubempresa}", String.class).getValue(contextoEL);  
+            //revisar checkbox
+            String selmesdesde = null;
+            String selmeshasta = null;
+            String selano = null; 
+            totCasosGenero=0;
+            totCasosTipoIncapacidad=0;
+            
+            if(todos == true){
+                selano = ano.getAño();   
+            }else{
+               selmesdesde = (ano.getAño())+"/"+(mes.getDesde());
+               selmeshasta = (ano.getAño()+"/"+(mes.getHasta()));           
+            }        
+            if(nitsubem == ""){
+                nitsubem = null;
+            }
+            
+            gestorAccidente=new GestorAccidente();
+            gestorAusentismo=new GestorAusentismo();
+            distribucionPorOrigen=new ArrayList<>();
+            
+            
+            distribucionPorOrigen.addAll(gestorAusentismo.cargarDistribucionPorOrigen(nitem, nitsubem,selmesdesde,selmeshasta,selano));
+            
+            for(int i=0;i<distribucionPorOrigen.size();i++){
+                totCasos += distribucionPorOrigen.get(i).getCasos();
+                totDiasIncapacidad += distribucionPorOrigen.get(i).getDiasIncapacidad();
+            }
+            
+            piePorOrigen=new PieChartModel();
+            for(int i=0;i<=distribucionPorOrigen.size()-1;i++){                
+                piePorOrigen.set(distribucionPorOrigen.get(i).getMotivo().getNombrem(), distribucionPorOrigen.get(i).getCasos());
+            }
+            piePorOrigen.isShowDataLabels();
+            piePorOrigen.setLegendPosition("w"); 
+            
+            piePorDias=new PieChartModel();
+            for(int i=0;i<=distribucionPorOrigen.size()-1;i++){                
+                piePorDias.set(distribucionPorOrigen.get(i).getMotivo().getNombrem(), distribucionPorOrigen.get(i).getDiasIncapacidad());
+            }
+            piePorDias.isShowDataLabels();
+            piePorDias.setLegendPosition("e"); 
+            
+            
+            distribucionAuLaboralGenero=new ArrayList<>();
+            distribucionAuLaboralGenero.addAll(gestorAusentismo.cargarDistribucionLabora(nitem, nitsubem,selmesdesde,selmeshasta,selano));
+            
+            pieGenero=new PieChartModel();
+            for(int i=0;i<distribucionAuLaboralGenero.size();i++){
+                totCasosGenero+=distribucionAuLaboralGenero.get(i).getCasos();
+                pieGenero.set(distribucionAuLaboralGenero.get(i).getSexo().getNombre(), distribucionAuLaboralGenero.get(i).getCasos());
+            }
+            
+            pieGenero.isShowDataLabels();
+            pieGenero.setLegendPosition("w");
+            
+            distribucionAuLaboralGenero.get(0).setPorcentaje((distribucionAuLaboralGenero.get(0).getCasos().floatValue()/totCasosGenero.floatValue())*100);
+            distribucionAuLaboralGenero.get(1).setPorcentaje((distribucionAuLaboralGenero.get(1).getCasos().floatValue()/totCasosGenero.floatValue())*100);
+            
+            distribucionTipoIncapacidad=new ArrayList<>();
+            distribucionTipoIncapacidad.addAll(gestorAusentismo.cargarDistribucionTipoIncapacidad(nitem, nitsubem,selmesdesde,selmeshasta,selano));
+            
+            pieTipoIncapacidad=new PieChartModel();
+            for(int i=0;i<distribucionTipoIncapacidad.size();i++){
+                totCasosTipoIncapacidad+=distribucionTipoIncapacidad.get(i).getCasos();
+                pieTipoIncapacidad.set(distribucionTipoIncapacidad.get(i).getTipoIncapacidad().getNombre(), distribucionTipoIncapacidad.get(i).getCasos());
+            }
+            
+            pieTipoIncapacidad.isShowDataLabels();
+            pieTipoIncapacidad.setLegendPosition("w");
+            
+            distribucionGrupoDiagnostico=new ArrayList<>();
+            distribucionGrupoDiagnostico.addAll(gestorAusentismo.cargarDistribucionGrupoDiagnostico(nitem, nitsubem,selmesdesde,selmeshasta,selano));
+        
+            horizontalBarGrupoDiagnostico=new HorizontalBarChartModel();
+            
+            for(int i=0;i<=distribucionGrupoDiagnostico.size()-1;i++){
+                ChartSeries serie=new ChartSeries();                                
+                serie.setLabel(distribucionGrupoDiagnostico.get(i).getGrupoCie10().getNombre());
+                serie.set(distribucionGrupoDiagnostico.get(i).getGrupoCie10().getNombre(), distribucionGrupoDiagnostico.get(i).getCasos());                
+                horizontalBarGrupoDiagnostico.addSeries(serie);
+            }                        
+            
+            horizontalBarGrupoDiagnostico.setLegendPosition("ne");
+            horizontalBarGrupoDiagnostico.setAnimate(true);
+            horizontalBarGrupoDiagnostico.setDatatipFormat("%.0f");            
+            horizontalBarGrupoDiagnostico.setBarWidth(10);
+            
+            
+            Axis xAxis = horizontalBarGrupoDiagnostico.getAxis(AxisType.X);
+            xAxis.setLabel("Cantidad");
+            xAxis.setMin(0);
+            xAxis.setMax(50);
+            xAxis.setTickInterval("5");
+
+            Axis yAxis = horizontalBarGrupoDiagnostico.getAxis(AxisType.Y);
+            yAxis.setLabel("Grupo Diagnostico");   
+            
+            
+            distribucionCargos=new ArrayList<>();
+            distribucionCargos.addAll(gestorAccidente.cargarDistribucionCargos(nitem,nitsubem,selmesdesde, selmeshasta,selano));
+            
+            horizontalBarCargos=new HorizontalBarChartModel();
+            
+            for(int i=0;i<=distribucionCargos.size()-1;i++){                
+                ChartSeries serie=new ChartSeries();                                
+                serie.setLabel(distribucionCargos.get(i).getCargo().getNombre());
+                serie.set(distribucionCargos.get(i).getCargo().getNombre(), distribucionCargos.get(i).getTotCargos());
+                horizontalBarCargos.addSeries(serie);                      
+            }
+            
+            horizontalBarCargos.setTitle("Distribucion Por Cargos");
+            horizontalBarCargos.setLegendPosition("ne");
+            horizontalBarCargos.setAnimate(true);
+            horizontalBarCargos.setDatatipFormat("%.0f");            
+            horizontalBarCargos.setBarWidth(40);
+            
+            Axis xAxisC = horizontalBarCargos.getAxis(AxisType.X);
+            xAxisC.setLabel("Cantidad");
+            xAxisC.setMin(0);
+            xAxisC.setMax(50);
+            xAxisC.setTickInterval("10");
+
+            Axis yAxisC= horizontalBarCargos.getAxis(AxisType.Y);
+            yAxisC.setLabel("Cargo");
+            
+            
+            distribucionPorCentroTrabajo=new ArrayList<>();
+            horizontalBarCentrosTrabajo=new HorizontalBarChartModel();
+            if(nitsubem==null){
+                distribucionPorCentroTrabajo.addAll(gestorAusentismo.cargarDistribucionPorCentroTrabajo(nitem, selmesdesde, selmeshasta, selano));
+
+
+
+                for(int i=0;i<=distribucionPorCentroTrabajo.size()-1;i++){                
+                    ChartSeries serie=new ChartSeries();                                
+                    serie.setLabel(distribucionPorCentroTrabajo.get(i).getSubempresa().getNombre());
+                    serie.set(distribucionPorCentroTrabajo.get(i).getSubempresa().getNombre(), distribucionPorCentroTrabajo.get(i).getCasos());
+                    horizontalBarCentrosTrabajo.addSeries(serie);                      
+                }
+
+                horizontalBarCentrosTrabajo.setTitle("Distribucion Por Centro Trabajo");
+                horizontalBarCentrosTrabajo.setLegendPosition("ne");
+                horizontalBarCentrosTrabajo.setAnimate(true);
+                horizontalBarCentrosTrabajo.setDatatipFormat("%.0f");            
+                horizontalBarCentrosTrabajo.setBarWidth(20);
+
+                Axis xAxisCe = horizontalBarCentrosTrabajo.getAxis(AxisType.X);
+                xAxisCe.setLabel("Cantidad");
+                xAxisCe.setMin(0);
+                xAxisCe.setMax(800);
+                xAxisCe.setTickInterval("40");
+
+                Axis yAxisCe=horizontalBarCentrosTrabajo.getAxis(AxisType.Y);
+                yAxisCe.setLabel("Centro Trabajo");
+            }
+            
+            
+        } catch (Exception e) {
+            Logger.getLogger(UIAusentismo.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+    public HorizontalBarChartModel getHorizontalBarCentrosTrabajo() {
+        return horizontalBarCentrosTrabajo;
+    }
+
+    public void setHorizontalBarCentrosTrabajo(HorizontalBarChartModel horizontalBarCentrosTrabajo) {
+        this.horizontalBarCentrosTrabajo = horizontalBarCentrosTrabajo;
+    }
+
+    public List<Ausentismo> getDistribucionPorCentroTrabajo() {
+        return distribucionPorCentroTrabajo;
+    }
+
+    public void setDistribucionPorCentroTrabajo(List<Ausentismo> distribucionPorCentroTrabajo) {
+        this.distribucionPorCentroTrabajo = distribucionPorCentroTrabajo;
+    }
+
+    public HorizontalBarChartModel getHorizontalBarCargos() {
+        return horizontalBarCargos;
+    }
+
+    public void setHorizontalBarCargos(HorizontalBarChartModel horizontalBarCargos) {
+        this.horizontalBarCargos = horizontalBarCargos;
+    }
+
+    public List<Accidente> getDistribucionCargos() {
+        return distribucionCargos;
+    }
+
+    public void setDistribucionCargos(List<Accidente> distribucionCargos) {
+        this.distribucionCargos = distribucionCargos;
+    }
+
+    public ArrayList<Incapacidad> getDistribucionGrupoDiagnostico() {
+        return distribucionGrupoDiagnostico;
+    }
+
+    public void setDistribucionGrupoDiagnostico(ArrayList<Incapacidad> distribucionGrupoDiagnostico) {
+        this.distribucionGrupoDiagnostico = distribucionGrupoDiagnostico;
+    }
+
+    public HorizontalBarChartModel getHorizontalBarGrupoDiagnostico() {
+        return horizontalBarGrupoDiagnostico;
+    }
+
+    public void setHorizontalBarGrupoDiagnostico(HorizontalBarChartModel horizontalBarGrupoDiagnostico) {
+        this.horizontalBarGrupoDiagnostico = horizontalBarGrupoDiagnostico;
+    }
+
+    public PieChartModel getPieTipoIncapacidad() {
+        return pieTipoIncapacidad;
+    }
+
+    public void setPieTipoIncapacidad(PieChartModel pieTipoIncapacidad) {
+        this.pieTipoIncapacidad = pieTipoIncapacidad;
+    }
+
+    public Integer getTotCasosTipoIncapacidad() {
+        return totCasosTipoIncapacidad;
+    }
+
+    public void setTotCasosTipoIncapacidad(Integer totCasosTipoIncapacidad) {
+        this.totCasosTipoIncapacidad = totCasosTipoIncapacidad;
+    }
+
+    public List<Ausentismo> getDistribucionTipoIncapacidad() {
+        return distribucionTipoIncapacidad;
+    }
+
+    public void setDistribucionTipoIncapacidad(List<Ausentismo> distribucionTipoIncapacidad) {
+        this.distribucionTipoIncapacidad = distribucionTipoIncapacidad;
+    }
+
+    public PieChartModel getPieGenero() {
+        return pieGenero;
+    }
+
+    public void setPieGenero(PieChartModel pieGenero) {
+        this.pieGenero = pieGenero;
+    }
+
+    public Integer getTotCasosGenero() {
+        return totCasosGenero;
+    }
+
+    public void setTotCasosGenero(Integer totCasosGenero) {
+        this.totCasosGenero = totCasosGenero;
+    }
+
+    public List<Ausentismo> getDistribucionAuLaboralGenero() {
+        return distribucionAuLaboralGenero;
+    }
+
+    public void setDistribucionAuLaboralGenero(List<Ausentismo> distribucionAuLaboralGenero) {
+        this.distribucionAuLaboralGenero = distribucionAuLaboralGenero;
+    }
+
+    public PieChartModel getPiePorDias() {
+        return piePorDias;
+    }
+
+    public void setPiePorDias(PieChartModel piePorDias) {
+        this.piePorDias = piePorDias;
+    }
+
+    public PieChartModel getPiePorOrigen() {
+        return piePorOrigen;
+    }
+
+    public void setPiePorOrigen(PieChartModel piePorOrigen) {
+        this.piePorOrigen = piePorOrigen;
+    }
+
+    public float getTotCasos() {
+        return totCasos;
+    }
+
+    public void setTotCasos(float totCasos) {
+        this.totCasos = totCasos;
+    }
+
+    public float getTotDiasIncapacidad() {
+        return totDiasIncapacidad;
+    }
+
+    public void setTotDiasIncapacidad(float totDiasIncapacidad) {
+        this.totDiasIncapacidad = totDiasIncapacidad;
+    }
+
+    public List<Ausentismo> getDistribucionPorOrigen() {
+        return distribucionPorOrigen;
+    }
+
+    public void setDistribucionPorOrigen(List<Ausentismo> distribucionPorOrigen) {
+        this.distribucionPorOrigen = distribucionPorOrigen;
     }
 
     public String getAnoActualizador() {

@@ -17,8 +17,8 @@ and open the template in the editor.
             <h:form id="frmConsultarAusentismo">
                 <p:growl id="growlConsultaAusentismo" showDetail="true" life="5000" />
                 <p:panel header="CONSULTAR INGRESO DE AUSENCIAS" id="pnlConsultaAusentismo">  
-                    <table>                        
-                        <tr><td>
+                                            
+                        
                                 <p:dataTable var="itemAusentismo" value="#{ausentismoBean.listaAusentismo}" id="dtListaAusentismos" style="font-size: 80%;"
                                              rows="20" paginator="true" emptyMessage="No hay resultados"
                                              filteredValue="#{ausentismoBean.filteredlistaAusentismo}" widgetVar="ausentismoWidget">
@@ -52,10 +52,12 @@ and open the template in the editor.
                                     </p:column>                                    
                                     <p:column headerText="Motivo Ausencia" style="width:150px" filterMatchMode="contains">
                                         <center><h:outputText value="#{itemAusentismo.motivoausentismo}" /></center>
+                                    </p:column>                                    
+                                    <p:column width="10%" headerText="Eliminar Registro">
+                                        <p:commandButton icon="ui-icon-trash" title="Eliminar Registro" update="dtListaAusentismos"
+                                                         action="#{ausentismoBean.eliminarRegisroAusentismo()}"/>
                                     </p:column>
                                 </p:dataTable>
-                            </td></tr>
-                    </table>
                 </p:panel>                                
             </h:form>
         </ui:composition>

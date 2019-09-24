@@ -42,7 +42,7 @@ and open the template in the editor.
                             <p:fieldset legend="Datos Empleado" style="margin-bottom:10px; margin-top:10px; width:auto" >                                       
                                 <h:panelGrid columns="4" cellpadding="5" style="width:auto; font-size: 90%;">                                    
                                     <p:outputLabel value="Cedula:" for="cedula" />
-                                    <p:inputText id="cedula" value="#{ausentismoBean.cedula}" required="true" label="cedula">
+                                    <p:inputText id="cedula" value="#{ausentismoBean.cedula}" label="cedula">
                                         <p:ajax event="blur" listener="#{ausentismoBean.buscarEActualizacion}" update="pnlActAusentismo"></p:ajax>
                                     </p:inputText> 
                                     <p:outputLabel value="año"/>
@@ -53,7 +53,9 @@ and open the template in the editor.
                                         <f:selectItem itemLabel="2021" itemValue="2021" />
                                     </p:selectOneMenu>
                                     <p:growl id="growl" life="3000"/>
-                                    <p:commandButton icon="ui-icon-search" value="Consultar" actionListener="#{ausentismoBean.buscarEActualizacion}" update="pnlActAusentismo"/>                                       
+                                    <p:commandButton icon="ui-icon-search" value="Consultar" actionListener="#{ausentismoBean.buscarEActualizacion}" update="pnlActAusentismo"/>
+                                    
+                                    <p:commandButton icon="ui-icon-search" value="ActualizadorEPS" actionListener="#{ausentismoBean.buscarEActualizacionEPS()}" update="pnlActAusentismo"/>
                                 </h:panelGrid>                                
                                 <table cellpadding="5">                                    
                                     <p:panelGrid id="panel01" columns="10" style="width:1000px; font-size: 90%;">

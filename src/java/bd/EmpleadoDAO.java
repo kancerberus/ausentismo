@@ -193,6 +193,129 @@ public class EmpleadoDAO {
         }
     }
     
+    
+    
+    public Integer validarEmpleadoActualizacionEPS() throws SQLException {
+        Consulta consulta = null;
+        ArrayList<Ausentismo> listaAusentismo = new ArrayList<>();        
+        Ausentismo au;
+        ResultSet rs;
+        String sql;
+        
+        
+        try {
+            consulta = new Consulta(getConexion());                        
+        
+                Integer resultado=0;                                                              
+                double minhoras = (828116/240);
+                double empleador;
+                double arl;
+                double eps;
+                double trabajador;
+                double total;
+                double porcent=0.6667;
+                double normal;
+                double thd;
+                double tha;
+                double salhoras;
+                
+                
+                
+                //Consulta la información a actualizar item a item
+                sql= " SELECT ra.cod_regausentismo cod_regausentismo,ra.fk_cedula, ra.tiempohoras tiempohoras, ra.eps, ra.empleador,ra.arl,ra.trabajador, ra.total, e.sueldo_mes sueldo_mes " +
+                        " FROM public.registro_ausentismo ra " +
+                        " inner join empleado e on (e.cedula=ra.fk_cedula) " +
+                        " where to_char(fechapermiso,'yyyy')='2019' and fk_cod_motivo='1' ";
+                
+                rs = consulta.ejecutar(sql);
+                                
+                while (rs.next()) {
+                    
+                    empleador=0;
+                    arl=0;
+                    eps=0;
+                    trabajador=0;
+                    total=0;
+                    porcent=0.6667;
+                    normal=0;
+                    thd=0;
+                    tha=0;
+                    salhoras=0.00;
+                    
+                    
+                    
+                    //au=new Ausentismo(rs.getString("cod_regausentismo"), new Empleado(rs.getString("fk_cedula"), "", ""), rs.getString("tiempohoras"));                  
+                    String cod_regausentismo = rs.getString("cod_regausentismo");                    
+                    float th=Float.parseFloat(rs.getString("tiempohoras"));
+                    Integer sueldo_mes = rs.getInt("sueldo_mes");
+                    salhoras=sueldo_mes/240.00;                        
+                        
+                    //listaAusentismo.add(au);
+                    //}//termina while 
+
+                //for(int i=0;i<1;i++){
+                    
+                    //float th=Float.parseFloat(listaAusentismo.get(i).getTiempo_horas());                            
+                    
+                    double minimo = (th-16) * minhoras;
+                    
+                    tha = 16;
+                    thd = th - tha;
+                    
+                    
+                    
+                    //consulta = new Consulta(getConexion());  
+                    //Consulta la información a actualizar item a item
+                    //sql= "SELECT sueldo_mes "
+                      //      + " from empleado "
+                        //    + " where cedula='"+listaAusentismo.get(i).getEmpleado().getCedula()+"' ";
+
+                    //rs = consulta.ejecutar(sql);
+
+                    //while (rs.next()) {
+                        //Integer salarioEmpleado=rs.getInt("sueldo_mes");
+                        
+                    //}                    
+                    
+                    if(th <= 16 ){
+                           empleador = tha * salhoras;    
+                           
+                    }else{
+                           //Calculo de los primeros dias                         
+                           empleador = tha * salhoras;
+                           //Calculo de los días restantes
+                           double epsxemp = ((salhoras * thd) * porcent);
+                           
+                           //Se compara con el mínimo el valor adquirido                           
+                        if (epsxemp > minimo) {
+                               eps = epsxemp;
+                        }else{
+                               eps = minimo;
+                        }
+                    }
+                    total = empleador + eps + arl + trabajador;
+                    
+                    //Ingresa la actualización en BD  
+                    consulta = new Consulta(getConexion());
+
+
+                    sql = " UPDATE registro_ausentismo re "
+                            +" set trabajador =  round(CAST(('"+trabajador+"') as numeric), '3'), eps =  round(CAST(('"+eps+"') as numeric), '3')  , empleador = round(CAST(('"+empleador+"') as numeric),'3') , total= round(CAST(('"+total+"') as numeric),'3') "
+                            +" where re.cod_regausentismo= '"+cod_regausentismo+"' ";
+
+                    resultado = consulta.actualizar(sql);
+                    
+                }                
+                
+                return resultado;
+                
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
+    
     public Integer modificarEmpleado(Empleado empleado) throws SQLException{
         Consulta consulta = null;
         Integer resultado;    

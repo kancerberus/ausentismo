@@ -5,6 +5,8 @@
  */
 package modelo;
 
+import java.util.Date;
+
 /**
  *
  * @author Andres
@@ -16,10 +18,12 @@ public class Usuario {
     private Perfil perfil;
     private SubEmpresa subempresa;
     private boolean estado;
+    private Float salarioMin;
+    private String fechaActualizado;
 
     public Usuario() {
         this.perfil=new Perfil(); 
-        this.subempresa=new SubEmpresa();
+        this.subempresa=new SubEmpresa();        
     }
 
     public String getNomusuario() {
@@ -30,6 +34,23 @@ public class Usuario {
         this.nomusuario = nomusuario;
     }
 
+    public Float getSalarioMin() {
+        return salarioMin;
+    }
+
+    public void setSalarioMin(Float salarioMin) {
+        this.salarioMin = salarioMin;
+    }
+
+    public String getFechaActualizado() {
+        return fechaActualizado;
+    }
+
+    public void setFechaActualizado(String fechaActualizado) {
+        this.fechaActualizado = fechaActualizado;
+    }
+
+    
     /**
      * @return the nombre
      */

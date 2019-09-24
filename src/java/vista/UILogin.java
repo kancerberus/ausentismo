@@ -97,6 +97,36 @@ public class UILogin implements Serializable {
             
                 return itemsPerfiles;    
     }
+    
+    public void modificarSalarioBasico(){
+        Boolean invalido = false;
+        String msg = null;
+        
+        
+        try {
+            gestorUsuario=new GestorUsuario();
+            
+            if (sesion.getUsuario().getSalarioMin()==0){
+                msg = "Ingrese salario basico!";                
+                invalido = true;
+            }
+
+            if (invalido == false) {
+                    Integer resultado=gestorUsuario.modificarSalarioBase(sesion.getUsuario().getSalarioMin());
+
+                    if (resultado > 0) {
+                        util.mostrarMensaje("!! Modificacion guardada !!");                                          
+                    } else {
+                        util.mostrarMensaje("!! La modificacion no pudo ser guardada !!");
+                    }
+            } else {
+                    util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
+            }
+            
+        } catch (Exception e) {
+            Logger.getLogger(UILogin.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
     /**
      * @return the usuario
      */

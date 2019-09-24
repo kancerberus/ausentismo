@@ -81,6 +81,17 @@ public class GestorEmpleado extends Gestor {
             cerrarConexion();
         }
     }
+    
+    public Integer validarEmpleadoActualizacionEPS() throws Exception {
+        try {
+            abrirConexion();
+            EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
+            return empleadoDAO.validarEmpleadoActualizacionEPS();
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
     public Integer guardarEmpleado(Empleado empleado, String nitsesion) throws Exception {
         try {
             abrirConexion();
