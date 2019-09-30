@@ -34,6 +34,7 @@ public class UIEmpleado implements Serializable {
     private GestorMunicipio gestorMunicipio;       
     private ExpressionFactory ef;
     private List<Empleado> listaEmpleado;
+    private List<Empleado> listaEmpleadoAdmin;    
     private List<Empleado> filteredlistaEmpleado; 
     
 
@@ -68,35 +69,56 @@ public class UIEmpleado implements Serializable {
             
             if (empleado.getCedula() == null) {
                 invalido = true;
+                util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
             }
             if (empleado.getNombres() == null){
                 invalido = true;
+                util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
             }
             if (empleado.getApellidos() == null){
                 invalido = true;
+                util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
             }
             if (empleado.getFecha_nac() == null){
                 invalido = true;
+                util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
             }
             if (empleado.getMunicipio() == null){
                 invalido = true;
+                util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
             }
             if (empleado.getEps() == null){
                 invalido = true;
+                util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
             }            
             if (empleado.getEps() == null){
                 invalido = true;
+                util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
             }         
             if (empleado.getCargo() == null){
                 invalido = true;
+                util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
             }       
             if (empleado.getEcivil() == null){
                 invalido = true;
+                util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
             }         
             if (empleado.getSexo() == null){
                 invalido = true;
+                util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
             }            
+            if(empleado.getFechaIngreso()==null){
+                invalido =true;
+                util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
+            }
             
+            
+            Empleado encontradoEn = gestorEmpleado.buscarempleadoAdmin(empleado.getCedula());                    
+                    
+            if(encontradoEn != null){
+                invalido=true;                
+                util.mostrarMensaje("!! El empleado esta registrado en el centro de trabajo "+encontradoEn.getNitsubempresa()+" !!");                        
+            }
             
             if (!invalido) {
                     Integer resultado = gestorEmpleado.guardarEmpleado(empleado,nitsesion);
@@ -107,9 +129,7 @@ public class UIEmpleado implements Serializable {
                     } else {
                         util.mostrarMensaje("!! El registro no pudo ser almacenado !!");
                     }
-            } else {
-                    util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
-                }
+            } 
             } catch (Exception ex) {
                 util.mostrarMensaje(ex.getMessage());
             }
@@ -225,7 +245,23 @@ public class UIEmpleado implements Serializable {
                 util.mostrarMensaje("!! La modificacion no pudo ser guardada !!");               
             }
     }    
-    
+
+    public List<Empleado> getListaEmpleadoAdmin() {
+        contextoJSF = FacesContext.getCurrentInstance();
+        contextoEL = contextoJSF.getELContext();
+        ef = contextoJSF.getApplication().getExpressionFactory();        
+
+        try {
+            listaEmpleadoAdmin = gestorEmpleado.listarEmpleadosAdmin();
+        } catch (Exception ex) {
+            Logger.getLogger(UIEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+        return listaEmpleadoAdmin;
+    }
+
+    public void setListaEmpleadoAdmin(List<Empleado> listaEmpleadoAdmin) {
+        this.listaEmpleadoAdmin = listaEmpleadoAdmin;
+    }    
     
     public void limpiarEmpleado() { 
         empleado = new Empleado();

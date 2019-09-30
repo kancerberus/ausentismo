@@ -57,7 +57,7 @@
                                 </table>
                             </p:fieldset> 
                             <p:fieldset style= "margin-top:10px;" >                                    
-                                <p:commandButton icon="ui-icon-newwin" update="barCargo,distTipoLesion,barTipoLesion,distParteAfectada,pieParteAfectada,barAgente,distAgente,barMecanismo,distMecanismo,distClasificacion,pieClasificacion,barTAccidente,distTAccidente,barCInmediata,avisoAccidente,distCInmediata,tipoEvento,cumplimiento,dist,barCBasica,cumpInc,cumpAcc,cumpEnf,distRiesgos,distCBasica" type="submit" value="Generar"  actionListener="#{accidenteBean.generarAccidentes()}"/>
+                                <p:commandButton icon="ui-icon-newwin" update="cumpTot,pieRiesgos,barCargo,distTipoLesion,barTipoLesion,distParteAfectada,pieParteAfectada,barAgente,distAgente,barMecanismo,distMecanismo,distClasificacion,pieClasificacion,barTAccidente,distTAccidente,barCInmediata,avisoAccidente,distCInmediata,tipoEvento,cumplimiento,dist,barCBasica,cumpInc,cumpAcc,cumpEnf,distRiesgos,distCBasica" type="submit" value="Generar"  actionListener="#{accidenteBean.generarAccidentes()}"/>
                             </p:fieldset>
                                 <br/>
                             <p:panel header="ESTADISTICAS GENERALES">
@@ -103,12 +103,20 @@
                                                    <p:column headerText="Clase De Evento">
                                                         <h:outputText value="#{varCumplimiento.tipoEvento.nombre}" />
                                                     </p:column>
+                                                    <p:columnGroup type="footer">
+                                                    <p:row>
+                                                        <p:column style="text-align:left" footerText="TOTALES" />
+                                                        
+                                                    </p:row>
+                                                </p:columnGroup>
                                                </p:dataTable>
                                         </p:column>
                                         
-                                        <p:progressBar id="cumpInc" value="#{accidenteBean.cumpInc}" labelTemplate="{value}%" displayOnly="true" style="width: 60%;float: right;margin-top: -11%;margin-right: 5%"/>
-                                        <p:progressBar id="cumpAcc" value="#{accidenteBean.cumpAcc}" labelTemplate="{value}%" displayOnly="true" style="width: 60%;float: right;margin-top: -7.5%;margin-right: 5%"/>
-                                        <p:progressBar id="cumpEnf" value="#{accidenteBean.cumpEnf}" labelTemplate="{value}%" displayOnly="true" style="width: 60%;float: right;margin-top: -3.9%;margin-right: 5%"/>
+                                        <p:progressBar id="cumpInc" value="#{accidenteBean.cumpInc}" labelTemplate="{value}%" displayOnly="true" style="width: 60%;float: right;margin-top: -15%;margin-right: 5%"/>
+                                        <p:progressBar id="cumpAcc" value="#{accidenteBean.cumpAcc}" labelTemplate="{value}%" displayOnly="true" style="width: 60%;float: right;margin-top: -11%;margin-right: 5%"/>
+                                        <p:progressBar id="cumpEnf" value="#{accidenteBean.cumpEnf}" labelTemplate="{value}%" displayOnly="true" style="width: 60%;float: right;margin-top: -7%;margin-right: 5%"/>
+                                        <p:progressBar id="cumpTot" value="#{accidenteBean.totCumpInv}" labelTemplate="{value}%" displayOnly="true" style="width: 60%;float: right;margin-top: -3%;margin-right: 5%"/>
+                                        
                                         
                                     </p:panel>
                              </h:panelGrid>                             
@@ -157,7 +165,7 @@
                                                 <p:ajax listener="#{accidenteBean.generarAccidentes()}" update="pieRiesgos"/>
                                             </p:selectOneMenu>
                                             <br/>
-                                            <p:chart id="pieRiesgos" type="pie" model="#{accidenteBean.pieRiesgos}" style="width:500px;height:300px" />
+                                            <p:chart id="pieRiesgos" type="pie" model="#{accidenteBean.pieRiesgos}" style="width:700px;height:500px" />
                                         </p:panel>
                                     </p:column>
                                 </h:panelGrid>
@@ -253,7 +261,9 @@
                                                 <h:outputText value="#{varTAccidente.casos}"/>
                                             </p:column>
                                             <p:column headerText="Porcentaje">
-                                                <h:outputText value="#{varTAccidente.porcentaje}"/>
+                                                <h:outputText value="#{varTAccidente.porcentaje}">
+                                                <f:convertNumber pattern="#0.00"/>
+                                                </h:outputText>
                                             </p:column>                                 
                                             
                                             <p:columnGroup type="footer">
@@ -283,7 +293,9 @@
                                                 <h:outputText value="#{varClasificacion.casos}"/>
                                             </p:column>
                                             <p:column headerText="Porcentaje">
-                                                <h:outputText value="#{varClasificacion.porcentaje}"/>
+                                                <h:outputText value="#{varClasificacion.porcentaje}">
+                                                <f:convertNumber pattern="#0.00"/>
+                                                </h:outputText>                                                
                                             </p:column>                                 
                                             
                                             <p:columnGroup type="footer">
@@ -321,7 +333,9 @@
                                                 <h:outputText value="#{varMecaniscmo.totMecanismo}"/>
                                             </p:column>                     
                                             <p:column headerText="Porcentaje">
-                                                <h:outputText value="#{varMecaniscmo.porcentaje}"/>
+                                                <h:outputText value="#{varMecaniscmo.porcentaje}">
+                                                    <f:convertNumber pattern="#0.00"/>
+                                                </h:outputText>                                                    
                                             </p:column>                     
                                             
                                             <p:columnGroup type="footer">
@@ -337,7 +351,7 @@
                                         </p:dataTable>
                                         </p:column>  
                                         <p:column width="50%">
-                                            <p:chart id="barMecanismo" type="bar" model="#{accidenteBean.horizontalBarMecanismos}" style="width: 600px;height:400px"/>
+                                            <p:chart id="barMecanismo" type="bar" model="#{accidenteBean.horizontalBarMecanismos}" style="width: 800px;height:600px"/>
                                         </p:column>
                                     </h:panelGrid>
                                     </p:panel>
@@ -359,7 +373,9 @@
                                                 <h:outputText value="#{varAgente.totAgAccidente}"/>
                                             </p:column>                     
                                             <p:column headerText="Porcentaje">
-                                                <h:outputText value="#{varAgente.porcentaje}"/>
+                                                <h:outputText value="#{varAgente.porcentaje}">
+                                                <f:convertNumber pattern="#0.00"/>
+                                                </h:outputText>
                                             </p:column>                     
                                             
                                             <p:columnGroup type="footer">
@@ -375,7 +391,7 @@
                                         </p:dataTable>
                                         </p:column>  
                                         <p:column width="50%">
-                                            <p:chart id="barAgente" type="bar" model="#{accidenteBean.horizontalBarAgenteAccidente}" style="width: 600px;height:400px"/>
+                                            <p:chart id="barAgente" type="bar" model="#{accidenteBean.horizontalBarAgenteAccidente}" style="width: 800px;height:600px"/>
                                         </p:column>
                                     </h:panelGrid>
                                     </p:panel>
@@ -398,7 +414,9 @@
                                                 <h:outputText value="#{varParteAfectada.totParteAfectada}"/>
                                             </p:column>                     
                                             <p:column headerText="Porcentaje">
-                                                <h:outputText value="#{varParteAfectada.porcentaje}"/>
+                                                <h:outputText value="#{varParteAfectada.porcentaje}">
+                                                    <f:convertNumber pattern="#0.00"/>
+                                                </h:outputText>                                                    
                                             </p:column>                     
                                             
                                             <p:columnGroup type="footer">
@@ -414,7 +432,7 @@
                                         </p:dataTable>
                                         </p:column>  
                                         <p:column width="50%">
-                                            <p:chart id="pieParteAfectada" type="pie" model="#{accidenteBean.pieParteAfectada}" style="width: 600px;height:400px"/>
+                                            <p:chart id="pieParteAfectada" type="pie" model="#{accidenteBean.pieParteAfectada}" style="width: 700px;height:500px"/>
                                         </p:column>
                                     </h:panelGrid>
                                     </p:panel>
@@ -437,7 +455,9 @@
                                                 <h:outputText value="#{varTipoLesion.totTipoLesion}"/>
                                             </p:column>                     
                                             <p:column headerText="Porcentaje">
-                                                <h:outputText value="#{varTipoLesion.porcentaje}"/>
+                                                <h:outputText value="#{varTipoLesion.porcentaje}">
+                                                <f:convertNumber pattern="#0.00"/>
+                                                </h:outputText>                                                    
                                             </p:column>                     
                                             
                                             <p:columnGroup type="footer">
@@ -453,7 +473,7 @@
                                         </p:dataTable>
                                         </p:column>  
                                         <p:column width="50%">
-                                            <p:chart id="barTipoLesion" type="bar" model="#{accidenteBean.horizontalBarTipoLesion}" style="width: 600px;height:400px"/>
+                                            <p:chart id="barTipoLesion" type="bar" model="#{accidenteBean.horizontalBarTipoLesion}" style="width: 800px;height:600px"/>
                                         </p:column>
                                     </h:panelGrid>
                                     </p:panel>
@@ -461,7 +481,7 @@
                                 <p:panel header="DISTRIBUCIÓN DE LA ACCIDENTALIDAD POR CARGO">
                                         <h:panelGrid columns="2" cellpadding="10" >                                        
                                         <p:column width="50%">
-                                            <p:chart id="barCargo" type="bar" model="#{accidenteBean.horizontalBarCargos}" style="width: 600px;height:400px"/>
+                                            <p:chart id="barCargo" type="bar" model="#{accidenteBean.horizontalBarCargos}" style="width: 800px;height:600px"/>
                                         </p:column>
                                     </h:panelGrid>
                                 </p:panel>

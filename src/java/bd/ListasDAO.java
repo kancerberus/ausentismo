@@ -163,7 +163,7 @@ public class ListasDAO {
         }
     }
     
-    public ArrayList<TipoEvento> listarTipoEventos() throws SQLException {
+     public ArrayList<TipoEvento> listarTipoEventos() throws SQLException {
         TipoEvento tipoEvento;
         ArrayList<TipoEvento> listaTipoEventos = new ArrayList<>();
         ResultSet dt;

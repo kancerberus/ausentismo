@@ -31,14 +31,16 @@ public class Ausentismo {
     private Double empleador;
     private Double trabajador;
     private Double total;
-    private TipoIncapacidad tipoIncapacidad;
+    private TipoIncapacidad tipoIncapacidad;    
     private Integer casos;
     private float diasIncapacidad; 
     private Sexo sexo;
     private float porcentaje=0.2f;
     private Integer totCasos;
+    private Cargo cargos;
     
     private Double totalsube;
+    private Integer totCargos;
     
     
     public Ausentismo() {   
@@ -49,6 +51,11 @@ public class Ausentismo {
         this.subempresa = new SubEmpresa();
         this.empresa = new Empresa();
     } 
+
+    public Ausentismo(Cargo cargos,Integer totCargos) {
+        this.cargos = cargos;
+        this.totCargos=totCargos;
+    }
 
 
     public Ausentismo(Motivo motivo, Integer casos, float diasIncapacidad) {
@@ -74,6 +81,22 @@ public class Ausentismo {
         this.casos = casos;
         this.totCasos=totCasos;
         
+    }
+
+    public Integer getTotCargos() {
+        return totCargos;
+    }
+
+    public void setTotCargos(Integer totCargos) {
+        this.totCargos = totCargos;
+    }
+
+    public Cargo getCargos() {
+        return cargos;
+    }
+
+    public void setCargos(Cargo cargos) {
+        this.cargos = cargos;
     }
  
     public float getPorcentaje() {

@@ -41,8 +41,6 @@ import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.HorizontalBarChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
-
-
 /**
  *
  * @author Andres
@@ -100,9 +98,10 @@ public class UIAccidente implements Serializable {
     private Integer totCasos=0;        
     private Integer totInc=0;
     private Integer totInv=0;
-    private Integer cumpInc=0;
-    private Integer cumpAcc=0;
-    private Integer cumpEnf=0;
+    private Float cumpInc=0.0f;
+    private Float cumpAcc=0.0f;
+    private Float cumpEnf=0.0f;
+    private Float totCumpInv=0.0f;
     
     Boolean todos;
     Boolean selec;
@@ -146,9 +145,9 @@ public class UIAccidente implements Serializable {
        contextoEL = contextoJSF.getELContext(); 
        reg = contextoJSF.getApplication().getExpressionFactory();
        empleado = new Empleado();
-       accidente = new Accidente();       
-       accidente.setTipoEvento(new TipoEvento());
+       accidente = new Accidente();                     
        accidente.setClasificacion(new Clasificacion());
+       accidente.setTipoEvento(new TipoEvento());
        accidente.setIncapacidadsi(new IncapacidadSi());
        accidente.setTipoAccidente(new TipoAccidente());
        accidente.setParteAfectada(new ParteAfectada());
@@ -160,6 +159,18 @@ public class UIAccidente implements Serializable {
        accidente.setAgenteAccidente(new AgenteAccidente());
        horizontalBarCausaBasica=new HorizontalBarChartModel();
        horizontalBarCausaInmediata=new HorizontalBarChartModel();
+       distribucionRiesgos=new ArrayList<>();
+       distribucionTipoEventos=new ArrayList<>();
+       distribucionRiesgos=new ArrayList<>();
+       distribucionCausaBasica=new ArrayList<>();
+       distribucionCausaInmediata=new ArrayList<>();  
+       distribucionTipoAccion=new ArrayList<>();
+       distribucionClasificacion=new ArrayList<>();
+       distribucionMecanismo=new ArrayList<>();
+       distribucionAgente=new ArrayList<>();
+       distribucionParteAfectada=new ArrayList<>();
+       distribucionTipoLesion=new ArrayList<>();
+       distribucionCargos=new ArrayList<>();
        mes = new Mes();
        ano = new Año();
        gestorAccidente = new GestorAccidente();       
@@ -185,7 +196,7 @@ public class UIAccidente implements Serializable {
     }
     
     public void generarAccidentes() throws Exception{
-        try {
+        try {  
             totarl=0;
             toteps=0;
             totempleador=0;
@@ -217,9 +228,9 @@ public class UIAccidente implements Serializable {
             totCasos=0;        
             totInc=0;
             totInv=0;
-            cumpInc=0;
-            cumpAcc=0;
-            cumpEnf=0;
+            cumpInc=0.0f;
+            cumpAcc=0.0f;
+            cumpEnf=0.0f;
             totCasos=0;
             totInc=0;
             totInv=0;   
@@ -243,14 +254,6 @@ public class UIAccidente implements Serializable {
             String selmeshasta = null;
             String selano = null; 
             gestorAccidente=new GestorAccidente();
-            distribucionTipoEventos=new ArrayList<>();
-            distribucionRiesgos=new ArrayList<>();
-            distribucionCausaBasica=new ArrayList<>();
-            distribucionCausaInmediata=new ArrayList<>();
-            distribucionTipoAccion=new ArrayList<>();
-            distribucionClasificacion=new ArrayList<>();
-            distribucionMecanismo=new ArrayList<>();
-            distribucionAgente=new ArrayList<>();
             
             pieRiesgos=new PieChartModel();
             
@@ -265,6 +268,7 @@ public class UIAccidente implements Serializable {
                 nitsubem = null;
             }            
             
+            distribucionTipoEventos=new ArrayList<>();
             distribucionTipoEventos.addAll(gestorAccidente.cargarDistribucionTipoEventos(nitem, nitsubem,selmesdesde,selmeshasta,selano));
             
             
@@ -274,11 +278,13 @@ public class UIAccidente implements Serializable {
                 totInv+=distribucionTipoEventos.get(i).getInvestigados();                  
             }
             
-            cumpInc=distribucionTipoEventos.get(0).getInvestigados()/distribucionTipoEventos.get(0).getCasos()*100;
-            cumpAcc=distribucionTipoEventos.get(1).getInvestigados()/distribucionTipoEventos.get(1).getCasos()*100;
-            cumpEnf=distribucionTipoEventos.get(2).getInvestigados()/distribucionTipoEventos.get(2).getCasos()*100;            
+            cumpInc=distribucionTipoEventos.get(0).getInvestigados().floatValue()/distribucionTipoEventos.get(0).getCasos().floatValue()*100;
+            cumpAcc=distribucionTipoEventos.get(1).getInvestigados().floatValue()/distribucionTipoEventos.get(1).getCasos().floatValue()*100;
+            cumpEnf=distribucionTipoEventos.get(2).getInvestigados().floatValue()/distribucionTipoEventos.get(2).getCasos().floatValue()*100;            
+            totCumpInv=(totInv.floatValue()/totCasos.floatValue())*100;
             
             ////
+            distribucionRiesgos=new ArrayList<>();
             distribucionRiesgos.addAll(gestorAccidente.cargarDistribucionRiesgos(nitem,nitsubem,selmesdesde, selmeshasta,selano));            
             
             for(int k=0;k<=distribucionRiesgos.size()-1;k++){
@@ -289,6 +295,13 @@ public class UIAccidente implements Serializable {
             }
             
             pieRiesgos=new PieChartModel();
+            
+            if(tipoAccion.equals("0")){
+                for(int j=0;j<=distribucionRiesgos.size()-1;j++){
+                        pieRiesgos.set(distribucionRiesgos.get(j).getRiesgo().getNombre(), distribucionRiesgos.get(j).getIncatels());
+                        
+                    }
+            }
             
             if(tipoAccion!=null){
                 if(tipoAccion.equals("11")){
@@ -307,11 +320,16 @@ public class UIAccidente implements Serializable {
                     }
                 }                
             }
-            pieRiesgos.isShowDataLabels();
+            
+            
+            
+            pieRiesgos.setDataFormat("value");            
+            pieRiesgos.setShowDataLabels(true);
             pieRiesgos.setLegendPosition("w");
+            
             /////
             
-
+            distribucionCausaBasica=new ArrayList<>();
             distribucionCausaBasica.addAll(gestorAccidente.cargarDistribucionCausaBasica(nitem,nitsubem,selmesdesde, selmeshasta,selano));            
             
             
@@ -335,6 +353,8 @@ public class UIAccidente implements Serializable {
             horizontalBarCausaBasica.setAnimate(true);
             horizontalBarCausaBasica.setDatatipFormat("%.0f");            
             horizontalBarCausaBasica.setBarWidth(40);
+            horizontalBarCausaBasica.setShowPointLabels(true);
+            
             
             Axis xAxis = horizontalBarCausaBasica.getAxis(AxisType.X);
             xAxis.setLabel("Cantidad");
@@ -345,6 +365,7 @@ public class UIAccidente implements Serializable {
             Axis yAxis = horizontalBarCausaBasica.getAxis(AxisType.Y);
             yAxis.setLabel("Causa Basica");
             
+            distribucionCausaInmediata=new ArrayList<>();
             distribucionCausaInmediata.addAll(gestorAccidente.cargarDistribucionCausaInmediata(nitem,nitsubem,selmesdesde, selmeshasta,selano));
             
             
@@ -366,6 +387,7 @@ public class UIAccidente implements Serializable {
             horizontalBarCausaInmediata.setAnimate(true);
             horizontalBarCausaInmediata.setDatatipFormat("%.0f");            
             horizontalBarCausaInmediata.setBarWidth(40);
+            horizontalBarCausaInmediata.setShowPointLabels(true);
             
             Axis xAxisInm = horizontalBarCausaInmediata.getAxis(AxisType.X);
             xAxisInm.setLabel("Cantidad");
@@ -376,6 +398,8 @@ public class UIAccidente implements Serializable {
             Axis yAxisInm = horizontalBarCausaInmediata.getAxis(AxisType.Y);
             yAxisInm.setLabel("Causa Inmediata");
             
+            
+            distribucionTipoAccion=new ArrayList<>();
             distribucionTipoAccion.addAll(gestorAccidente.cargarDistribucionTipoAccidente(nitem,nitsubem,selmesdesde, selmeshasta,selano));            
             
             pieTipoAccidente=new PieChartModel();
@@ -385,7 +409,10 @@ public class UIAccidente implements Serializable {
             }
             pieTipoAccidente.isShowDataLabels();
             pieTipoAccidente.setLegendPosition("w");   
+            pieTipoAccidente.setDataFormat("value");
+            pieTipoAccidente.setShowDataLabels(true);            
             
+            distribucionClasificacion=new ArrayList<>();
             distribucionClasificacion.addAll(gestorAccidente.cargarDistribucionClasificaciones(nitem,nitsubem,selmesdesde, selmeshasta,selano));
             
 
@@ -397,7 +424,12 @@ public class UIAccidente implements Serializable {
             }
             pieClasificacion.isShowDataLabels();
             pieClasificacion.setLegendPosition("w");   
+            pieClasificacion.setDataFormat("value");
+            pieClasificacion.setShowDataLabels(true);
             
+            
+            
+            distribucionMecanismo=new ArrayList<>();
             distribucionMecanismo.addAll(gestorAccidente.cargarDistribucionMecanismos(nitem,nitsubem,selmesdesde, selmeshasta,selano));
                                     
             horizontalBarMecanismos=new HorizontalBarChartModel();       
@@ -417,6 +449,7 @@ public class UIAccidente implements Serializable {
             horizontalBarMecanismos.setAnimate(true);
             horizontalBarMecanismos.setDatatipFormat("%.0f");            
             horizontalBarMecanismos.setBarWidth(40);
+            horizontalBarMecanismos.setShowPointLabels(true);
             
             Axis xAxisMec = horizontalBarMecanismos.getAxis(AxisType.X);
             xAxisMec.setLabel("Cantidad");
@@ -427,6 +460,8 @@ public class UIAccidente implements Serializable {
             Axis yAxisMec= horizontalBarMecanismos.getAxis(AxisType.Y);
             yAxisMec.setLabel("Mecanismo");
             
+            
+            distribucionAgente=new ArrayList<>();
             distribucionAgente.addAll(gestorAccidente.cargarDistribucionAgente(nitem,nitsubem,selmesdesde, selmeshasta,selano));
             
             horizontalBarAgenteAccidente=new HorizontalBarChartModel();
@@ -447,6 +482,7 @@ public class UIAccidente implements Serializable {
             horizontalBarAgenteAccidente.setAnimate(true);
             horizontalBarAgenteAccidente.setDatatipFormat("%.0f");            
             horizontalBarAgenteAccidente.setBarWidth(40);
+            horizontalBarAgenteAccidente.setShowPointLabels(true);
             
             Axis xAxisAg = horizontalBarAgenteAccidente.getAxis(AxisType.X);
             xAxisAg.setLabel("Cantidad");
@@ -470,6 +506,8 @@ public class UIAccidente implements Serializable {
             
             pieParteAfectada.isShowDataLabels();
             pieParteAfectada.setLegendPosition("w");   
+            pieParteAfectada.setDataFormat("value");
+            pieParteAfectada.setShowDataLabels(true);
             
             
             distribucionTipoLesion=new ArrayList<>();
@@ -492,6 +530,7 @@ public class UIAccidente implements Serializable {
             horizontalBarTipoLesion.setAnimate(true);
             horizontalBarTipoLesion.setDatatipFormat("%.0f");            
             horizontalBarTipoLesion.setBarWidth(40);
+            horizontalBarTipoLesion.setShowPointLabels(true);
             
             Axis xAxisTl = horizontalBarTipoLesion.getAxis(AxisType.X);
             xAxisTl.setLabel("Cantidad");
@@ -519,6 +558,7 @@ public class UIAccidente implements Serializable {
             horizontalBarCargos.setAnimate(true);
             horizontalBarCargos.setDatatipFormat("%.0f");            
             horizontalBarCargos.setBarWidth(40);
+            horizontalBarCargos.setShowPointLabels(true);
             
             Axis xAxisC = horizontalBarCargos.getAxis(AxisType.X);
             xAxisC.setLabel("Cantidad");
@@ -563,6 +603,18 @@ public class UIAccidente implements Serializable {
                     if (resultado > 0) {
                         util.mostrarMensaje("!! El registro fue realizado de manera exitosa !!");
                         accidente = new Accidente();
+                        accidente.setTipoEvento(new TipoEvento());
+                        accidente.setClasificacion(new Clasificacion());
+                        accidente.setTipoEvento(new TipoEvento());
+                        accidente.setIncapacidadsi(new IncapacidadSi());
+                        accidente.setTipoAccidente(new TipoAccidente());
+                        accidente.setParteAfectada(new ParteAfectada());
+                        accidente.setTipoLesion(new TipoLesion());
+                        accidente.setCausaBasica(new CausaBasica());
+                        accidente.setCausaInmediata(new CausaInmediata());
+                        accidente.setRiesgo(new Riesgo());   
+                        accidente.setMecanismo(new Mecanismo());
+                        accidente.setAgenteAccidente(new AgenteAccidente());
                     } else {
                         util.mostrarMensaje("!! El registro no pudo ser almacenado !!");
                     }
@@ -575,6 +627,40 @@ public class UIAccidente implements Serializable {
                 util.mostrarMensaje("!! El registro no pudo ser almacenado !!");               
             }
     }  
+
+    public Float getCumpInc() {
+        return cumpInc;
+    }
+
+    public void setCumpInc(Float cumpInc) {
+        this.cumpInc = cumpInc;
+    }
+
+    public Float getCumpAcc() {
+        return cumpAcc;
+    }
+
+    public void setCumpAcc(Float cumpAcc) {
+        this.cumpAcc = cumpAcc;
+    }
+
+    public Float getCumpEnf() {
+        return cumpEnf;
+    }
+
+    public void setCumpEnf(Float cumpEnf) {
+        this.cumpEnf = cumpEnf;
+    }
+
+    public Float getTotCumpInv() {
+        return totCumpInv;
+    }
+
+    public void setTotCumpInv(Float totCumpInv) {
+        this.totCumpInv = totCumpInv;
+    }
+
+
 
     public HorizontalBarChartModel getHorizontalBarCargos() {
         return horizontalBarCargos;
@@ -953,29 +1039,7 @@ public class UIAccidente implements Serializable {
         this.distribucionCausaBasica = distribucionCausaBasica;
     }
 
-    public Integer getCumpAcc() {
-        return cumpAcc;
-    }
-
-    public void setCumpAcc(Integer cumpAcc) {
-        this.cumpAcc = cumpAcc;
-    }
-
-    public Integer getCumpEnf() {
-        return cumpEnf;
-    }
-
-    public void setCumpEnf(Integer cumpEnf) {
-        this.cumpEnf = cumpEnf;
-    }
-
-    public Integer getCumpInc() {
-        return cumpInc;
-    }
-
-    public void setCumpInc(Integer cumpInc) {
-        this.cumpInc = cumpInc;
-    }
+    
 
     public Integer getTotCasos() {
         return totCasos;
@@ -1251,8 +1315,5 @@ public class UIAccidente implements Serializable {
     public void setHorizontalBarCausaInmediata(HorizontalBarChartModel horizontalBarCausaInmediata) {
         this.horizontalBarCausaInmediata = horizontalBarCausaInmediata;
     }
-
-    
-    
     
 }

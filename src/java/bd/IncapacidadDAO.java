@@ -1096,7 +1096,7 @@ public class IncapacidadDAO {
                 sql = "INSERT INTO registro_incapacidad ("
                         + "fecha_registro, fk_cod_motivo, "
                         + " tiempo_dias, tiempohoras, observaciones, cod_cie10, cod_det_lista_tipo_incapacidad, "
-                        + "fk_cedula, fecha_inicial, fecha_final, empleador, eps, arl,trabajador, total )"
+                        + "fk_cedula, fecha_inicial, fecha_final, empleador, eps, arl,trabajador, total, num_incapacidad )"
                         + "VALUES ("
                         + "'" + formatoFecha.format(ahora) + "',"                                                                                                    
                         + "'" + incapacidad.getMotivoincapacidad() + "',"
@@ -1112,7 +1112,8 @@ public class IncapacidadDAO {
                         + " round(CAST(('"+eps+"') as numeric), '3'), "
                         + " round(CAST(('"+arl+"') as numeric), '3'), "
                         + " round(CAST(('"+trabajador+"') as numeric), '3'), "
-                        + " round(CAST(('"+total+"') as numeric), '3'))";
+                        + " round(CAST(('"+total+"') as numeric), '3'), "
+                        + "'" + incapacidad.getNumIncapacidad()+ "')";
 
                 resultado = consulta.actualizar(sql);
                 return resultado;

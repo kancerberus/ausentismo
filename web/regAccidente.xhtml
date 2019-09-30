@@ -70,6 +70,7 @@ and open the template in the editor.
                                     </f:facet>
                                     Fecha Ocurrencia<p:calendar id="focurrencia" value="#{accidenteBean.accidente.fechaOcurrencia}" locale="de" navigator="true" pattern="dd-MM-yy"  mask="true">
                                     </p:calendar>
+                                    Numero Reporte<p:inputText value="#{accidenteBean.accidente.numReporte}"/>
                                     Tipo Evento<p:selectOneMenu value="#{accidenteBean.accidente.tipoEvento.codigo}" id="tipoEvento">
                                         <f:selectItem itemLabel="Seleccione..." itemValue=""  />
                                         <f:selectItems   value="#{listasBean.itemsTipoEvento}" />                                                                                                                        

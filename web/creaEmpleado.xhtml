@@ -77,7 +77,9 @@ and open the template in the editor.
                                                 <f:selectItem itemLabel="Seleccione..." itemValue="" />
                                                 
                                                 <f:selectItems   value="#{listasBean.itemsSexos}"/>
-                                                </p:selectOneMenu>                                        
+                                                </p:selectOneMenu>                                     
+                                                
+                                                Fecha Ingreso<p:calendar id="fecI" value="#{empleadoBean.empleado.fechaIngreso}" pattern="dd-MM-yyyy" mask="true"/>
                                             </p:panelGrid>
                                             <p:keyFilter for="ced" mask="int" /> 
                                             

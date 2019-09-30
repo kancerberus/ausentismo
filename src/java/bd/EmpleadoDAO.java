@@ -16,6 +16,7 @@ import java.util.Date;
 import modelo.Ausentismo;
 import modelo.Empleado;
 import modelo.Municipio;
+import modelo.SubEmpresa;
 /**
  *
  * @author Andres
@@ -54,10 +55,11 @@ public class EmpleadoDAO {
             consulta = new Consulta(getConexion());
             
             sql = "SELECT em.nombres nombres,em.apellidos apellidos,em.fecha_nacimiento fecha_nac, "
-                    + "m.municipio municipio,c.cargo cargo,det1.nombre sexo,det2.nombre e_civil,estado "
+                    + "m.municipio municipio,c.cargo cargo,det1.nombre sexo,det2.nombre e_civil,estado, eps.eps as nomeps "
                     + "FROM empleado em "
                     + "INNER JOIN municipio m using (cod_municipio) "
-                    + "INNER JOIN cargo c on (c.cod_cargo=em.cargo) "
+                    + "INNER JOIN cargo c on (c.cod_cargo=em.cargo)"
+                    + "INNER JOIN eps eps using (cod_eps) "
                     + "INNER JOIN det_lista det1 on (det1.cod_det_lista=em.cod_det_lista_sexo) "
                     + "INNER JOIN det_lista det2 on (det2.cod_det_lista=em.cod_det_lista_ecivil) "
                     + " WHERE nitsubempresa ='" + nit +"' and cedula='" + cedula.trim() +"'";
@@ -72,6 +74,7 @@ public class EmpleadoDAO {
                 em.getSexo().setNombre(rs.getString("sexo"));
                 em.getCargo().setNombre(rs.getString("cargo"));                 
                 em.setEstado(rs.getBoolean("estado"));
+                em.getEps().setNombre(rs.getString("nomeps"));
 
                 //calculo de la edad
                 fechaNac = rs.getDate("fecha_nac");
@@ -456,7 +459,7 @@ public class EmpleadoDAO {
 
             rs = consulta.ejecutar(sql);
             if (rs.next()) {
-                em = new Empleado();  
+                em = new Empleado();                 
                 em.setCedula(cedula);
                 em.setNombres(rs.getString("nombres"));
                 em.setApellidos(rs.getString("apellidos"));                
@@ -527,6 +530,44 @@ public class EmpleadoDAO {
             consulta.desconectar();
         }
     }
+    
+    
+    public ArrayList<Empleado> listarEmpleadosAdmin() throws SQLException {
+        Empleado em;
+        ArrayList<Empleado> listaEmpleado = new ArrayList<>();
+        ResultSet rs;
+        String sql;
+        Consulta consulta = null;           
+        
+        try {
+            consulta = new Consulta(getConexion());
+                    sql = "select e.cedula, e.nombres, e.apellidos,c.cargo cargo,ep.eps eps , e.sueldo_mes, sub.nombre nomsub " +
+                      " from empleado e " +
+                      " inner join eps ep on (ep.cod_eps=e.cod_eps) "+
+                      " inner join cargo c on (c.cod_cargo=e.cargo) "+
+                      " inner join subempresa sub on (sub.nitsubempresa=e.nitsubempresa) ";                      
+
+            rs = consulta.ejecutar(sql);
+
+            while (rs.next()) {
+                em = new Empleado();
+                em.setCedula(rs.getString("cedula"));
+                em.setNombres(rs.getString("nombres"));
+                em.setApellidos(rs.getString("apellidos"));
+                em.getCargo().setNombre(rs.getString("cargo"));
+                em.getEps().setNombre(rs.getString("eps"));
+                em.setSueldo_mes(rs.getInt("sueldo_mes"));
+                em.setNitsubempresa(rs.getString("nomsub"));
+                listaEmpleado.add(em);
+            }
+            return listaEmpleado;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
 
 public Integer guardarEmpleado(Empleado empleado, String nitsesion) throws SQLException{
     Consulta consulta = null;
@@ -550,7 +591,7 @@ public Integer guardarEmpleado(Empleado empleado, String nitsesion) throws SQLEx
             sql = "INSERT INTO empleado ("
                     + "cedula, nombres, apellidos, cod_municipio, "
                     + "cod_eps, cod_det_lista_sexo, cod_det_lista_ecivil, "
-                    + "nitsubempresa, fecha_nacimiento, sueldo_mes, aux_transporte, cargo, estado)"
+                    + "nitsubempresa, fecha_nacimiento, sueldo_mes, aux_transporte, cargo, estado, fecha_ingreso)"
                     + "VALUES ("                                                                                                    
                     + "'" + empleado.getCedula()+ "',"
                     + "'" + empleado.getNombres()+ "',"
@@ -563,7 +604,7 @@ public Integer guardarEmpleado(Empleado empleado, String nitsesion) throws SQLEx
                     + "'" + formatoFecha1.format(empleado.getFecha_nac()) +"',"
                     + "'" + empleado.getSueldo_mes() +"',"
                     + "'" + empleado.getAux_transporte() +"',"
-                    + "'" + empleado.getCargo().getCodigo()+"', true)";
+                    + "'" + empleado.getCargo().getCodigo()+"', true, '"+empleado.getFechaIngreso()+"')";
         resultado = consulta.actualizar(sql);
         return resultado;
     } catch (SQLException ex) {

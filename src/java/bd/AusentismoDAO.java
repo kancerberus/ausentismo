@@ -17,8 +17,10 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import modelo.Cargo;
 import modelo.Empleado;
 import modelo.Empresa;
 import modelo.GrupoCie10;
@@ -452,6 +454,95 @@ public class AusentismoDAO {
             
             return listaIncapacidad;
 
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
+    
+    public Collection<? extends Ausentismo> cargarDistribucionCargos(String nitem, String nitsubem, String selmesdesde, String selmeshasta, String selano ) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        List<Ausentismo> listaDistribucionCargos = new ArrayList<>();        
+        
+        
+        String selfecha = null;
+        String selfecha2 = null;
+        String queryfecha = null;        
+
+         if ((selmesdesde == null) && (selmeshasta == null)){
+            selfecha = selano;
+            queryfecha = "to_char(ra.fechapermiso,'yyyy')";                         
+        }else{
+            selfecha = selmesdesde;
+            selfecha2 = selmeshasta;
+            queryfecha = "to_char(ra.fechapermiso,'yyyy/mm')";            
+        }
+        
+        try {                
+            
+            if(nitem != null && nitsubem != null && selfecha != null && selfecha2==null) {
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " SELECT count(cod_regausentismo) ausentismos, e.cargo cargo, car.cargo nomcargo " +
+                    " FROM registro_ausentismo ra " +                    
+                    " JOIN empleado e ON (e.cedula=ra.fk_cedula) " +
+                    " JOIN cargo car ON (car.cod_cargo=e.cargo) " +
+                    " WHERE e.cargo<>'0' " +
+                    " and e.nitsubempresa = '"+nitsubem+"'"+
+                    " and " + queryfecha + " = '" + selfecha + "'"+
+                    " GROUP BY e.cargo, car.cargo "
+                    
+                );
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {                   
+                    Ausentismo ausentismo=new Ausentismo(new Cargo(rs.getString("cargo"), rs.getString("nomcargo")), rs.getInt("ausentismos"));
+                    listaDistribucionCargos.add(ausentismo);
+                }
+            }
+            
+            if(nitem != null && selano != null && nitsubem==null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " SELECT count(cod_regausentismo) ausentismos, e.cargo cargo, car.cargo nomcargo " +
+                    " FROM registro_ausentismo ra " +                    
+                    " JOIN empleado e ON (e.cedula=ra.fk_cedula) " +
+                    " JOIN cargo car ON (car.cod_cargo=e.cargo) " +
+                    " WHERE e.cargo<>'0' " +
+                    " and "+queryfecha+"='"+selano+"'"
+                    + " and e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
+                    " GROUP BY e.cargo, car.cargo "
+                    
+                );
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {                   
+                    Ausentismo ausentismo=new Ausentismo(new Cargo(rs.getString("cargo"), rs.getString("nomcargo")), rs.getInt("ausentismos"));
+                    listaDistribucionCargos.add(ausentismo);
+                }
+            
+            }            
+            
+            if(selmesdesde!=null && selmeshasta!=null){
+                
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " SELECT count(cod_regausentismo) ausentismos, e.cargo cargo, car.cargo nomcargo " +
+                    " FROM registro_ausentismo ra " +                    
+                    " JOIN empleado e ON (e.cedula=ra.fk_cedula) " +
+                    " JOIN cargo car ON (car.cod_cargo=e.cargo) " +
+                    " WHERE e.cargo<>'0' " +
+                    " and " + queryfecha + " between '" + selfecha + "' and '" + selfecha2 + "' "+
+                    " GROUP BY e.cargo, car.cargo ");
+                    
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {                   
+                    Ausentismo ausentismo=new Ausentismo(new Cargo(rs.getString("cargo"), rs.getString("nomcargo")), rs.getInt("ausentismos"));
+                    listaDistribucionCargos.add(ausentismo);
+                }
+            }           
+            
+            return listaDistribucionCargos;
         } catch (SQLException ex) {
             throw ex;
         } finally {

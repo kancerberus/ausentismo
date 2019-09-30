@@ -34,6 +34,7 @@ public class Incapacidad {
     private Double total;
     private TipoIncapacidad tipoIncapacidad;
     private Integer casos;
+    private String numIncapacidad;
     
     
     private Double totalsube;
@@ -41,7 +42,7 @@ public class Incapacidad {
     public Incapacidad() {
     }
 
-    public Incapacidad(String cod_reg_Incapacidad, Cie10 cie10, GrupoCie10 grupoCie10, Empleado empleado, SubEmpresa subempresa, Empresa empresa, Date fecha_registro, String tiempoHoras,Integer tiempoDias, Date fecha_inicial, Date fecha_final, String motivoincapacidad, String tipo_permiso, Motivo motivo, String observaciones, String mes, String cargo, String estado, Double arl, Double eps, Double hs, Double empleador, Double trabajador, Double total, TipoIncapacidad tipoIncapacidad, Double totalsube) {
+    public Incapacidad(String cod_reg_Incapacidad, Cie10 cie10, GrupoCie10 grupoCie10, Empleado empleado, SubEmpresa subempresa, Empresa empresa, Date fecha_registro, String tiempoHoras,Integer tiempoDias, Date fecha_inicial, Date fecha_final, String motivoincapacidad, String tipo_permiso, Motivo motivo, String observaciones, String mes, String cargo, String estado, Double arl, Double eps, Double hs, Double empleador, Double trabajador, Double total, TipoIncapacidad tipoIncapacidad, Double totalsube, String numIncapacidad) {
         this.cod_reg_Incapacidad = cod_reg_Incapacidad;
         this.cie10 = cie10;
         this.grupoCie10 = grupoCie10;
@@ -68,6 +69,15 @@ public class Incapacidad {
         this.total = total;
         this.tipoIncapacidad = tipoIncapacidad;
         this.totalsube = totalsube;
+        this.numIncapacidad = numIncapacidad;
+    }
+
+    public String getNumIncapacidad() {
+        return numIncapacidad;
+    }
+
+    public void setNumIncapacidad(String numIncapacidad) {
+        this.numIncapacidad = numIncapacidad;
     }
 
     public Integer getCasos() {
