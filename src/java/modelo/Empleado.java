@@ -25,7 +25,10 @@ public class Empleado {
     private Eps eps;    
     private Municipio Residencia;
     private boolean estado;
+    private Date fechaIngreso;
+    
 
+    
     
     public Empleado() {
         this.municipio = new Municipio();
@@ -34,16 +37,26 @@ public class Empleado {
         this.cargo = new Cargo();
         this.ecivil = new Ecivil();
         this.sexo = new Sexo();
-        this.eps = new Eps();
+        this.eps = new Eps();      
     } 
+
+    
+    
+
 
     public Empleado(String cedula, String nombres, String apellidos) {
         this.cedula = cedula;
         this.nombres = nombres;
         this.apellidos = apellidos;
     }
-    
-    
+
+    public Date getFechaIngreso() {
+        return fechaIngreso;
+    }
+
+    public void setFechaIngreso(Date fechaIngreso) {
+        this.fechaIngreso = fechaIngreso;
+    }
 
     public String getAnoacum() {
         return anoacum;

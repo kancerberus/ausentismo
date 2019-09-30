@@ -8,6 +8,7 @@ import bd.AusentismoDAO;
 import bd.EmpleadoDAO;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javafx.scene.chart.PieChart;
 import modelo.Ausentismo;
@@ -27,6 +28,16 @@ public class GestorAusentismo extends Gestor implements Serializable{
     
     public GestorAusentismo() throws Exception{
         super();
+    }
+    
+    public Collection<? extends Ausentismo> cargarDistribucionCargos(String nitem, String nitsubem, String  mesdesde,String meshasta,String ano) throws Exception {
+       try {
+            abrirConexion();
+            AusentismoDAO ausentismoDAO= new AusentismoDAO(conexion);
+            return ausentismoDAO.cargarDistribucionCargos(nitem, nitsubem, mesdesde, meshasta, ano);
+        } finally {
+            cerrarConexion();
+        }
     }
     
     public String cargarFechaActualizadoSalario() throws Exception{

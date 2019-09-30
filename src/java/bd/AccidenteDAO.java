@@ -62,7 +62,7 @@ public class AccidenteDAO {
                         + "fk_cedula, fecha_registro, fecha_ocurrencia, cod_det_lista_tipo_evento, "
                         + " cod_det_lista_clasif, investigacion, cod_det_lista_tipo_incapacidad, cod_det_lista_tipo_accidente, "
                         + " cod_det_lista_parte_afectada, cod_det_lista_tipo_lesion, cod_det_lista_riesgo, cod_det_lista_mecanismo, "
-                        + " cod_det_lista_agente_acc, cod_det_lista_causa_bas, cod_det_lista_causa_inm, descripcion_acc) "                        
+                        + " cod_det_lista_agente_acc, cod_det_lista_causa_bas, cod_det_lista_causa_inm, descripcion_acc, num_reporte) "                        
                         + "VALUES ("
                         + "'" + accidente.getEmpleado().getCedula() + "',"
                         + "'" + formatoFecha.format(ahora) + "',"                                                                                                    
@@ -79,7 +79,8 @@ public class AccidenteDAO {
                         + "'" + accidente.getAgenteAccidente().getCodigo()+ "',"
                         + "'" + accidente.getCausaBasica().getCodigo()+ "',"
                         + "'" + accidente.getCausaInmediata().getCodigo()+ "',"
-                        + "'" + accidente.getDescAccidente()+ "')";
+                        + "'" + accidente.getDescAccidente()+ "',"
+                        + "'" + accidente.getNumReporte() + "')";
             resultado = consulta.actualizar(sql);
             return resultado;
         } catch (SQLException ex) {
@@ -228,11 +229,11 @@ public class AccidenteDAO {
                 " JOIN lista l on(l.cod_lista=dl.fk_cod_lista) " +
                 " WHERE cod_lista='4' " +
                 " GROUP BY dl.nombre, cod_lista, dl.cod_det_lista " + 
-                " ORDER BY dl.cod_det_lista "    
+                " ORDER BY dl.cod_det_lista "
             );
             rs = consulta.ejecutar(sql);
-            while (rs.next()) {                   
-                Accidente accidente=new Accidente(new 
+            while (rs.next()) {
+                Accidente accidente=new Accidente(new
                 TipoEvento(rs.getString("cod_det_lista_tipo_evento"), rs.getString("nombre")),0, 0, 0);                                
                 listaDistribucionTiposAccidente.add(accidente);
             }
@@ -496,7 +497,7 @@ public class AccidenteDAO {
             }
             
             
-            if(nitem != null && selano != null){
+            if(nitem != null && selano != null && nitsubem==null){
             
             for(int i=0; i<=listaDistribucionTiposAccidente.size()-1;i++){
                 consulta = new Consulta(this.conexion);
@@ -701,7 +702,7 @@ public class AccidenteDAO {
             }
             }
             
-            if(nitem != null && selano != null){
+            if(nitem != null && selano != null && nitsubem==null){
             
             for(int i=0; i<=listaDistribucionTiposAccidente.size()-1;i++){
                 consulta = new Consulta(this.conexion);
@@ -904,7 +905,7 @@ public class AccidenteDAO {
             }
             }
             
-            if(nitem != null && selano != null){            
+            if(nitem != null && selano != null && nitsubem==null){            
             
             for(int i=0; i<=listaDistribucionTiposAccidente.size()-1;i++){
                 consulta = new Consulta(this.conexion);
@@ -1092,7 +1093,7 @@ public class AccidenteDAO {
             }
             }            
             
-            if(nitem != null && selano != null){
+            if(nitem != null && selano != null && nitsubem==null){
             
             consulta = new Consulta(this.conexion);
             StringBuilder sql1 = new StringBuilder(
@@ -1260,7 +1261,7 @@ public class AccidenteDAO {
             }
             }
             
-            if(nitem != null && selano != null){
+            if(nitem != null && selano != null && nitsubem==null){
             
             consulta = new Consulta(this.conexion);
             StringBuilder sql1 = new StringBuilder(
@@ -1446,7 +1447,7 @@ public class AccidenteDAO {
             }
             }
             
-            if(nitem != null && selano != null){            
+            if(nitem != null && selano != null && nitsubem==null){            
             
             consulta = new Consulta(this.conexion);
             StringBuilder sql4 = new StringBuilder(
@@ -1673,7 +1674,7 @@ public class AccidenteDAO {
             }
             
             
-            if(nitem != null && selano != null){            
+            if(nitem != null && selano != null && nitsubem==null){            
             
             consulta = new Consulta(this.conexion);
             StringBuilder sql4 = new StringBuilder(
@@ -1899,7 +1900,7 @@ public class AccidenteDAO {
             }
             }
             
-            if(nitem != null && selano != null){            
+            if(nitem != null && selano != null && nitsubem==null){            
             
             consulta = new Consulta(this.conexion);
             StringBuilder sql4 = new StringBuilder(
@@ -2127,7 +2128,7 @@ public class AccidenteDAO {
             }
             
             
-            if(nitem != null && selano != null){            
+            if(nitem != null && selano != null && nitsubem==null){            
             
             consulta = new Consulta(this.conexion);
             StringBuilder sql4 = new StringBuilder(
@@ -2293,7 +2294,7 @@ public class AccidenteDAO {
                 }
             }
             
-            if(nitem != null && selano != null){
+            if(nitem != null && selano != null && nitsubem==null){
                 consulta = new Consulta(this.conexion);
                 StringBuilder sql = new StringBuilder(
                     " SELECT count(cod_regaccidente) accidentes, e.cargo cargo, car.cargo nomcargo " +

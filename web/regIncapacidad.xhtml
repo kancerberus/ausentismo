@@ -59,6 +59,7 @@ and open the template in the editor.
                                         <h:outputText value="Cargo: " style="font-weight: bold;" /><h:outputText value="#{incapacidadBean.incapacidad.empleado.cargo.nombre}" /> 
                                         <h:outputText value="Estado Civil: " style="font-weight: bold;" /><h:outputText value="#{incapacidadBean.incapacidad.empleado.ecivil.nombre}" /> 
                                         <h:outputText value="Genero: " style="font-weight: bold;" /><h:outputText value="#{incapacidadBean.incapacidad.empleado.sexo.nombre}" />                                                                                         
+                                        <h:outputText value="EPS: " style="font-weight: bold;" /><h:outputText value="#{incapacidadBean.incapacidad.empleado.eps.nombre}" />                                                                                                                                
                                     </p:panelGrid>  
                                 </table>
                             </p:fieldset>
@@ -76,8 +77,8 @@ and open the template in the editor.
                                             <f:selectItem itemLabel="Seleccione..." itemValue=""  />
                                             <f:selectItems   value="#{listasBean.itemsTipoIncapacidades}" />                                                                                                                        
                                         </p:selectOneMenu>        
-                                        <p:outputLabel/>
-                                        <p:outputLabel/>
+                                        <p:outputLabel value="Num Incapacidad"/>
+                                        <p:inputText value="#{incapacidadBean.incapacidad.numIncapacidad}"/>
                                         CIE10
                                         <p:inputText id="cie10" value="#{incapacidadBean.cie10}" >
                                             <p:ajax event="blur" listener="#{incapacidadBean.cargarCie10()}" update="dcie10, gcie10"/>                                            

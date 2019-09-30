@@ -10,7 +10,7 @@
         <ui:composition>
             <h:form id="indAusensimo">
                 <p:growl id="avisoIndAusensismo" showDetail="true" life="50000" />
-                <p:panel header="INDICADORES ACCIDENTES" id="pnlInformeaccidenteEmpresa"
+                <p:panel header="INDICADORES AUSENTISMO" id="pnlInformeaccidenteEmpresa"
                          style="width:auto;">
                     <table>
                         <tr><td>
@@ -82,7 +82,9 @@
                                             </p:column>
 
                                              <p:column headerText="Dias Incapacidad" >
-                                                 <h:outputText value="#{varAuOrigenDias.diasIncapacidad}" />
+                                                 <h:outputText value="#{varAuOrigenDias.diasIncapacidad}" >
+                                                 <f:convertNumber pattern="#0.00"/>
+                                                 </h:outputText>
                                             </p:column>
                                              
                                              <p:columnGroup type="footer">
@@ -116,7 +118,9 @@
                                                     </p:column>
 
                                                      <p:column headerText="Porcentaje" >
-                                                         <h:outputText value="#{varLaboralGenero.porcentaje} %" />
+                                                         <h:outputText value="#{varLaboralGenero.porcentaje} %" >                                                         
+                                                            <f:convertNumber pattern="#0.00"/>
+                                                         </h:outputText>
                                                     </p:column>
 
                                                      <p:columnGroup type="footer">
@@ -128,9 +132,6 @@
                                                     </p:columnGroup>                                            
                                                 </p:dataTable>
                                             </p:panel>
-                                                
-                                                
-                                            
                                         </p:column>
                                         <p:column width="50%"  >
                                             <p:panel header="DISTRIBUCIÓN POR TIPO DE INCAPACIDAD" >
@@ -148,7 +149,9 @@
                                                     </p:column>
 
                                                      <p:column headerText="Porcentaje" >
-                                                         <h:outputText value="#{varTipoIncapacidad.porcentaje} %" />
+                                                         <h:outputText value="#{varTipoIncapacidad.porcentaje} %" >                                                        
+                                                            <f:convertNumber pattern="#0.00"/>                                                        
+                                                         </h:outputText>
                                                     </p:column>
 
                                                      <p:columnGroup type="footer">
@@ -173,7 +176,7 @@
                                 <p:panel header="DISTRIBUCIÓN DE AUSENSITSMO POR CARGO">
                                         <h:panelGrid columns="2" cellpadding="10" >                                        
                                         <p:column width="50%">
-                                            <p:chart id="barCargo" type="bar" model="#{ausentismoBean.horizontalBarCargos}" style="width: 600px;height:400px"/>
+                                            <p:chart id="barCargo" type="bar" model="#{ausentismoBean.horizontalBarCargos}" style="width: 1000px;height:900px"/>
                                         </p:column>
                                     </h:panelGrid>
                                 </p:panel>

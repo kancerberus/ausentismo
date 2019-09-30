@@ -29,6 +29,7 @@ public class Accidente {
     private CausaBasica causaBasica;
     private CausaInmediata causaInmediata;
     private String descAccidente;
+    private Integer numReporte;
     
     
     private Integer casos=0;
@@ -131,6 +132,24 @@ public class Accidente {
     public Accidente(Cargo cargo, Integer totCargos) {
         this.cargo = cargo;
         this.totCargos = totCargos;
+    }
+
+    public TipoEvento getTipoEvento() {
+        return tipoEvento;
+    }
+
+    public void setTipoEvento(TipoEvento tipoEvento) {
+        this.tipoEvento = tipoEvento;
+    }
+    
+    
+
+    public Integer getNumReporte() {
+        return numReporte;
+    }
+
+    public void setNumReporte(Integer numReporte) {
+        this.numReporte = numReporte;
     }
 
     public Integer getTotCargos() {
@@ -307,15 +326,7 @@ public class Accidente {
 
     public void setFechaOcurrencia(Date fechaOcurrencia) {
         this.fechaOcurrencia = fechaOcurrencia;
-    }
-
-    public TipoEvento getTipoEvento() {
-        return tipoEvento;
-    }
-
-    public void setTipoEvento(TipoEvento tipoEvento) {
-        this.tipoEvento = tipoEvento;
-    }
+    }    
 
     public Clasificacion getClasificacion() {
         return clasificacion;

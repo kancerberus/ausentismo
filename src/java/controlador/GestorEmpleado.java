@@ -29,6 +29,16 @@ public class GestorEmpleado extends Gestor {
             cerrarConexion();
         }
     }
+    
+    public List<Empleado> listarEmpleadosAdmin() throws Exception {
+       try {
+            abrirConexion();
+            EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
+            return empleadoDAO.listarEmpleadosAdmin();
+        } finally {
+            cerrarConexion();
+        }
+    }
 
     
     public Empleado buscarEmpleado(String cedula, String nitsesion) throws Exception {

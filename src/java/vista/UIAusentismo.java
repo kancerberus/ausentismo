@@ -99,7 +99,7 @@ public class UIAusentismo implements Serializable {
     
     private List<Ausentismo> distribucionAuLaboralGenero=new ArrayList<>();
     private List<Ausentismo> distribucionTipoIncapacidad=new ArrayList<>();
-    private List<Accidente> distribucionCargos=new ArrayList<>();
+    private List<Ausentismo> distribucionCargos=new ArrayList<>();
     private List<Ausentismo> distribucionPorCentroTrabajo=new ArrayList<>();
     
     private List<Ausentismo> pieporSubempresa;
@@ -138,12 +138,18 @@ public class UIAusentismo implements Serializable {
         
         if(em!=null && em.isEstado() == true){
            ausentismo.setEmpleado(em);
-           ausentismo.getEmpleado().setThacum(thacum);
+           ausentismo.getEmpleado().setThacum(thacum);        
         }
-        else {
-            util.mostrarMensaje("La cedula no existe....");
-            empleado =new Empleado();
-        }
+        
+        Empleado encontradoEn=gestorEmpleado.buscarempleadoAdmin(cedula);        
+        
+        if(encontradoEn != null){        
+            util.mostrarMensaje("El funcionario no pertenece a este centro de trabajo....");            
+        }else{
+            util.mostrarMensaje("La cedula no Existe.");                
+            empleado=new Empleado();
+        } 
+        
     }
     
     public void buscarEActualizacion() throws Exception {
@@ -575,6 +581,8 @@ public class UIAusentismo implements Serializable {
             }
             piePorOrigen.isShowDataLabels();
             piePorOrigen.setLegendPosition("w"); 
+            piePorOrigen.setShowDataLabels(true);
+            piePorOrigen.setDataFormat("value");
             
             piePorDias=new PieChartModel();
             for(int i=0;i<=distribucionPorOrigen.size()-1;i++){                
@@ -582,6 +590,8 @@ public class UIAusentismo implements Serializable {
             }
             piePorDias.isShowDataLabels();
             piePorDias.setLegendPosition("e"); 
+            piePorDias.setShowDataLabels(true);
+            piePorDias.setDataFormat("value");
             
             
             distribucionAuLaboralGenero=new ArrayList<>();
@@ -595,6 +605,8 @@ public class UIAusentismo implements Serializable {
             
             pieGenero.isShowDataLabels();
             pieGenero.setLegendPosition("w");
+            pieGenero.setShowDataLabels(true);
+            pieGenero.setDataFormat("value");
             
             distribucionAuLaboralGenero.get(0).setPorcentaje((distribucionAuLaboralGenero.get(0).getCasos().floatValue()/totCasosGenero.floatValue())*100);
             distribucionAuLaboralGenero.get(1).setPorcentaje((distribucionAuLaboralGenero.get(1).getCasos().floatValue()/totCasosGenero.floatValue())*100);
@@ -610,6 +622,8 @@ public class UIAusentismo implements Serializable {
             
             pieTipoIncapacidad.isShowDataLabels();
             pieTipoIncapacidad.setLegendPosition("w");
+            pieTipoIncapacidad.setShowDataLabels(true);
+            pieTipoIncapacidad.setDataFormat("value");
             
             distribucionGrupoDiagnostico=new ArrayList<>();
             distribucionGrupoDiagnostico.addAll(gestorAusentismo.cargarDistribucionGrupoDiagnostico(nitem, nitsubem,selmesdesde,selmeshasta,selano));
@@ -627,6 +641,7 @@ public class UIAusentismo implements Serializable {
             horizontalBarGrupoDiagnostico.setAnimate(true);
             horizontalBarGrupoDiagnostico.setDatatipFormat("%.0f");            
             horizontalBarGrupoDiagnostico.setBarWidth(10);
+            horizontalBarGrupoDiagnostico.setShowPointLabels(true);
             
             
             Axis xAxis = horizontalBarGrupoDiagnostico.getAxis(AxisType.X);
@@ -640,28 +655,29 @@ public class UIAusentismo implements Serializable {
             
             
             distribucionCargos=new ArrayList<>();
-            distribucionCargos.addAll(gestorAccidente.cargarDistribucionCargos(nitem,nitsubem,selmesdesde, selmeshasta,selano));
+            distribucionCargos.addAll(gestorAusentismo.cargarDistribucionCargos(nitem,nitsubem,selmesdesde, selmeshasta,selano));
             
             horizontalBarCargos=new HorizontalBarChartModel();
             
             for(int i=0;i<=distribucionCargos.size()-1;i++){                
                 ChartSeries serie=new ChartSeries();                                
-                serie.setLabel(distribucionCargos.get(i).getCargo().getNombre());
-                serie.set(distribucionCargos.get(i).getCargo().getNombre(), distribucionCargos.get(i).getTotCargos());
+                serie.setLabel(distribucionCargos.get(i).getCargos().getNombre());
+                serie.set(distribucionCargos.get(i).getCargos().getNombre(), distribucionCargos.get(i).getTotCargos());
                 horizontalBarCargos.addSeries(serie);                      
             }
             
             horizontalBarCargos.setTitle("Distribucion Por Cargos");
-            horizontalBarCargos.setLegendPosition("ne");
+            horizontalBarCargos.setLegendPosition("se");
             horizontalBarCargos.setAnimate(true);
             horizontalBarCargos.setDatatipFormat("%.0f");            
-            horizontalBarCargos.setBarWidth(40);
+            horizontalBarCargos.setBarWidth(20);
+            horizontalBarCargos.setShowPointLabels(true);
             
             Axis xAxisC = horizontalBarCargos.getAxis(AxisType.X);
             xAxisC.setLabel("Cantidad");
             xAxisC.setMin(0);
-            xAxisC.setMax(50);
-            xAxisC.setTickInterval("10");
+            xAxisC.setMax(300);
+            xAxisC.setTickInterval("50");
 
             Axis yAxisC= horizontalBarCargos.getAxis(AxisType.Y);
             yAxisC.setLabel("Cargo");
@@ -686,6 +702,7 @@ public class UIAusentismo implements Serializable {
                 horizontalBarCentrosTrabajo.setAnimate(true);
                 horizontalBarCentrosTrabajo.setDatatipFormat("%.0f");            
                 horizontalBarCentrosTrabajo.setBarWidth(20);
+                horizontalBarCentrosTrabajo.setShowPointLabels(true);
 
                 Axis xAxisCe = horizontalBarCentrosTrabajo.getAxis(AxisType.X);
                 xAxisCe.setLabel("Cantidad");
@@ -727,13 +744,14 @@ public class UIAusentismo implements Serializable {
         this.horizontalBarCargos = horizontalBarCargos;
     }
 
-    public List<Accidente> getDistribucionCargos() {
+    public List<Ausentismo> getDistribucionCargos() {
         return distribucionCargos;
     }
 
-    public void setDistribucionCargos(List<Accidente> distribucionCargos) {
+    public void setDistribucionCargos(List<Ausentismo> distribucionCargos) {
         this.distribucionCargos = distribucionCargos;
     }
+
 
     public ArrayList<Incapacidad> getDistribucionGrupoDiagnostico() {
         return distribucionGrupoDiagnostico;
