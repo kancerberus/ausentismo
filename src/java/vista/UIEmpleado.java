@@ -117,7 +117,7 @@ public class UIEmpleado implements Serializable {
                     
             if(encontradoEn != null){
                 invalido=true;                
-                util.mostrarMensaje("!! El empleado esta registrado en el centro de trabajo "+encontradoEn.getNitsubempresa()+" !!");                        
+                util.mostrarMensaje("!! No se puede crear empleado ya existe en el centro de trabajo '"+encontradoEn.getNitsubempresa()+"'  !!");                        
             }
             
             if (!invalido) {
