@@ -139,17 +139,18 @@ public class UIAusentismo implements Serializable {
         if(em!=null && em.isEstado() == true){
            ausentismo.setEmpleado(em);
            ausentismo.getEmpleado().setThacum(thacum);        
+        }else {
+            Empleado encontradoEn=gestorEmpleado.buscarempleadoAdmin(cedula);        
+        
+            if(encontradoEn != null){        
+                util.mostrarMensaje("El funcionario no pertenece a este centro de trabajo....");            
+            }else{
+                util.mostrarMensaje("La cedula no Existe.");                
+                empleado=new Empleado();
+            }                
+        
+            
         }
-        
-        Empleado encontradoEn=gestorEmpleado.buscarempleadoAdmin(cedula);        
-        
-        if(encontradoEn != null){        
-            util.mostrarMensaje("El funcionario no pertenece a este centro de trabajo....");            
-        }else{
-            util.mostrarMensaje("La cedula no Existe.");                
-            empleado=new Empleado();
-        } 
-        
     }
     
     public void buscarEActualizacion() throws Exception {
