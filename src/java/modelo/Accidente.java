@@ -29,7 +29,7 @@ public class Accidente {
     private CausaBasica causaBasica;
     private CausaInmediata causaInmediata;
     private String descAccidente;
-    private Integer numReporte;
+    private String numReporte;
     
     
     private Integer casos=0;
@@ -141,16 +141,18 @@ public class Accidente {
     public void setTipoEvento(TipoEvento tipoEvento) {
         this.tipoEvento = tipoEvento;
     }
-    
-    
 
-    public Integer getNumReporte() {
+    public String getNumReporte() {
         return numReporte;
     }
 
-    public void setNumReporte(Integer numReporte) {
+    public void setNumReporte(String numReporte) {
         this.numReporte = numReporte;
     }
+    
+    
+
+
 
     public Integer getTotCargos() {
         return totCargos;
