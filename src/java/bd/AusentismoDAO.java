@@ -2233,7 +2233,9 @@ public class AusentismoDAO {
             consulta = new Consulta(getConexion());
             String sql
                     = " SELECT cod_motivo,nombre_motivo,tipo "
-                    + " FROM motivopermiso order by cod_motivo";
+                    + " FROM motivopermiso "
+                    + " where cod_motivo not in ('1','2')"
+                    + " order by cod_motivo ";
 
             rs = consulta.ejecutar(sql);
 

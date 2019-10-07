@@ -73,9 +73,9 @@ and open the template in the editor.
                                         <f:selectItem itemLabel="Seleccione..." itemValue=""  />
                                         <f:selectItems   value="#{incapacidadBean.itemsMotivos}" />
                                         </p:selectOneMenu>                                                                               
-                                        Tipo De Incapacidad<p:selectOneMenu value="#{incapacidadBean.incapacidad.tipoIncapacidad.codigo}" id="tipoIncapacidad">
+                                        Tipo De Incapacidad<p:selectOneMenu value="#{incapacidadBean.codIncapacidad}" id="tipoIncapacidad">
                                             <f:selectItem itemLabel="Seleccione..." itemValue=""  />
-                                            <f:selectItems   value="#{listasBean.itemsTipoIncapacidades}" />                                                                                                                        
+                                            <f:selectItems   value="#{incapacidadBean.itemsTipoIncapacidades}" />                                                                                                                        
                                         </p:selectOneMenu>        
                                         <p:outputLabel value="Num Incapacidad"/>
                                         <p:inputText value="#{incapacidadBean.incapacidad.numIncapacidad}"/>

@@ -99,6 +99,7 @@ public class UIListas implements Serializable {
        gestorEmpleado = new GestorEmpleado();
        empresa = new Empresa();
        subempresa = new SubEmpresa();
+       itemsTipoIncapacidades=new ArrayList<>();
        
     }
   

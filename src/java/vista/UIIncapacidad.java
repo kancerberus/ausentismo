@@ -7,6 +7,7 @@ package vista;
 
 import controlador.GestorEmpleado;
 import controlador.GestorIncapacidad;
+import controlador.GestorListas;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -44,7 +45,8 @@ public class UIIncapacidad implements Serializable {
 
     private String cedula;    
     private Empleado empleado;
-    private Incapacidad incapacidad;
+    private Incapacidad incapacidad=new Incapacidad();
+    private String codIncapacidad="";
     private Mes mes;
     private Año ano;
     private Motivo motivo;
@@ -72,6 +74,7 @@ public class UIIncapacidad implements Serializable {
     private ExpressionFactory reg;
     private GestorIncapacidad gestorIncapacidad;
     private ArrayList<SelectItem> itemsMotivos = new ArrayList<>();
+    private ArrayList<SelectItem> itemsTipoIncapacidades = new ArrayList<>();
     private List<Incapacidad> listaIncapacidad;
     private List<Incapacidad> listaIncapacidadanomes;
     private List<Incapacidad> listaincapacidadEmpresa;
@@ -95,6 +98,7 @@ public class UIIncapacidad implements Serializable {
        empleado = new Empleado();
        incapacidad = new Incapacidad();
        incapacidad.setTipoIncapacidad(new TipoIncapacidad());
+       incapacidad.getTipoIncapacidad().setCodigo("");
        mes = new Mes();
        ano = new Año();
        gestorIncapacidad = new GestorIncapacidad();
@@ -475,12 +479,14 @@ public class UIIncapacidad implements Serializable {
                 invalido = true;
             }            
 
-            if (invalido == false) {                                    
+            if (invalido == false) {           
+                incapacidad.setCod_reg_Incapacidad(codIncapacidad);
                     Integer resultado = gestorIncapacidad.guardarIncapacidad(incapacidad);
 
                     if (resultado > 0) {
                         util.mostrarMensaje("!! El registro fue realizado de manera exitosa !!");
                         incapacidad = new Incapacidad();
+                        incapacidad.setTipoIncapacidad(new TipoIncapacidad());
                     } else {
                         util.mostrarMensaje("!! El registro no pudo ser almacenado !!");
                     }
@@ -533,6 +539,35 @@ public class UIIncapacidad implements Serializable {
             
                 return itemsMotivos;    
     }    
+
+    public ArrayList<SelectItem> getItemsTipoIncapacidades() {
+        try {
+            GestorListas gestorListas= new GestorListas();
+            ArrayList<TipoIncapacidad> listaTipoIncapacidades;
+            listaTipoIncapacidades = gestorListas.listarTipoIncapaciadades();
+            itemsTipoIncapacidades.clear();
+            for (int i = 0; i < listaTipoIncapacidades.size(); i++) {                    
+                    itemsTipoIncapacidades.add(new SelectItem(listaTipoIncapacidades.get(i).getCodigo(), listaTipoIncapacidades.get(i).getNombre()));
+                }                        
+            }
+        catch (Exception ex) {
+                    Logger.getLogger(UIEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            return itemsTipoIncapacidades;
+    }
+
+    public void setItemsTipoIncapacidades(ArrayList<SelectItem> itemsTipoIncapacidades) {
+        this.itemsTipoIncapacidades = itemsTipoIncapacidades;
+    }
+
+    public String getCodIncapacidad() {
+        return codIncapacidad;
+    }
+
+    public void setCodIncapacidad(String codIncapacidad) {
+        this.codIncapacidad = codIncapacidad;
+    }
 
     public String getCie10() {
         return cie10;
