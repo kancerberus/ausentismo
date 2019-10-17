@@ -13,6 +13,7 @@ import controlador.GestorMes;
 import controlador.GestorSexo;
 import controlador.GestorMunicipio;
 import controlador.GestorListas;
+import controlador.GestorNivelEscolar;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,20 +32,30 @@ import javax.el.ExpressionFactory;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import modelo.AgenteAccidente;
+import modelo.AntiguedadCargo;
+import modelo.AntiguedadEmpresa;
 import modelo.Empresa;
 import modelo.SubEmpresa;
 import modelo.Año;
 import modelo.CausaBasica;
 import modelo.CausaInmediata;
 import modelo.Clasificacion;
+import modelo.ConsumoBebidasAlcoholicas;
 import modelo.IncapacidadSi;
 import modelo.Mecanismo;
+import modelo.NivelEscolar;
+import modelo.NumeroPersonasCargo;
 import modelo.ParteAfectada;
+import modelo.ParticipaActividades;
+import modelo.PromedioIngreso;
 import modelo.Riesgo;
+import modelo.TendenciaVivienda;
 import modelo.TipoAccidente;
+import modelo.TipoContratacion;
 import modelo.TipoEvento;
 import modelo.TipoIncapacidad;
 import modelo.TipoLesion;
+import modelo.UsoTiempoLibre;
 /**
  *
  * @author Andres
@@ -63,11 +74,22 @@ public class UIListas implements Serializable {
     private GestorEps gestorEps;
     private GestorEcivil gestorEcivil;
     private GestorCargo gestorCargo;
+    private GestorNivelEscolar gestorNivelEscolar;
     private GestorSexo gestorSexo;
     private GestorMunicipio gestorMunicipio;
     private GestorListas gestorListas;
     private GestorMes gestorMes;
-    private ArrayList<SelectItem> itemsEpss = new ArrayList<>();
+    private ArrayList<SelectItem> itemsConsumeBebidasAlcoholicas = new ArrayList<>();
+    private ArrayList<SelectItem> itemsParticipaActividades = new ArrayList<>();
+    private ArrayList<SelectItem> itemsTipoContratacion = new ArrayList<>();
+    private ArrayList<SelectItem> itemsAntiguedadCargo = new ArrayList<>();
+    private ArrayList<SelectItem> itemsAntiguedadEmpresa = new ArrayList<>();
+    private ArrayList<SelectItem> itemsPromedioIngreso = new ArrayList<>();
+    private ArrayList<SelectItem> itemsTiempoLibre = new ArrayList<>();
+    private ArrayList<SelectItem> itemsNumeroPersonasCargo = new ArrayList<>();
+    private ArrayList<SelectItem> itemsTenenciaViviendas = new ArrayList<>();
+    private ArrayList<SelectItem> itemsNivelEscolar = new ArrayList<>();
+    private ArrayList<SelectItem> itemsEpss = new ArrayList<>();    
     private ArrayList<SelectItem> itemsCargos = new ArrayList<>();
     private ArrayList<SelectItem> itemsEciviles = new ArrayList<>();
     private ArrayList<SelectItem> itemsSexos = new ArrayList<>();
@@ -150,6 +172,173 @@ public class UIListas implements Serializable {
             
                 return itemsCargos;    
     }
+    
+    public ArrayList<SelectItem> getItemsNivelEscolar() throws Exception{
+            
+        try {                
+            ArrayList<NivelEscolar> listaNivelEscolars;
+            listaNivelEscolars = gestorListas.listarNivelEscolares();
+            itemsNivelEscolar.clear();
+            for (int i = 0; i < listaNivelEscolars.size(); i++) {                    
+                    itemsNivelEscolar.add(new SelectItem(listaNivelEscolars.get(i).getCodigo(), listaNivelEscolars.get(i).getNombre()));
+                }
+            }
+        catch (Exception ex) {
+                    Logger.getLogger(UIEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+            }            
+            return itemsNivelEscolar;    
+    }
+    
+    public ArrayList<SelectItem> getItemsNumeroPersonasCargo() throws Exception{
+            
+            try {                
+                ArrayList<NumeroPersonasCargo> listaNumeroPersonasCargo;
+                listaNumeroPersonasCargo = gestorListas.listarNumeroPersonasCargo();
+                itemsNumeroPersonasCargo.clear();
+                for (int i = 0; i < listaNumeroPersonasCargo.size(); i++) {                    
+                        itemsNumeroPersonasCargo.add(new SelectItem(listaNumeroPersonasCargo.get(i).getCodigo(), listaNumeroPersonasCargo.get(i).getNombre()));
+                    }                        
+                }
+            catch (Exception ex) {
+                    Logger.getLogger(UIEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                }            
+                return itemsNumeroPersonasCargo;    
+    }
+
+    public ArrayList<SelectItem> getItemsConsumeBebidasAlcoholicas() {
+        try {                
+                ArrayList<ConsumoBebidasAlcoholicas> listaConsumoBebidasAlcoholicas;
+                listaConsumoBebidasAlcoholicas = gestorListas.listarConsumoBebidasAlcoholicas();
+                itemsConsumeBebidasAlcoholicas.clear();
+                for (int i = 0; i < listaConsumoBebidasAlcoholicas.size(); i++) {                    
+                        itemsConsumeBebidasAlcoholicas.add(new SelectItem(listaConsumoBebidasAlcoholicas.get(i).getCodigo(), listaConsumoBebidasAlcoholicas.get(i).getNombre()));
+                    }                        
+                }
+            catch (Exception ex) {
+                    Logger.getLogger(UIEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                }            
+                return itemsConsumeBebidasAlcoholicas;  
+    }
+
+    public void setItemsConsumeBebidasAlcoholicas(ArrayList<SelectItem> itemsConsumeBebidasAlcoholicas) {
+        this.itemsConsumeBebidasAlcoholicas = itemsConsumeBebidasAlcoholicas;
+    }
+    
+    
+    
+    
+    
+    public ArrayList<SelectItem> getItemsTenenciaViviendas() throws Exception{
+            
+            try {                
+                ArrayList<TendenciaVivienda> listaTenenciaVivienda;
+                listaTenenciaVivienda = gestorListas.listarTendenciaVivienda();
+                itemsTenenciaViviendas.clear();
+                for (int i = 0; i < listaTenenciaVivienda.size(); i++) {                    
+                        itemsTenenciaViviendas.add(new SelectItem(listaTenenciaVivienda.get(i).getCodigo(), listaTenenciaVivienda.get(i).getNombre()));
+                    }                        
+                }
+            catch (Exception ex) {
+                    Logger.getLogger(UIEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                }            
+                return itemsTenenciaViviendas;    
+    }
+    
+
+
+    
+    public ArrayList<SelectItem> getItemsTiempoLibre() throws Exception{
+            
+            try {                
+                ArrayList<UsoTiempoLibre> listaUsoTiempoLibre;
+                listaUsoTiempoLibre = gestorListas.listarUsoTiempoLibre();
+                itemsTiempoLibre.clear();
+                for (int i = 0; i < listaUsoTiempoLibre.size(); i++) {                    
+                        itemsTiempoLibre.add(new SelectItem(listaUsoTiempoLibre.get(i).getCodigo(), listaUsoTiempoLibre.get(i).getNombre()));
+                    }                        
+                }
+            catch (Exception ex) {
+                    Logger.getLogger(UIEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                }            
+                return itemsTiempoLibre;
+    }
+    
+    
+    public ArrayList<SelectItem> getItemsPromedioIngreso() throws Exception{
+            
+            try {                
+                ArrayList<PromedioIngreso> listaPromedioIngreso;
+                listaPromedioIngreso = gestorListas.listarPromedioIngresos();
+                itemsPromedioIngreso.clear();
+                for (int i = 0; i < listaPromedioIngreso.size(); i++) {                    
+                        itemsPromedioIngreso.add(new SelectItem(listaPromedioIngreso.get(i).getCodigo(), listaPromedioIngreso.get(i).getNombre()));
+                    }                        
+                }
+            catch (Exception ex) {
+                    Logger.getLogger(UIEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                }            
+                return itemsPromedioIngreso;
+    }
+    
+    public ArrayList<SelectItem> getItemsAntiguedadEmpresa() {
+        try {                
+            ArrayList<AntiguedadEmpresa> listaAntiguedadEmpresa;
+            listaAntiguedadEmpresa = gestorListas.listarAntiguedadEmpresa();
+            itemsAntiguedadEmpresa.clear();
+            for (int i = 0; i < listaAntiguedadEmpresa.size(); i++) {                    
+                    itemsAntiguedadEmpresa.add(new SelectItem(listaAntiguedadEmpresa.get(i).getCodigo(), listaAntiguedadEmpresa.get(i).getNombre()));
+                }                        
+            }
+        catch (Exception ex) {
+                Logger.getLogger(UIEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+            }            
+            return itemsAntiguedadEmpresa;
+    }
+    
+    public ArrayList<SelectItem> getItemsAntiguedadCargo() {
+        try {                
+            ArrayList<AntiguedadCargo> listaAntiguedadCargo;
+            listaAntiguedadCargo = gestorListas.listarAntiguedadCargo();
+            itemsAntiguedadCargo.clear();
+            for (int i = 0; i < listaAntiguedadCargo.size(); i++) {                    
+                    itemsAntiguedadCargo.add(new SelectItem(listaAntiguedadCargo.get(i).getCodigo(), listaAntiguedadCargo.get(i).getNombre()));
+                }                        
+            }
+        catch (Exception ex) {
+                Logger.getLogger(UIEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+            }            
+            return itemsAntiguedadCargo;
+    }
+    
+    public ArrayList<SelectItem> getItemsTipoContratacion() {
+        try {                
+            ArrayList<TipoContratacion> listaTipoContratacion;
+            listaTipoContratacion = gestorListas.listarTiposContratacion();
+            itemsTipoContratacion.clear();
+            for (int i = 0; i < listaTipoContratacion.size(); i++) {
+                    itemsTipoContratacion.add(new SelectItem(listaTipoContratacion.get(i).getCodigo(), listaTipoContratacion.get(i).getNombre()));
+                }                        
+            }
+        catch (Exception ex) {
+                Logger.getLogger(UIEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+            }            
+            return itemsTipoContratacion;        
+    }    
+    
+    public ArrayList<SelectItem> getItemsParticipaActividades() {
+        try {                
+            ArrayList<ParticipaActividades> listaParticipaActividades;
+            listaParticipaActividades = gestorListas.listarParticipaActividades();
+            itemsParticipaActividades.clear();
+            for (int i = 0; i < listaParticipaActividades.size(); i++) {
+                    itemsParticipaActividades.add(new SelectItem(listaParticipaActividades.get(i).getCodigo(), listaParticipaActividades.get(i).getNombre()));
+                }                        
+            }
+        catch (Exception ex) {
+                Logger.getLogger(UIEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+            }            
+            return itemsParticipaActividades;        
+    }    
     
     public ArrayList<SelectItem> getItemsMeses() throws Exception{
             
@@ -536,6 +725,36 @@ public class UIListas implements Serializable {
                 
                 return nomfecha;
     }  
+
+
+
+    public void setItemsTipoContratacion(ArrayList<SelectItem> itemsTipoContratacion) {
+        this.itemsTipoContratacion = itemsTipoContratacion;
+    }
+
+    public void setItemsAntiguedadCargo(ArrayList<SelectItem> itemsAntiguedadCargo) {
+        this.itemsAntiguedadCargo = itemsAntiguedadCargo;
+    }
+
+    public void setItemsAntiguedadEmpresa(ArrayList<SelectItem> itemsAntiguedadEmpresa) {
+        this.itemsAntiguedadEmpresa = itemsAntiguedadEmpresa;
+    }
+    
+    public void setItemsTenenciaViviendas(ArrayList<SelectItem> itemsTenenciaViviendas) {
+        this.itemsTenenciaViviendas = itemsTenenciaViviendas;
+    }
+
+    public void setItemsNumeroPersonasCargo(ArrayList<SelectItem> itemsNumeroPersonasCargo) {
+        this.itemsNumeroPersonasCargo = itemsNumeroPersonasCargo;
+    }
+
+    public GestorNivelEscolar getGestorNivelEscolar() {
+        return gestorNivelEscolar;
+    }
+
+    public void setGestorNivelEscolar(GestorNivelEscolar gestorNivelEscolar) {
+        this.gestorNivelEscolar = gestorNivelEscolar;
+    }
 
     public void setItemsMecanismos(ArrayList<SelectItem> itemsMecanismos) {
         this.itemsMecanismos = itemsMecanismos;

@@ -5,6 +5,7 @@
  */
 package vista;
 
+import controlador.GestorAusentismo;
 import controlador.GestorMunicipio;
 import java.io.Serializable;
 import controlador.GestorEmpleado;
@@ -36,6 +37,7 @@ public class UIEmpleado implements Serializable {
     private List<Empleado> listaEmpleado;
     private List<Empleado> listaEmpleadoAdmin;    
     private List<Empleado> filteredlistaEmpleado; 
+    private String cedula;
     
 
     public UIEmpleado()  throws Exception {
@@ -108,6 +110,10 @@ public class UIEmpleado implements Serializable {
                 util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
             }            
             if(empleado.getFechaIngreso()==null){
+                invalido =true;
+                util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
+            }
+            if(empleado.getNescolar()==null){
                 invalido =true;
                 util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
             }
@@ -208,6 +214,100 @@ public class UIEmpleado implements Serializable {
             empleado = new Empleado();
         }
     }
+
+    public void BuscarEmpleado() throws Exception {
+    
+        contextoJSF = FacesContext.getCurrentInstance();
+        contextoEL = contextoJSF.getELContext();
+        ef = contextoJSF.getApplication().getExpressionFactory();
+        String nitsesion = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);        
+        GestorEmpleado gestorEmpleado = new GestorEmpleado();
+        empleado = gestorEmpleado.validarEmpleado(cedula,nitsesion);
+
+        if(empleado == null){
+            util.mostrarMensaje("La cedula no Existe.");                
+            empleado=new Empleado();
+        }                
+        
+            
+        
+    }
+    
+    
+    public void guardarPerfilSocioDemografico() throws Exception{
+        Boolean invalido = false;        
+
+        //ingreso de informacion al gestor
+        gestorEmpleado = new GestorEmpleado();
+        
+        contextoJSF = FacesContext.getCurrentInstance();
+        contextoEL = contextoJSF.getELContext();
+        ef = contextoJSF.getApplication().getExpressionFactory();
+        String nitsesion = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);
+
+        try {
+            //verificar que todas las cajas este llenas            
+            
+            if (empleado.getNumPersonas()== null) {
+                invalido = true;
+                util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
+            }
+            if (empleado.getTendenciaVivienda()== null){
+                invalido = true;
+                util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
+            }
+            if (empleado.getUsoTiempoLibre() == null){
+                invalido = true;
+                util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
+            }
+            if (empleado.getPromedioIngreso() == null){
+                invalido = true;
+                util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
+            }
+            if (empleado.getAntiguedadEmpresa() == null){
+                invalido = true;
+                util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
+            }
+            if (empleado.getAntiguedadCargo() == null){
+                invalido = true;
+                util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
+            }            
+            if (empleado.getTipoContratacion() == null){
+                invalido = true;
+                util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
+            }         
+            if (empleado.getParticipaActividades() == null){
+                invalido = true;
+                util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
+            }                   
+            
+            
+            if (!invalido) {
+                empleado.setCedula(cedula);
+                Integer resultado = gestorEmpleado.guardarPerfilSocioDemografico(empleado,nitsesion);
+                    empleado=new Empleado();
+                if (resultado > 0) {
+                    util.mostrarMensaje("!! El PERFIL fue creado de manera exitosa !!");
+                    empleado = new Empleado();                    
+                } else {
+                    util.mostrarMensaje("!! El PERFIL no pudo ser almacenado !!");
+                }
+            }
+            
+        } catch (Exception e) {
+            util.mostrarMensaje(e.getMessage());
+        }
+    }
+    
+    
+    public void actualizarConsumoBebidas(){
+        try {
+            
+            util.mostrarMensaje("i");
+        } catch (Exception e) {
+            util.mostrarMensaje(e.getMessage());
+        }
+    }
     
     public void modificarEmpleado() throws Exception{    
 
@@ -257,6 +357,14 @@ public class UIEmpleado implements Serializable {
             Logger.getLogger(UIEmpleado.class.getName()).log(Level.SEVERE, null, ex);
         }        
         return listaEmpleadoAdmin;
+    }
+
+    public String getCedula() {
+        return cedula;
+    }
+
+    public void setCedula(String cedula) {
+        this.cedula = cedula;
     }
 
     public void setListaEmpleadoAdmin(List<Empleado> listaEmpleadoAdmin) {

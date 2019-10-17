@@ -15,6 +15,24 @@ public class Empleado {
     private Date fecha_nac;
     private int edad;
     private Cargo cargo;
+    private NivelEscolar nescolar;
+    private NumeroPersonasCargo numPersonas;
+    private TendenciaVivienda tendenciaVivienda;
+    private UsoTiempoLibre usoTiempoLibre;
+    private PromedioIngreso promedioIngreso;
+    private AntiguedadEmpresa antiguedadEmpresa;
+    private AntiguedadCargo antiguedadCargo;
+    private TipoContratacion tipoContratacion;
+    private ParticipaActividades participaActividades;
+    private Boolean fuma;
+    private String promedioFuma;
+    private Boolean diagnosticadoEnfermidad;
+    private String enfermedad;    
+    private ConsumoBebidasAlcoholicas consumoBebidasAlcoholicas;
+    private boolean consBebidasAlcoholicas;
+    private Boolean practicaAlgunDeporte;
+    private String deportePractica;
+    private String frecuenciaDeportePractica;
     private int sueldo_mes;
     private int aux_transporte;
     private Ecivil ecivil;    
@@ -25,10 +43,7 @@ public class Empleado {
     private Eps eps;    
     private Municipio Residencia;
     private boolean estado;
-    private Date fechaIngreso;
-    
-
-    
+    private Date fechaIngreso;    
     
     public Empleado() {
         this.municipio = new Municipio();
@@ -38,16 +53,167 @@ public class Empleado {
         this.ecivil = new Ecivil();
         this.sexo = new Sexo();
         this.eps = new Eps();      
-    } 
-
-    
-    
-
+        this.nescolar=new NivelEscolar();        
+        this.tendenciaVivienda=new TendenciaVivienda();        
+        this.numPersonas=new NumeroPersonasCargo();
+        this.tendenciaVivienda=new TendenciaVivienda();
+        this.usoTiempoLibre=new UsoTiempoLibre();
+        this.promedioIngreso=new PromedioIngreso();
+        this.antiguedadEmpresa=new AntiguedadEmpresa();
+        this.antiguedadCargo=new AntiguedadCargo();
+        this.tipoContratacion=new TipoContratacion();
+        this.participaActividades=new ParticipaActividades();
+        this.consumoBebidasAlcoholicas=new ConsumoBebidasAlcoholicas();        
+    }
 
     public Empleado(String cedula, String nombres, String apellidos) {
         this.cedula = cedula;
         this.nombres = nombres;
         this.apellidos = apellidos;
+    }
+
+    public boolean isConsBebidasAlcoholicas() {
+        return consBebidasAlcoholicas;
+    }
+
+    public void setConsBebidasAlcoholicas(boolean consBebidasAlcoholicas) {
+        this.consBebidasAlcoholicas = consBebidasAlcoholicas;
+    }
+
+    public String getFrecuenciaDeportePractica() {
+        return frecuenciaDeportePractica;
+    }
+
+    public void setFrecuenciaDeportePractica(String frecuenciaDeportePractica) {
+        this.frecuenciaDeportePractica = frecuenciaDeportePractica;
+    }
+
+    public String getPromedioFuma() {
+        return promedioFuma;
+    }
+
+    public void setPromedioFuma(String promedioFuma) {
+        this.promedioFuma = promedioFuma;
+    }
+
+    public String getEnfermedad() {
+        return enfermedad;
+    }
+
+    public void setEnfermedad(String enfermedad) {
+        this.enfermedad = enfermedad;
+    }
+
+    public String getDeportePractica() {
+        return deportePractica;
+    }
+
+    public void setDeportePractica(String deportePractica) {
+        this.deportePractica = deportePractica;
+    }
+
+    public Boolean getFuma() {
+        return fuma;
+    }
+
+    public void setFuma(Boolean fuma) {
+        this.fuma = fuma;
+    }
+
+    public Boolean getDiagnosticadoEnfermidad() {
+        return diagnosticadoEnfermidad;
+    }
+
+    public void setDiagnosticadoEnfermidad(Boolean diagnosticadoEnfermidad) {
+        this.diagnosticadoEnfermidad = diagnosticadoEnfermidad;
+    }
+
+    public ConsumoBebidasAlcoholicas getConsumoBebidasAlcoholicas() {
+        return consumoBebidasAlcoholicas;
+    }
+
+    public void setConsumoBebidasAlcoholicas(ConsumoBebidasAlcoholicas consumoBebidasAlcoholicas) {
+        this.consumoBebidasAlcoholicas = consumoBebidasAlcoholicas;
+    }
+
+    public Boolean getPracticaAlgunDeporte() {
+        return practicaAlgunDeporte;
+    }
+
+    public void setPracticaAlgunDeporte(Boolean practicaAlgunDeporte) {
+        this.practicaAlgunDeporte = practicaAlgunDeporte;
+    }
+
+    public ParticipaActividades getParticipaActividades() {
+        return participaActividades;
+    }
+
+    public void setParticipaActividades(ParticipaActividades participaActividades) {
+        this.participaActividades = participaActividades;
+    }
+
+    public TipoContratacion getTipoContratacion() {
+        return tipoContratacion;
+    }
+
+    public void setTipoContratacion(TipoContratacion tipoContratacion) {
+        this.tipoContratacion = tipoContratacion;
+    }
+
+    public AntiguedadEmpresa getAntiguedadEmpresa() {
+        return antiguedadEmpresa;
+    }
+
+    public void setAntiguedadEmpresa(AntiguedadEmpresa antiguedadEmpresa) {
+        this.antiguedadEmpresa = antiguedadEmpresa;
+    }
+
+    public AntiguedadCargo getAntiguedadCargo() {
+        return antiguedadCargo;
+    }
+
+    public void setAntiguedadCargo(AntiguedadCargo antiguedadCargo) {
+        this.antiguedadCargo = antiguedadCargo;
+    }
+
+    public PromedioIngreso getPromedioIngreso() {
+        return promedioIngreso;
+    }
+
+    public void setPromedioIngreso(PromedioIngreso promedioIngreso) {
+        this.promedioIngreso = promedioIngreso;
+    }
+
+    public UsoTiempoLibre getUsoTiempoLibre() {
+        return usoTiempoLibre;
+    }
+
+    public void setUsoTiempoLibre(UsoTiempoLibre usoTiempoLibre) {
+        this.usoTiempoLibre = usoTiempoLibre;
+    }
+
+    public TendenciaVivienda getTendenciaVivienda() {
+        return tendenciaVivienda;
+    }
+
+    public void setTendenciaVivienda(TendenciaVivienda tendenciaVivienda) {
+        this.tendenciaVivienda = tendenciaVivienda;
+    }
+
+    public NumeroPersonasCargo getNumPersonas() {
+        return numPersonas;
+    }
+
+    public void setNumPersonas(NumeroPersonasCargo numPersonas) {
+        this.numPersonas = numPersonas;
+    }
+
+    public NivelEscolar getNescolar() {
+        return nescolar;
+    }
+
+    public void setNescolar(NivelEscolar nescolar) {
+        this.nescolar = nescolar;
     }
 
     public Date getFechaIngreso() {

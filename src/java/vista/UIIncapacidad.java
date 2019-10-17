@@ -459,6 +459,7 @@ public class UIIncapacidad implements Serializable {
         itemsMotivos.clear();
     }
         
+
      
     public void guardarRegistro() throws Exception{    
 

@@ -13,6 +13,8 @@ import javax.el.ELContext;
 import javax.el.ExpressionFactory;
 import javax.faces.context.FacesContext;
 import modelo.AgenteAccidente;
+import modelo.AntiguedadCargo;
+import modelo.AntiguedadEmpresa;
 import modelo.Cargo;
 import modelo.Ecivil;
 import modelo.Empresa;
@@ -25,6 +27,7 @@ import modelo.Año;
 import modelo.CausaBasica;
 import modelo.CausaInmediata;
 import modelo.Clasificacion;
+import modelo.ConsumoBebidasAlcoholicas;
 import modelo.IncapacidadSi;
 import modelo.Mecanismo;
 import modelo.ParteAfectada;
@@ -33,6 +36,13 @@ import modelo.TipoAccidente;
 import modelo.TipoEvento;
 import modelo.TipoIncapacidad;
 import modelo.TipoLesion;
+import modelo.NivelEscolar;
+import modelo.NumeroPersonasCargo;
+import modelo.ParticipaActividades;
+import modelo.PromedioIngreso;
+import modelo.TendenciaVivienda;
+import modelo.TipoContratacion;
+import modelo.UsoTiempoLibre;
 
 /**
  *
@@ -636,6 +646,306 @@ public class ListasDAO {
             consulta.desconectar();
         }
     }
+    
+    
+    public ArrayList<NivelEscolar> listarNivelesEscolar() throws SQLException {
+        NivelEscolar nivelEscolar;
+        ArrayList<NivelEscolar> listaNivelesEscolares = new ArrayList<>();
+        ResultSet dt;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(getConexion());
+            String sql
+                    = "select cod_det_lista,nombre "
+                    + "from det_lista inner join lista on"
+                    + " (cod_lista = fk_cod_lista) where cod_lista='15'";
+
+            dt = consulta.ejecutar(sql);
+
+            while (dt.next()) {
+                nivelEscolar = new NivelEscolar();
+                nivelEscolar.setCodigo(dt.getString("cod_det_lista"));
+                nivelEscolar.setNombre(dt.getString("nombre"));                
+                listaNivelesEscolares.add(nivelEscolar);
+            }
+            return listaNivelesEscolares;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
+    
+    
+    public ArrayList<NumeroPersonasCargo> listarNumeroPersonasCargo() throws SQLException {
+        NumeroPersonasCargo nPersonasCargo;
+        ArrayList<NumeroPersonasCargo> listaNumeroPersonasCargo = new ArrayList<>();
+        ResultSet dt;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(getConexion());
+            String sql
+                    = "select cod_det_lista,nombre "
+                    + "from det_lista inner join lista on"
+                    + " (cod_lista = fk_cod_lista) where cod_lista='16'";
+
+            dt = consulta.ejecutar(sql);
+
+            while (dt.next()) {
+                nPersonasCargo = new NumeroPersonasCargo();
+                nPersonasCargo.setCodigo(dt.getString("cod_det_lista"));
+                nPersonasCargo.setNombre(dt.getString("nombre"));                
+                listaNumeroPersonasCargo.add(nPersonasCargo);
+            }
+            return listaNumeroPersonasCargo;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
+    
+    public ArrayList<ConsumoBebidasAlcoholicas> listarConsumoBebidasAlcoholica() throws SQLException {
+        ConsumoBebidasAlcoholicas consumoBebidasAlcoholicas;
+        ArrayList<ConsumoBebidasAlcoholicas> listaConsumoBebidasAlcoholicases = new ArrayList<>();
+        ResultSet dt;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(getConexion());
+            String sql
+                    = "select cod_det_lista,nombre "
+                    + "from det_lista inner join lista on"
+                    + " (cod_lista = fk_cod_lista) where cod_lista='24'";
+
+            dt = consulta.ejecutar(sql);
+
+            while (dt.next()) {
+                consumoBebidasAlcoholicas = new ConsumoBebidasAlcoholicas();
+                consumoBebidasAlcoholicas.setCodigo(dt.getString("cod_det_lista"));
+                consumoBebidasAlcoholicas.setNombre(dt.getString("nombre"));                
+                listaConsumoBebidasAlcoholicases.add(consumoBebidasAlcoholicas);
+            }
+            return listaConsumoBebidasAlcoholicases;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
+    
+    
+    public ArrayList<TendenciaVivienda> listarTendenciaVivienda() throws SQLException {
+        TendenciaVivienda tendenciaVivienda;
+        ArrayList<TendenciaVivienda> listaTendenciaVivienda = new ArrayList<>();
+        ResultSet dt;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(getConexion());
+            String sql
+                    = "select cod_det_lista,nombre "
+                    + "from det_lista inner join lista on"
+                    + " (cod_lista = fk_cod_lista) where cod_lista='17'";
+
+            dt = consulta.ejecutar(sql);
+
+            while (dt.next()) {
+                tendenciaVivienda = new TendenciaVivienda();
+                tendenciaVivienda.setCodigo(dt.getString("cod_det_lista"));
+                tendenciaVivienda.setNombre(dt.getString("nombre"));                
+                listaTendenciaVivienda.add(tendenciaVivienda);
+            }
+            return listaTendenciaVivienda;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
+    
+    public ArrayList<UsoTiempoLibre> listarUsoTiempoLibre() throws SQLException {
+        UsoTiempoLibre usoTiempoLibre;
+        ArrayList<UsoTiempoLibre> listaUsoTiempoLibre = new ArrayList<>();
+        ResultSet dt;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(getConexion());
+            String sql
+                    = "select cod_det_lista,nombre "
+                    + "from det_lista inner join lista on"
+                    + " (cod_lista = fk_cod_lista) where cod_lista='18'";
+
+            dt = consulta.ejecutar(sql);
+
+            while (dt.next()) {
+                usoTiempoLibre = new UsoTiempoLibre();
+                usoTiempoLibre.setCodigo(dt.getString("cod_det_lista"));
+                usoTiempoLibre.setNombre(dt.getString("nombre"));                
+                listaUsoTiempoLibre.add(usoTiempoLibre);
+            }
+            return listaUsoTiempoLibre;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
+    
+    
+    public ArrayList<PromedioIngreso> listarPromedioIngreso() throws SQLException {
+        PromedioIngreso promedioIngreso;
+        ArrayList<PromedioIngreso> listaPromedioIngreso = new ArrayList<>();
+        ResultSet dt;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(getConexion());
+            String sql
+                    = "select cod_det_lista,nombre "
+                    + "from det_lista inner join lista on"
+                    + " (cod_lista = fk_cod_lista) where cod_lista='19'";
+
+            dt = consulta.ejecutar(sql);
+
+            while (dt.next()) {
+                promedioIngreso = new PromedioIngreso();
+                promedioIngreso.setCodigo(dt.getString("cod_det_lista"));
+                promedioIngreso.setNombre(dt.getString("nombre"));                
+                listaPromedioIngreso.add(promedioIngreso);
+            }
+            return listaPromedioIngreso;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
+
+
+    public ArrayList<AntiguedadEmpresa> listarAntiguedadEmpresa() throws SQLException {
+        AntiguedadEmpresa antiguedadEmpresa;
+        ArrayList<AntiguedadEmpresa> listaAntiguedadEmpresa = new ArrayList<>();
+        ResultSet dt;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(getConexion());
+            String sql
+                    = "select cod_det_lista,nombre "
+                    + "from det_lista inner join lista on"
+                    + " (cod_lista = fk_cod_lista) where cod_lista='20'";
+
+            dt = consulta.ejecutar(sql);
+
+            while (dt.next()) {
+                antiguedadEmpresa = new AntiguedadEmpresa();
+                antiguedadEmpresa.setCodigo(dt.getString("cod_det_lista"));
+                antiguedadEmpresa.setNombre(dt.getString("nombre"));                
+                listaAntiguedadEmpresa.add(antiguedadEmpresa);
+            }
+            return listaAntiguedadEmpresa;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
+    
+    
+    public ArrayList<AntiguedadCargo> listarAntiguedadCargo() throws SQLException {
+        AntiguedadCargo antiguedadCargo;
+        ArrayList<AntiguedadCargo> listaAntiguedadCargo = new ArrayList<>();
+        ResultSet dt;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(getConexion());
+            String sql
+                    = "select cod_det_lista,nombre "
+                    + "from det_lista inner join lista on"
+                    + " (cod_lista = fk_cod_lista) where cod_lista='21'";
+
+            dt = consulta.ejecutar(sql);
+
+            while (dt.next()) {
+                antiguedadCargo = new AntiguedadCargo();
+                antiguedadCargo.setCodigo(dt.getString("cod_det_lista"));
+                antiguedadCargo.setNombre(dt.getString("nombre"));                
+                listaAntiguedadCargo.add(antiguedadCargo);
+            }
+            return listaAntiguedadCargo;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
+    
+    public ArrayList<TipoContratacion> listarTiposContratacion() throws SQLException {
+        TipoContratacion tipoContratacion;
+        ArrayList<TipoContratacion> listaTiposContratacion = new ArrayList<>();
+        ResultSet dt;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(getConexion());
+            String sql
+                    = "select cod_det_lista,nombre "
+                    + "from det_lista inner join lista on"
+                    + " (cod_lista = fk_cod_lista) where cod_lista='22'";
+
+            dt = consulta.ejecutar(sql);
+
+            while (dt.next()) {
+                tipoContratacion = new TipoContratacion();
+                tipoContratacion.setCodigo(dt.getString("cod_det_lista"));
+                tipoContratacion.setNombre(dt.getString("nombre"));                
+                listaTiposContratacion.add(tipoContratacion);
+            }
+            return listaTiposContratacion;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
+    
+    
+    public ArrayList<ParticipaActividades> listarParticipaActividades() throws SQLException {
+        ParticipaActividades participaActividades;
+        ArrayList<ParticipaActividades> listaParticipaActividades = new ArrayList<>();
+        ResultSet dt;
+        Consulta consulta = null;
+        try {
+            consulta = new Consulta(getConexion());
+            String sql
+                    = "select cod_det_lista,nombre "
+                    + "from det_lista inner join lista on"
+                    + " (cod_lista = fk_cod_lista) where cod_lista='23'";
+
+            dt = consulta.ejecutar(sql);
+
+            while (dt.next()) {
+                participaActividades = new ParticipaActividades();
+                participaActividades.setCodigo(dt.getString("cod_det_lista"));
+                participaActividades.setNombre(dt.getString("nombre"));                
+                listaParticipaActividades.add(participaActividades);
+            }
+            return listaParticipaActividades;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
+
+
+    
     public ArrayList<Empresa> listarEmpresas() throws SQLException {
         
         FacesContext contextoJSF = FacesContext.getCurrentInstance();

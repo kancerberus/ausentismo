@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:body>
+        <ui:composition>
+            <h:form id="perfilSociodemografico">
+               <p:growl id="aviso" showDetail="true" life="5000" />
+                <p:panel header="PERFIL SOCIODEMOGRAFICO" id="pnlperfilSociodemografico"  
+                         style="width:auto;">
+                    <table>
+                        <tr><td>
+                            <p:fieldset legend="Datos de Inicio de Sesión" style="margin-bottom:10px; margin-top:10px;" >
+                                <table cellpadding="5">                        
+                                    <tr>
+                                        <td align="center">
+                                            <p:panelGrid id="tblDatosSesion" columns="4" style="width:1000px; font-size: 90%;">
+                                                <f:facet name="header">
+                                                    <h:outputText value="" />
+                                                </f:facet>
+                                                <h:outputText value="Nombre de la empresa" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.subEmpresa.nombre}" />                                                
+                                                <h:outputText value="Fecha" style="font-weight: bold;"/>
+                                                <h:outputText value="#{currentDate}">
+                                                    <f:convertDateTime pattern="MM/dd/yyyy" type="date"/> 
+                                                </h:outputText>                                                
+                                                <h:outputText value="Usuario de sesion" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.nomusuario}"/>
+                                                <h:outputText value="Nombre" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.nombre}"/>
+                                            </p:panelGrid>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </p:fieldset>
+                            <p:fieldset legend="Datos Empleado" style="margin-bottom:10px; margin-top:10px; width:auto" >                                       
+                                <h:panelGrid columns="4" cellpadding="5" style="width:auto; font-size: 90%;">                                    
+                                    <p:outputLabel value="Cedula:" for="cedula" />
+                                    <p:inputText id="cedula" value="#{empleadoBean.cedula}" required="true" label="cedula">
+                                        <p:ajax event="blur" listener="#{empleadoBean.BuscarEmpleado}" update="perfilSociodemografico,pnlperfilSociodemografico"></p:ajax>
+                                    </p:inputText> 
+                                    <p:growl id="growl" life="3000"/>
+                                    <p:commandButton icon="ui-icon-search" value="Consultar" actionListener="#{empleadoBean.BuscarEmpleado}" update="pnlperfilSociodemografico"/>                                       
+                                </h:panelGrid>                                
+                                <table cellpadding="5">                                    
+                                    <p:panelGrid id="panel01" columns="10" style="width:1000px; font-size: 90%;">
+                                         <f:facet name="header">
+                                            <h:outputText value="" />
+                                        </f:facet>
+                                        <h:outputText value="Nombres: " style="font-weight: bold;" /><h:outputText value="#{empleadoBean.empleado.nombres}"/>                                                                                            
+                                        <h:outputText id="apellidos" value="Apellidos: " style="font-weight: bold;" /><h:outputText value="#{empleadoBean.empleado.apellidos}" /> 
+                                        <h:outputText value="Edad: " style="font-weight: bold;" /><h:outputText value="#{empleadoBean.empleado.edad}" /> 
+                                        <h:outputText value="Cargo: " style="font-weight: bold;" /><h:outputText value="#{empleadoBean.empleado.cargo.nombre}" /> 
+                                        <h:outputText value="Estado Civil: " style="font-weight: bold;" /><h:outputText value="#{empleadoBean.empleado.ecivil.nombre}" /> 
+                                        <h:outputText value="Genero: " style="font-weight: bold;" /><h:outputText value="#{empleadoBean.empleado.sexo.nombre}" />                                                                                         
+                                    </p:panelGrid>  
+                                </table>
+                            </p:fieldset>
+                            <p:fieldset legend="Registro Datos"  style="margin-bottom:10px; margin-top:10px; width:500px" >                                                                     
+                                <table>                                    
+                                <p:panelGrid id="perfSocioDemografico" columns="6"  style="width:1030px; font-size: 90%;">
+                                    <f:facet name="header">
+                                        <h:outputText value="" />
+                                    </f:facet>
+                                    Nivel Escolar:<p:selectOneMenu value="#{empleadoBean.empleado.nescolar.codigo}" id="nescolar">
+                                    <f:selectItem itemLabel="Seleccione..." itemValue="" />
+
+                                    <f:selectItems   value="#{listasBean.itemsNivelEscolar}"/>
+                                    </p:selectOneMenu>
+                                    Numero De Personas a Cargo:
+                                    <p:selectOneMenu value="#{empleadoBean.empleado.numPersonas.codigo}" id="numpercargo" >
+                                    <f:selectItem itemLabel="Seleccione..." itemValue=""  />
+                                    <f:selectItems   value="#{listasBean.itemsNumeroPersonasCargo}" />                                                                                                                        
+                                    </p:selectOneMenu>
+                                    Tendencia De Vivienda:
+                                    <p:selectOneMenu value="#{empleadoBean.empleado.tendenciaVivienda.codigo}" style="width: 150px" id="tendVivienda" >
+                                    <f:selectItem itemLabel="Seleccione..." itemValue=""  />
+                                    <f:selectItems   value="#{listasBean.itemsTenenciaViviendas}" />                                                                                                                        
+                                    </p:selectOneMenu>
+                                    Uso De Tiempo Libre:
+                                    <p:selectOneMenu value="#{empleadoBean.empleado.usoTiempoLibre.codigo}" id="tiempoLibre" >
+                                    <f:selectItem itemLabel="Seleccione..." itemValue=""  />
+                                    <f:selectItems   value="#{listasBean.itemsTiempoLibre}" />                                                                                                                        
+                                    </p:selectOneMenu>
+                                    Promedio Ingresos (S.M.L)
+                                    <p:selectOneMenu value="#{empleadoBean.empleado.promedioIngreso.codigo}" id="promIngreso" >
+                                    <f:selectItem itemLabel="Seleccione..." itemValue=""  />
+                                    <f:selectItems   value="#{listasBean.itemsPromedioIngreso}" />                                                                                                                        
+                                    </p:selectOneMenu>
+                                    Antiguedad En La Empresa:
+                                    <p:selectOneMenu value="#{empleadoBean.empleado.antiguedadEmpresa.codigo}" id="antEmpresa" >
+                                    <f:selectItem itemLabel="Seleccione..." itemValue=""  />
+                                    <f:selectItems   value="#{listasBean.itemsAntiguedadEmpresa}" />                                                                                                                        
+                                    </p:selectOneMenu>
+                                    Antiguedad En El Cargo:
+                                    <p:selectOneMenu value="#{empleadoBean.empleado.antiguedadCargo.codigo}" id="antCargo" >
+                                    <f:selectItem itemLabel="Seleccione..." itemValue=""  />
+                                    <f:selectItems   value="#{listasBean.itemsAntiguedadCargo}" />                                                                                                                        
+                                    </p:selectOneMenu>
+                                    Tipo De Contratacion:
+                                    <p:selectOneMenu style="width: 150px" value="#{empleadoBean.empleado.tipoContratacion.codigo}" id="tipoContrato" >
+                                    <f:selectItem itemLabel="Seleccione..." itemValue=""  />
+                                    <f:selectItems   value="#{listasBean.itemsTipoContratacion}" />                                                                                                                        
+                                    </p:selectOneMenu>
+                                    Participa En Actividades De La Empresa
+                                    <p:selectOneMenu style="width: 150px" value="#{empleadoBean.empleado.participaActividades.codigo}" id="partActividades" >
+                                    <f:selectItem itemLabel="Seleccione..." itemValue=""  />
+                                    <f:selectItems   value="#{listasBean.itemsParticipaActividades}" />                                                                                                                        
+                                    </p:selectOneMenu>                                        
+                                    Consume Bebidas Alcoholicas:
+                                    <p:selectBooleanButton id="value3"  value="#{empleadoBean.empleado.consBebidasAlcoholicas}" onLabel="Si" offLabel="No" />                                                                            
+                                    <p:selectOneMenu value="#{empleadoBean.empleado.consumoBebidasAlcoholicas.codigo}" id="consumeAlcohol" style="width: 150px" >
+                                    <f:selectItem itemLabel="Frecuencia..." itemValue=""/>
+                                    <f:selectItems   value="#{listasBean.itemsConsumeBebidasAlcoholicas}" />                                                                                                                        
+                                    </p:selectOneMenu>
+                                    Fuma:
+                                    <p:selectBooleanButton id="value1" value="#{empleadoBean.empleado.fuma}" onLabel="Si" offLabel="No"/>                                                                        
+                                    <p:inputText value="#{empleadoBean.empleado.promedioFuma}" placeholder="Promedio Diario" />
+                                    Le Han Diagnosticado Alguna Enfermedad:
+                                    <p:selectBooleanButton id="value2" value="#{empleadoBean.empleado.diagnosticadoEnfermidad}" onLabel="Si" offLabel="No"/>
+                                    
+                                    <p:inputText value="#{empleadoBean.empleado.enfermedad}" placeholder="Escriba Enfermedad" />
+                                    
+                                    Practica Algun Deporte
+                                    <p:selectBooleanButton id="value4" value="#{empleadoBean.empleado.practicaAlgunDeporte}" onLabel="Si" offLabel="No" onchange=""/>                                    
+                                    <p:inputText value="#{empleadoBean.empleado.deportePractica}" placeholder="Escriba Deporte"  />                                        
+                                    Con Que Frecuencia Practica
+                                    <p:inputText value="#{empleadoBean.empleado.frecuenciaDeportePractica}"/>
+                                    <p:outputLabel/>
+                                    <p:outputLabel/>
+                                    <p:commandButton icon="ui-icon-trash"  type="submit" id="limpiar" value="Limpiar" actionListener="#{empleadoBean.limpiarPerfilsocioDemografico()}"/>
+                                    <p:commandButton icon="ui-icon-disk" update="aviso,@this"  type="submit" id="registrarincapacidad" value="Guardar" actionListener="#{empleadoBean.guardarPerfilSocioDemografico()}"/>
+                                </p:panelGrid>
+                                </table>
+                            </p:fieldset> 
+                           </td>
+                        </tr> 
+                    </table>                   
+                </p:panel>                                                
+            </h:form>
+        </ui:composition>
+    </h:body>
+</html>
+

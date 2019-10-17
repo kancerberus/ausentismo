@@ -118,6 +118,10 @@ and open the template in the editor.
                             <ui:include src="reporteEmpleado.xhtml"></ui:include>  
                         </h:panelGroup>
                         
+                        <h:panelGroup rendered="#{gestorPrincipal.reporteEmpleadoAdmin}">
+                            <ui:include src="reporteEmpleadoAdmin.xhtml"></ui:include>  
+                        </h:panelGroup>
+                        
                         <h:panelGroup rendered="#{gestorPrincipal.modificarEmpleado}">
                             <ui:include src="modificarEmpleado.xhtml"></ui:include>  
                         </h:panelGroup>
@@ -158,8 +162,8 @@ and open the template in the editor.
                             <ui:include src="modificarMinimo.xhtml"></ui:include>  
                         </h:panelGroup>
                         
-                        <h:panelGroup rendered="#{gestorPrincipal.reporteEmpleadoAdmin}">
-                            <ui:include src="reporteEmpleadoAdmin.xhtml"></ui:include>  
+                        <h:panelGroup rendered="#{gestorPrincipal.perfilSociodemografico}">
+                            <ui:include src="perfilSociodemografico.xhtml"></ui:include>  
                         </h:panelGroup>
                         
                     </h:panelGroup>                    

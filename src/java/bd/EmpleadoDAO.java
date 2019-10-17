@@ -343,7 +343,7 @@ public class EmpleadoDAO {
                 sql = "UPDATE empleado "
                         +" set nombres = '" + empleado.getNombres() + "', apellidos = '" + empleado.getApellidos() + "', cod_municipio = '" + empleado.getResidencia().getCodigo() + "', cod_eps = '" + empleado.getEps().getCodigo() + "',"
                         +" cod_det_lista_sexo='" + empleado.getSexo().getCodigo() + "',cod_det_lista_ecivil='" + empleado.getEcivil().getCodigo() + "',fecha_nacimiento='" + empleado.getFecha_nac() + "',"
-                        +" cargo = '" + empleado.getCargo().getCodigo() + "', sueldo_mes = '" + empleado.getSueldo_mes() + "',aux_transporte='" + empleado.getAux_transporte() + "', estado = "+empleado.isEstado()+"  "
+                        +" cargo = '" + empleado.getCargo().getCodigo() + "', sueldo_mes = '" + empleado.getSueldo_mes() + "',aux_transporte='" + empleado.getAux_transporte() + "', estado = "+empleado.isEstado()+", fecha_ingreso='"+empleado.getFechaIngreso()+"'  "
                         +" where cedula = '" + empleado.getCedula() + "'";
 
             resultado = consulta.actualizar(sql);
@@ -367,8 +367,8 @@ public class EmpleadoDAO {
             
             sql = "select e.nombres,e.apellidos,m.municipio nom_municipio,ep.cod_eps eps,\n" +
                     "e.cod_det_lista_ecivil,cod_det_lista_sexo,\n" +
-                    "e.fecha_nacimiento, c.cod_cargo ,e.sueldo_mes, e.aux_transporte, e.estado\n" +
-                    "from empleado e\n" +
+                    "e.fecha_nacimiento, c.cod_cargo ,e.sueldo_mes, e.aux_transporte, e.estado, fecha_ingreso\n" +
+                    "from empleado e " +
                     "inner join municipio m on (m.cod_municipio=e.cod_municipio)\n" +
                     "inner join eps ep on(ep.cod_eps=e.cod_eps)\n" +
                     "inner join det_lista s on (s.cod_det_lista=e.cod_det_lista_sexo)\n" +
@@ -397,7 +397,7 @@ public class EmpleadoDAO {
                 em.getCargo().setCodigo(rs.getString("cod_cargo"));
                 em.setSueldo_mes(rs.getInt("sueldo_mes"));
                 em.setAux_transporte(rs.getInt("aux_transporte")); 
-                
+                em.setFechaIngreso(rs.getDate("fecha_ingreso"));
                 em.getSexo().setCodigo(rs.getString("cod_det_lista_sexo")); 
                 em.setFecha_nac(rs.getDate("fecha_nacimiento"));
                 em.setEstado(rs.getBoolean("estado"));
@@ -568,7 +568,31 @@ public class EmpleadoDAO {
             consulta.desconectar();
         }
     }
+    
+    public Integer guardarPerfilSocioDemografico(Empleado empleado, String nitsesion) throws SQLException{
+        Consulta consulta = null;
+        Integer resultado;    
 
+        //Sentencia SQL para guardar el registro
+        String sql = "";
+        try {
+            consulta = new Consulta(getConexion());        
+
+                sql = "UPDATE empleado "
+                        + " SET cod_det_lista_num_personas_cargo='"+empleado.getNumPersonas().getCodigo()+"', cod_det_lista_tendencia_vivienda='"+empleado.getTendenciaVivienda().getCodigo()+"', cod_det_lista_uso_tiempo_libre='"+empleado.getUsoTiempoLibre().getCodigo()+"', "
+                        + " cod_det_lista_promedio_ingresos='"+empleado.getPromedioIngreso().getCodigo()+"', cod_det_lista_antiguedad_empresa='"+empleado.getAntiguedadEmpresa().getCodigo()+"', cod_det_lista_antiguedad_cargo='"+empleado.getAntiguedadCargo().getCodigo()+"', cod_det_lista_tipo_contrato='"+empleado.getTipoContratacion().getCodigo()+"', "
+                        + " cod_det_lista_participacion_actividades='"+empleado.getParticipaActividades().getCodigo()+"', fuma='"+empleado.getFuma()+"', promedio_fuma_diario='"+empleado.getPromedioFuma()+"', diagonosticado_enfermedad='"+empleado.getDiagnosticadoEnfermidad()+"', enfermedad='"+empleado.getEnfermedad()+"', practica_deporte='"+empleado.getPracticaAlgunDeporte()+"', "
+                        + " deporte='"+empleado.getDeportePractica()+"',consume_alcohol='"+empleado.isConsBebidasAlcoholicas()+"',cod_det_lista_frecuencia_alcohol='"+empleado.getConsumoBebidasAlcoholicas().getCodigo()+"', frecuencia_deporte='"+empleado.getFrecuenciaDeportePractica()+"' "
+                        + " WHERE cedula='"+empleado.getCedula()+"'";
+            resultado = consulta.actualizar(sql);
+            return resultado;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }     
+    }
+    
 public Integer guardarEmpleado(Empleado empleado, String nitsesion) throws SQLException{
     Consulta consulta = null;
     Integer resultado;    
@@ -599,7 +623,7 @@ public Integer guardarEmpleado(Empleado empleado, String nitsesion) throws SQLEx
                     + "'" + empleado.getResidencia().getCodigo()+ "',"
                     + "'" + empleado.getEps().getCodigo()+ "',"
                     + "'" + empleado.getSexo().getCodigo()+ "',"
-                    + "'" + empleado.getEcivil().getCodigo()+ "',"
+                    + "'" + empleado.getEcivil().getCodigo()+ "',"                    
                     + "'" + nitsesion + "',"
                     + "'" + formatoFecha1.format(empleado.getFecha_nac()) +"',"
                     + "'" + empleado.getSueldo_mes() +"',"

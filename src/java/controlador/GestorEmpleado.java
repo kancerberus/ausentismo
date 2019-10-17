@@ -112,6 +112,18 @@ public class GestorEmpleado extends Gestor {
             cerrarConexion();
         }       
     }
+    
+    public Integer guardarPerfilSocioDemografico(Empleado empleado, String nitsesion) throws Exception {
+        try {
+            abrirConexion();
+            EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
+            return empleadoDAO.guardarPerfilSocioDemografico(empleado, nitsesion);
+           
+        } finally {
+            cerrarConexion();
+        }       
+    }
+    
     public Integer modificarEmpleado(Empleado empleado) throws Exception{
         try {
             abrirConexion();

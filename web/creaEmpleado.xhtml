@@ -79,6 +79,13 @@ and open the template in the editor.
                                                 <f:selectItems   value="#{listasBean.itemsSexos}"/>
                                                 </p:selectOneMenu>                                     
                                                 
+                                                Nivel Escolar:<p:selectOneMenu value="#{empleadoBean.empleado.nescolar.codigo}" id="nescolar">
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />
+                                                
+                                                <f:selectItems   value="#{listasBean.itemsNivelEscolar}}"/>
+                                                </p:selectOneMenu>
+                                                
+                                                
                                                 Fecha Ingreso<p:calendar id="fecI" value="#{empleadoBean.empleado.fechaIngreso}" pattern="dd-MM-yyyy" mask="true"/>
                                             </p:panelGrid>
                                             <p:keyFilter for="ced" mask="int" /> 

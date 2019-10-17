@@ -10,6 +10,8 @@ import bd.SubempresaDAO;
 import java.util.ArrayList;
 import modelo.Accidente;
 import modelo.AgenteAccidente;
+import modelo.AntiguedadCargo;
+import modelo.AntiguedadEmpresa;
 import modelo.Cargo;
 import modelo.Ecivil;
 import modelo.Empresa;
@@ -22,14 +24,22 @@ import modelo.Año;
 import modelo.CausaBasica;
 import modelo.CausaInmediata;
 import modelo.Clasificacion;
+import modelo.ConsumoBebidasAlcoholicas;
 import modelo.IncapacidadSi;
 import modelo.Mecanismo;
+import modelo.NivelEscolar;
+import modelo.NumeroPersonasCargo;
 import modelo.ParteAfectada;
+import modelo.ParticipaActividades;
+import modelo.PromedioIngreso;
 import modelo.Riesgo;
+import modelo.TendenciaVivienda;
 import modelo.TipoAccidente;
+import modelo.TipoContratacion;
 import modelo.TipoEvento;
 import modelo.TipoIncapacidad;
 import modelo.TipoLesion;
+import modelo.UsoTiempoLibre;
 /**
  *
  * @author Andres
@@ -197,6 +207,106 @@ public class GestorListas extends Gestor{
             abrirConexion();
             ListasDAO listasDAO = new ListasDAO(conexion);
             return listasDAO.listarCargos();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<NivelEscolar> listarNivelEscolares() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarNivelesEscolar();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<NumeroPersonasCargo> listarNumeroPersonasCargo() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarNumeroPersonasCargo();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<ConsumoBebidasAlcoholicas> listarConsumoBebidasAlcoholicas() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarConsumoBebidasAlcoholica();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<TendenciaVivienda> listarTendenciaVivienda() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarTendenciaVivienda();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<UsoTiempoLibre> listarUsoTiempoLibre() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarUsoTiempoLibre();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<PromedioIngreso> listarPromedioIngresos() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarPromedioIngreso();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<AntiguedadEmpresa> listarAntiguedadEmpresa() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarAntiguedadEmpresa();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<AntiguedadCargo> listarAntiguedadCargo() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarAntiguedadCargo();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<TipoContratacion> listarTiposContratacion() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarTiposContratacion();
+        } finally {
+            cerrarConexion();
+        }        
+    }
+    
+    public ArrayList<ParticipaActividades> listarParticipaActividades() throws Exception {
+        try {
+            abrirConexion();
+            ListasDAO listasDAO = new ListasDAO(conexion);
+            return listasDAO.listarParticipaActividades();
         } finally {
             cerrarConexion();
         }        
