@@ -45,6 +45,11 @@ public class Empleado {
     private boolean estado;
     private Date fechaIngreso;    
     
+    private Integer cantidad;
+    private Float porcentaje;
+    private String descDistribucion;
+    private Integer total;
+    
     public Empleado() {
         this.municipio = new Municipio();
         this.fecha_nac = new Date();
@@ -70,6 +75,47 @@ public class Empleado {
         this.cedula = cedula;
         this.nombres = nombres;
         this.apellidos = apellidos;
+    }
+
+    public Empleado(Integer cantidad, Float porcentaje, String descDistribucion, Integer total) {
+        this.cantidad = cantidad;
+        this.porcentaje = porcentaje;
+        this.descDistribucion = descDistribucion;
+        this.total=total;
+    }
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
+    
+    
+    public String getDescDistribucion() {
+        return descDistribucion;
+    }
+
+    public void setDescDistribucion(String descDistribucion) {
+        this.descDistribucion = descDistribucion;
+    }
+
+    
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public Float getPorcentaje() {
+        return porcentaje;
+    }
+
+    public void setPorcentaje(Float porcentaje) {
+        this.porcentaje = porcentaje;
     }
 
     public boolean isConsBebidasAlcoholicas() {

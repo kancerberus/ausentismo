@@ -166,6 +166,10 @@ and open the template in the editor.
                             <ui:include src="perfilSociodemografico.xhtml"></ui:include>  
                         </h:panelGroup>
                         
+                        <h:panelGroup rendered="#{gestorPrincipal.reportePerfilSocioDemografico}">
+                            <ui:include src="reportePerfilSocioDemografico.xhtml"></ui:include>  
+                        </h:panelGroup>
+                        
                     </h:panelGroup>                    
                   </h:form>
                 </td>

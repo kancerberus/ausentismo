@@ -7,6 +7,7 @@ package controlador;
 
 import bd.AusentismoDAO;
 import bd.EmpleadoDAO;
+import java.util.Collection;
 import java.util.List;
 import modelo.Empleado;
 
@@ -66,6 +67,167 @@ public class GestorEmpleado extends Gestor {
             abrirConexion();
             EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
             return empleadoDAO.modificarSubempresaempleado(empleado);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends Empleado> cargarDistEdad(String nitem, String nitsubem) throws Exception {
+       try {
+            abrirConexion();
+            EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
+            return empleadoDAO.cargarDistEdad(nitem, nitsubem);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends Empleado> cargarDistECivil(String nitem, String nitsubem) throws Exception {
+       try {
+            abrirConexion();
+            EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
+            return empleadoDAO.cargarDistECivil(nitem, nitsubem);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends Empleado> cargarDistSexo(String nitem, String nitsubem) throws Exception {
+       try {
+            abrirConexion();
+            EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
+            return empleadoDAO.cargarDistSexo(nitem, nitsubem);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends Empleado> cargarDistNumPerCargo(String nitem, String nitsubem) throws Exception {
+       try {
+            abrirConexion();
+            EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
+            return empleadoDAO.cargarDistNumPerCargo(nitem, nitsubem);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    
+    public Collection<? extends Empleado> cargarDistNivelEscolaridad(String nitem, String nitsubem) throws Exception {
+       try {
+            abrirConexion();
+            EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
+            return empleadoDAO.cargarDistNivelEscolaridad(nitem, nitsubem);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends Empleado> cargarDistTendenciaVivienda(String nitem, String nitsubem) throws Exception {
+       try {
+            abrirConexion();
+            EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
+            return empleadoDAO.cargarDistTendenciaVivienda(nitem, nitsubem);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends Empleado> cargarDistUsoTiempoLibre(String nitem, String nitsubem) throws Exception {
+       try {
+            abrirConexion();
+            EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
+            return empleadoDAO.cargarDistUsoTiempoLibre(nitem, nitsubem);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends Empleado> cargarDistPromedioIngreso(String nitem, String nitsubem) throws Exception {
+       try {
+            abrirConexion();
+            EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
+            return empleadoDAO.cargarDistPromedioIngreso(nitem, nitsubem);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends Empleado> cargarDistAntiguedadEmpresa(String nitem, String nitsubem) throws Exception {
+       try {
+            abrirConexion();
+            EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
+            return empleadoDAO.cargarDistAntiguedadEmpresa(nitem, nitsubem);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends Empleado> cargarDistAntiguedadCargo(String nitem, String nitsubem) throws Exception {
+       try {
+            abrirConexion();
+            EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
+            return empleadoDAO.cargarDistAntiguedadCargo(nitem, nitsubem);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends Empleado> cargarDistTipoContrato(String nitem, String nitsubem) throws Exception {
+       try {
+            abrirConexion();
+            EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
+            return empleadoDAO.cargarDistTipoContrato(nitem, nitsubem);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends Empleado> cargarDistActivEmpresa(String nitem, String nitsubem) throws Exception {
+       try {
+            abrirConexion();
+            EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
+            return empleadoDAO.cargarDistActivEmpresa(nitem, nitsubem);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends Empleado> cargarDistFuma(String nitem, String nitsubem) throws Exception {
+       try {
+            abrirConexion();
+            EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
+            return empleadoDAO.cargarDistFuma(nitem, nitsubem);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends Empleado> cargarDistDiagnosticadoEnfermedad(String nitem, String nitsubem) throws Exception {
+       try {
+            abrirConexion();
+            EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
+            return empleadoDAO.cargarDistDiagnosticadoEnfermedad(nitem, nitsubem);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends Empleado> cargarDistConsumoAlcohol(String nitem, String nitsubem) throws Exception {
+       try {
+            abrirConexion();
+            EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
+            return empleadoDAO.cargarConsumoAlcohol(nitem, nitsubem);
+        } finally {
+            cerrarConexion();
+        }
+    }
+    
+    public Collection<? extends Empleado> cargarDistPracticaDeporte(String nitem, String nitsubem) throws Exception {
+       try {
+            abrirConexion();
+            EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
+            return empleadoDAO.cargarPracticaDeporte(nitem, nitsubem);
         } finally {
             cerrarConexion();
         }

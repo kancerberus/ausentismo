@@ -12,7 +12,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import modelo.Ausentismo;
 import modelo.Empleado;
 import modelo.Municipio;
@@ -196,6 +198,925 @@ public class EmpleadoDAO {
         }
     }
     
+    
+    public Collection<? extends Empleado> cargarDistEdad(String nitem, String nitsubem) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        
+        List<Empleado> listaDistribucionEmpleados = new ArrayList<>();        
+        
+ 
+        try {
+            
+            if(nitem!=null && nitsubem==null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " select count(*), (select count(cedula) from empleado WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')) total," +
+                    " case " +
+                    " when substring(age(now(),fecha_nacimiento)::text from 1 for 2)::int between 0 and 17 " +
+                    " then '1-. MENOR DE 18 AÑOS (0-18)' " +
+                    " when substring(age(now(),fecha_nacimiento)::text from 1 for 2)::int between 18 and 27 " +
+                    " then '2-. 18 a 27 AÑOS (18-27)' " +
+                    " when substring(age(now(),fecha_nacimiento)::text from 1 for 2)::int between 28 and 37 " +
+                    " then '3-. 28 a 37 AÑOS (28-37)' " +
+                    " when substring(age(now(),fecha_nacimiento)::text from 1 for 2)::int between 38 and 47 " +
+                    " then '4-. 38 a 47 AÑOS (38-47)' " +
+                    " when substring(age(now(),fecha_nacimiento)::text from 1 for 2)::int between 48 and 200 " +
+                    " then '5-. MAYOR de 48 (>47)' " +
+                    " end AS grupo_etario " +
+                    " from empleado " +
+                    " WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
+                    " group by grupo_etario " +
+                    " order by grupo_etario "
+                );
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("grupo_etario"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionEmpleados.add(empleado);
+                }
+            }
+            
+            if(nitem!=null && nitsubem!=null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " select count(*), (select count(cedula) from empleado WHERE nitsubempresa = '"+nitsubem+"') total," +
+                    " case " +
+                    " when substring(age(now(),fecha_nacimiento)::text from 1 for 2)::int between 0 and 17 " +
+                    " then '1-. MENOR DE 18 AÑOS (0-18)' " +
+                    " when substring(age(now(),fecha_nacimiento)::text from 1 for 2)::int between 18 and 27 " +
+                    " then '2-. 18 a 27 AÑOS (18-27)' " +
+                    " when substring(age(now(),fecha_nacimiento)::text from 1 for 2)::int between 28 and 37 " +
+                    " then '3-. 28 a 37 AÑOS (28-37)' " +
+                    " when substring(age(now(),fecha_nacimiento)::text from 1 for 2)::int between 38 and 47 " +
+                    " then '4-. 38 a 47 AÑOS (38-47)' " +
+                    " when substring(age(now(),fecha_nacimiento)::text from 1 for 2)::int between 48 and 200 " +
+                    " then '5-. MAYOR de 48 (>47)' " +
+                    " end AS grupo_etario " +
+                    " from empleado " +
+                    " WHERE nitsubempresa = '"+nitsubem+"'"+
+                    " group by grupo_etario " +
+                    " order by grupo_etario "
+                );
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("grupo_etario"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionEmpleados.add(empleado);
+                }
+            }
+            
+                        
+            
+            return listaDistribucionEmpleados;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+         
+    }
+
+
+    public Collection<? extends Empleado> cargarDistECivil(String nitem, String nitsubem) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        
+        List<Empleado> listaDistribucionEciviles = new ArrayList<>();        
+        
+ 
+        try {
+            
+            if(nitem!=null && nitsubem==null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " select count(cod_det_lista_ecivil),  dl.nombre descripcion, (select count (cod_det_lista_ecivil) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')) total " +
+                    " from empleado e " +
+                    " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_ecivil)" +
+                    " WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
+                    " group by dl.nombre "
+                );
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionEciviles.add(empleado);
+                }
+            }
+            
+            if(nitem!=null && nitsubem!=null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " select count(cod_det_lista_ecivil),  dl.nombre descripcion, (select count (cod_det_lista_ecivil) from empleado e WHERE nitsubempresa = '"+nitsubem+"') total " +
+                    " from empleado e " +
+                    " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_ecivil)" +
+                    " WHERE nitsubempresa = '"+nitsubem+"'"+
+                    " group by dl.nombre "
+                );
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionEciviles.add(empleado);
+                }
+            }           
+            
+            return listaDistribucionEciviles;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+         
+    }
+    
+    
+    public Collection<? extends Empleado> cargarDistSexo(String nitem, String nitsubem) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        
+        List<Empleado> listaDistribucionSexos = new ArrayList<>();        
+        
+ 
+        try {
+            
+            if(nitem!=null && nitsubem==null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                        " select count(cod_det_lista_sexo),  dl.nombre descripcion, (select count (cod_det_lista_sexo) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')) total " +
+                        " from empleado e " +                        
+                        " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_sexo) " +
+                        " WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
+                        " group by dl.nombre ");
+                    
+                ;
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionSexos.add(empleado);
+                }
+            }
+            
+            if(nitem!=null && nitsubem!=null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " select count(cod_det_lista_sexo),  dl.nombre descripcion, (select count (cod_det_lista_sexo) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa WHERE nitsubempresa = '"+nitsubem+"')) total " +
+                        " from empleado e " +                        
+                        " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_sexo) " +
+                        " WHERE nitsubempresa = '"+nitsubem+"'"+
+                        " group by dl.nombre "
+                );
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionSexos.add(empleado);
+                }
+            }           
+            
+            return listaDistribucionSexos;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+         
+    }
+    
+    
+    public Collection<? extends Empleado> cargarDistNumPerCargo(String nitem, String nitsubem) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        
+        List<Empleado> listaDistribucionNumPerCargos = new ArrayList<>();        
+        
+ 
+        try {
+            
+            if(nitem!=null && nitsubem==null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                        " select count(cod_det_lista_num_personas_cargo),  dl.nombre descripcion, (select count (cod_det_lista_num_personas_cargo) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')) total " +
+                        " from empleado e " +                        
+                        " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_num_personas_cargo) " +
+                        " WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
+                        " group by dl.nombre,e.cod_det_lista_num_personas_cargo "+                        
+                        "order by e.cod_det_lista_num_personas_cargo");
+                    
+                ;
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionNumPerCargos.add(empleado);
+                }
+            }
+            
+            if(nitem!=null && nitsubem!=null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " select count(cod_det_lista_num_personas_cargo),  dl.nombre descripcion, (select count (cod_det_lista_num_personas_cargo) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa WHERE nitsubempresa = '"+nitsubem+"')) total " +
+                        " from empleado e " +                        
+                        " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_num_personas_cargo) " +
+                        " WHERE nitsubempresa = '"+nitsubem+"'"+
+                        " group by dl.nombre,e.cod_det_lista_num_personas_cargo "+
+                        " order by e.cod_det_lista_num_personas_cargo"
+                );
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionNumPerCargos.add(empleado);
+                }
+            }           
+            
+            return listaDistribucionNumPerCargos;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+         
+    }
+    
+    
+    public Collection<? extends Empleado> cargarDistNivelEscolaridad(String nitem, String nitsubem) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        
+        List<Empleado> listaDistribucionNivelEscolaridad = new ArrayList<>();        
+ 
+        try {
+            
+            if(nitem!=null && nitsubem==null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                        " select count(cod_det_lista_nescolar),  dl.nombre descripcion, (select count (cod_det_lista_nescolar) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')) total " +
+                        " from empleado e " +                        
+                        " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_nescolar) " +
+                        " WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
+                        " group by dl.nombre,e.cod_det_lista_nescolar "+                        
+                        " order by e.cod_det_lista_nescolar");
+                    
+                ;
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionNivelEscolaridad.add(empleado);
+                }
+            }
+            
+            if(nitem!=null && nitsubem!=null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " select count(cod_det_lista_nescolar),  dl.nombre descripcion, (select count (cod_det_lista_nescolar) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa WHERE nitsubempresa = '"+nitsubem+"')) total " +
+                        " from empleado e " +                        
+                        " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_nescolar) " +
+                        " WHERE nitsubempresa = '"+nitsubem+"'"+
+                        " group by dl.nombre,e.cod_det_lista_nescolar "+
+                        " order by e.cod_det_lista_nescolar"
+                );
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionNivelEscolaridad.add(empleado);
+                }
+            }           
+            
+            return listaDistribucionNivelEscolaridad;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+         
+    }
+    
+    
+    public Collection<? extends Empleado> cargarDistTendenciaVivienda(String nitem, String nitsubem) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        
+        List<Empleado> listaDistribucionTendenciaVivienda = new ArrayList<>();        
+ 
+        try {
+            
+            if(nitem!=null && nitsubem==null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                        " select count(cod_det_lista_tendencia_vivienda),  dl.nombre descripcion, (select count (cod_det_lista_tendencia_vivienda) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')) total " +
+                        " from empleado e " +                        
+                        " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_tendencia_vivienda) " +
+                        " WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
+                        " group by dl.nombre,e.cod_det_lista_tendencia_vivienda "+                        
+                        "order by e.cod_det_lista_tendencia_vivienda");
+                    
+                ;
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionTendenciaVivienda.add(empleado);
+                }
+            }
+            
+            if(nitem!=null && nitsubem!=null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " select count(cod_det_lista_tendencia_vivienda),  dl.nombre descripcion, (select count (cod_det_lista_tendencia_vivienda) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa WHERE nitsubempresa = '"+nitsubem+"')) total " +
+                        " from empleado e " +                        
+                        " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_tendencia_vivienda) " +
+                        " WHERE nitsubempresa = '"+nitsubem+"'"+
+                        " group by dl.nombre,e.cod_det_lista_tendencia_vivienda "+
+                        " order by e.cod_det_lista_tendencia_vivienda"
+                );
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionTendenciaVivienda.add(empleado);
+                }
+            }           
+            
+            return listaDistribucionTendenciaVivienda;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+         
+    }
+    
+    
+    public Collection<? extends Empleado> cargarDistUsoTiempoLibre(String nitem, String nitsubem) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        
+        List<Empleado> listaDistribucionUsoTiempoLibre = new ArrayList<>();        
+ 
+        try {
+            
+            if(nitem!=null && nitsubem==null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                        " select count(cod_det_lista_uso_tiempo_libre),  dl.nombre descripcion, (select count (cod_det_lista_uso_tiempo_libre) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')) total " +
+                        " from empleado e " +                        
+                        " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_uso_tiempo_libre) " +
+                        " WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
+                        " group by dl.nombre,e.cod_det_lista_uso_tiempo_libre "+                        
+                        " order by e.cod_det_lista_uso_tiempo_libre");
+                    
+                ;
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionUsoTiempoLibre.add(empleado);
+                }
+            }
+            
+            if(nitem!=null && nitsubem!=null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " select count(cod_det_lista_uso_tiempo_libre),  dl.nombre descripcion, (select count (cod_det_lista_uso_tiempo_libre) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa WHERE nitsubempresa = '"+nitsubem+"')) total " +
+                        " from empleado e " +                        
+                        " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_uso_tiempo_libre) " +
+                        " WHERE nitsubempresa = '"+nitsubem+"'"+
+                        " group by dl.nombre,e.cod_det_lista_uso_tiempo_libre "+
+                        " order by e.cod_det_lista_uso_tiempo_libre"
+                );
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionUsoTiempoLibre.add(empleado);
+                }
+            }           
+            
+            return listaDistribucionUsoTiempoLibre;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+         
+    }
+    
+    public Collection<? extends Empleado> cargarDistPromedioIngreso(String nitem, String nitsubem) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        
+        List<Empleado> listaDistribucionPromedioIngreso = new ArrayList<>();        
+ 
+        try {
+            
+            if(nitem!=null && nitsubem==null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                        " select count(cod_det_lista_promedio_ingresos),  dl.nombre descripcion, (select count (cod_det_lista_promedio_ingresos) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')) total " +
+                        " from empleado e " +                        
+                        " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_promedio_ingresos) " +
+                        " WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
+                        " group by dl.nombre,e.cod_det_lista_promedio_ingresos "+                        
+                        " order by e.cod_det_lista_promedio_ingresos");
+                    
+                ;
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionPromedioIngreso.add(empleado);
+                }
+            }
+            
+            if(nitem!=null && nitsubem!=null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " select count(cod_det_lista_promedio_ingresos),  dl.nombre descripcion, (select count (cod_det_lista_promedio_ingresos) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa WHERE nitsubempresa = '"+nitsubem+"')) total " +
+                        " from empleado e " +                        
+                        " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_promedio_ingresos) " +
+                        " WHERE nitsubempresa = '"+nitsubem+"'"+
+                        " group by dl.nombre,e.cod_det_lista_promedio_ingresos "+
+                        " order by e.cod_det_lista_promedio_ingresos"
+                );
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionPromedioIngreso.add(empleado);
+                }
+            }           
+            
+            return listaDistribucionPromedioIngreso;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+         
+    }
+    
+    public Collection<? extends Empleado> cargarDistAntiguedadEmpresa(String nitem, String nitsubem) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        
+        List<Empleado> listaDistribucionAntiguedadEmpresa = new ArrayList<>();        
+ 
+        try {
+            
+            if(nitem!=null && nitsubem==null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                        " select count(cod_det_lista_antiguedad_empresa),  dl.nombre descripcion, (select count (cod_det_lista_antiguedad_empresa) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')) total " +
+                        " from empleado e " +                        
+                        " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_antiguedad_empresa) " +
+                        " WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
+                        " group by dl.nombre,e.cod_det_lista_antiguedad_empresa "+                        
+                        " order by e.cod_det_lista_antiguedad_empresa");
+                    
+                ;
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionAntiguedadEmpresa.add(empleado);
+                }
+            }
+            
+            if(nitem!=null && nitsubem!=null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " select count(cod_det_lista_antiguedad_empresa),  dl.nombre descripcion, (select count (cod_det_lista_antiguedad_empresa) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa WHERE nitsubempresa = '"+nitsubem+"')) total " +
+                        " from empleado e " +                        
+                        " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_antiguedad_empresa) " +
+                        " WHERE nitsubempresa = '"+nitsubem+"'"+
+                        " group by dl.nombre,e.cod_det_lista_antiguedad_empresa "+
+                        " order by e.cod_det_lista_antiguedad_empresa"
+                );
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionAntiguedadEmpresa.add(empleado);
+                }
+            }           
+            
+            return listaDistribucionAntiguedadEmpresa;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+         
+    }
+    
+    
+    public Collection<? extends Empleado> cargarDistAntiguedadCargo(String nitem, String nitsubem) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        
+        List<Empleado> listaDistribucionAntiguedadCargo = new ArrayList<>();        
+ 
+        try {
+            
+            if(nitem!=null && nitsubem==null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                        " select count(cod_det_lista_antiguedad_cargo),  dl.nombre descripcion, (select count (cod_det_lista_antiguedad_cargo) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')) total " +
+                        " from empleado e " +                        
+                        " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_antiguedad_cargo) " +
+                        " WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
+                        " group by dl.nombre,e.cod_det_lista_antiguedad_cargo "+                        
+                        " order by e.cod_det_lista_antiguedad_cargo");
+                    
+                ;
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionAntiguedadCargo.add(empleado);
+                }
+            }
+            
+            if(nitem!=null && nitsubem!=null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " select count(cod_det_lista_antiguedad_cargo),  dl.nombre descripcion, (select count (cod_det_lista_antiguedad_cargo) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa WHERE nitsubempresa = '"+nitsubem+"')) total " +
+                        " from empleado e " +                        
+                        " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_antiguedad_cargo) " +
+                        " WHERE nitsubempresa = '"+nitsubem+"'"+
+                        " group by dl.nombre,e.cod_det_lista_antiguedad_cargo "+
+                        " order by e.cod_det_lista_antiguedad_cargo"
+                );
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionAntiguedadCargo.add(empleado);
+                }
+            }           
+            
+            return listaDistribucionAntiguedadCargo;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+         
+    }
+    
+    public Collection<? extends Empleado> cargarDistTipoContrato(String nitem, String nitsubem) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        
+        List<Empleado> listaDistribucionTipoContrato = new ArrayList<>();        
+ 
+        try {
+            
+            if(nitem!=null && nitsubem==null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                        " select count(cod_det_lista_tipo_contrato),  dl.nombre descripcion, (select count (cod_det_lista_tipo_contrato) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')) total " +
+                        " from empleado e " +                        
+                        " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_tipo_contrato) " +
+                        " WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
+                        " group by dl.nombre,e.cod_det_lista_tipo_contrato "+                        
+                        " order by e.cod_det_lista_tipo_contrato");
+                    
+                ;
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionTipoContrato.add(empleado);
+                }
+            }
+            
+            if(nitem!=null && nitsubem!=null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " select count(cod_det_lista_tipo_contrato),  dl.nombre descripcion, (select count (cod_det_lista_tipo_contrato) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa WHERE nitsubempresa = '"+nitsubem+"')) total " +
+                        " from empleado e " +                        
+                        " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_tipo_contrato) " +
+                        " WHERE nitsubempresa = '"+nitsubem+"'"+
+                        " group by dl.nombre,e.cod_det_lista_tipo_contrato "+
+                        " order by e.cod_det_lista_tipo_contrato"
+                );
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionTipoContrato.add(empleado);
+                }
+            }           
+            
+            return listaDistribucionTipoContrato;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+         
+    }
+    
+    public Collection<? extends Empleado> cargarDistActivEmpresa(String nitem, String nitsubem) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        
+        List<Empleado> listaDistribucionActivEmpresa = new ArrayList<>();        
+ 
+        try {
+            
+            if(nitem!=null && nitsubem==null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                        " select count(cod_det_lista_participacion_actividades),  dl.nombre descripcion, (select count (cod_det_lista_participacion_actividades) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')) total " +
+                        " from empleado e " +                        
+                        " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_participacion_actividades) " +
+                        " WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
+                        " group by dl.nombre,e.cod_det_lista_participacion_actividades "+                        
+                        " order by e.cod_det_lista_participacion_actividades");
+                    
+                ;
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionActivEmpresa.add(empleado);
+                }
+            }
+            
+            if(nitem!=null && nitsubem!=null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " select count(cod_det_lista_participacion_actividades),  dl.nombre descripcion, (select count (cod_det_lista_participacion_actividades) from empleado e WHERE nitsubempresa in (select nitsubempresa from subempresa WHERE nitsubempresa = '"+nitsubem+"')) total " +
+                        " from empleado e " +                        
+                        " join public.det_lista dl on (dl.cod_det_lista=e.cod_det_lista_participacion_actividades) " +
+                        " WHERE nitsubempresa = '"+nitsubem+"'"+
+                        " group by dl.nombre,e.cod_det_lista_participacion_actividades "+
+                        " order by e.cod_det_lista_participacion_actividades"
+                );
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("descripcion"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionActivEmpresa.add(empleado);
+                }
+            }           
+            
+            return listaDistribucionActivEmpresa;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+         
+    }
+    
+    public Collection<? extends Empleado> cargarDistFuma(String nitem, String nitsubem) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        
+        List<Empleado> listaDistribucionFuma = new ArrayList<>();        
+ 
+        try {
+            
+            if(nitem!=null && nitsubem==null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                        " select case		" +
+                        " when fuma=true " +
+                        " then 'SI' " +
+                        " when fuma=false " +
+                        " then 'NO' end " +
+                        " fuma, count(*), (select count(fuma)from empleado) as total " +
+                        " from empleado " +
+                        " WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
+                        " group by fuma ");
+                    
+                ;
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("fuma"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionFuma.add(empleado);
+                }
+            }
+            
+            if(nitem!=null && nitsubem!=null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " select case " +
+                        " when fuma=true " +
+                        " then 'SI' " +
+                        " when fuma=false " +
+                        " then 'NO' end " +
+                        " fuma, count(*), (select count(fuma)from empleado) as total " +
+                        " from empleado " +
+                        " WHERE nitsubempresa = '"+nitsubem+"'"+
+                        " group by fuma "
+                );
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("fuma"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionFuma.add(empleado);
+                }
+            }           
+            
+            return listaDistribucionFuma;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+         
+    }
+    
+    public Collection<? extends Empleado> cargarDistDiagnosticadoEnfermedad(String nitem, String nitsubem) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        
+        List<Empleado> listaDistribucionDiagnosticadoEnfermedad = new ArrayList<>();        
+ 
+        try {
+            
+            if(nitem!=null && nitsubem==null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                        " select case " +
+                        " when diagonosticado_enfermedad=true " +
+                        " then 'SI' " +
+                        " when diagonosticado_enfermedad=false " +
+                        " then 'NO' end " +
+                        " diagonosticado_enfermedad, count(*), (select count(diagonosticado_enfermedad)from empleado) as total " +
+                        " from empleado " +
+                        " WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
+                        " group by diagonosticado_enfermedad ");
+                    
+                ;
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("diagonosticado_enfermedad"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionDiagnosticadoEnfermedad.add(empleado);
+                }
+            }
+            
+            if(nitem!=null && nitsubem!=null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " select case " +
+                        " when diagonosticado_enfermedad=true " +
+                        " then 'SI' " +
+                        " when diagonosticado_enfermedad=false " +
+                        " then 'NO' end " +
+                        " diagonosticado_enfermedad, count(*), (select count(diagonosticado_enfermedad)from empleado) as total " +
+                        " from empleado " +
+                        " WHERE nitsubempresa = '"+nitsubem+"'"+
+                        " group by diagonosticado_enfermedad "
+                );
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("diagonosticado_enfermedad"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionDiagnosticadoEnfermedad.add(empleado);
+                }
+            }           
+            
+            return listaDistribucionDiagnosticadoEnfermedad;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+         
+    }
+    
+    public Collection<? extends Empleado> cargarConsumoAlcohol(String nitem, String nitsubem) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        
+        List<Empleado> listaDistribucionConsumoAlcohol = new ArrayList<>();        
+ 
+        try {
+            
+            if(nitem!=null && nitsubem==null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                        " select case " +
+                        " when consume_alcohol=true " +
+                        " then 'SI' " +
+                        " when consume_alcohol=false " +
+                        " then 'NO' end " +
+                        " consume_alcohol, count(*), (select count(consume_alcohol)from empleado) as total " +
+                        " from empleado " +
+                        " WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
+                        " group by consume_alcohol ");
+                    
+                ;
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("consume_alcohol"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionConsumoAlcohol.add(empleado);
+                }
+            }
+            
+            if(nitem!=null && nitsubem!=null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " select case " +
+                        " when consume_alcohol=true " +
+                        " then 'SI' " +
+                        " when consume_alcohol=false " +
+                        " then 'NO' end " +
+                        " consume_alcohol, count(*), (select count(consume_alcohol)from empleado) as total " +
+                        " from empleado " +
+                        " WHERE nitsubempresa = '"+nitsubem+"'"+
+                        " group by consume_alcohol "
+                );
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("consume_alcohol"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionConsumoAlcohol.add(empleado);
+                }
+            }           
+            
+            return listaDistribucionConsumoAlcohol;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+         
+    }
+    
+    public Collection<? extends Empleado> cargarPracticaDeporte(String nitem, String nitsubem) throws SQLException {
+        ResultSet rs = null;
+        Consulta consulta = null;
+        
+        List<Empleado> listaDistribucionPracticaDeporte = new ArrayList<>();        
+ 
+        try {
+            
+            if(nitem!=null && nitsubem==null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                        " select case " +
+                        " when practica_deporte=true " +
+                        " then 'SI' " +
+                        " when practica_deporte=false " +
+                        " then 'NO' end " +
+                        " practica_deporte, count(*), (select count(practica_deporte)from empleado) as total " +
+                        " from empleado " +
+                        " WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
+                        " group by practica_deporte ");
+                    
+                ;
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("practica_deporte"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionPracticaDeporte.add(empleado);
+                }
+            }
+            
+            if(nitem!=null && nitsubem!=null){
+                consulta = new Consulta(this.conexion);
+                StringBuilder sql = new StringBuilder(
+                    " select case " +
+                        " when practica_deporte=true " +
+                        " then 'SI' " +
+                        " when practica_deporte=false " +
+                        " then 'NO' end " +
+                        " practica_deporte, count(*), (select count(practica_deporte)from empleado) as total " +
+                        " from empleado " +
+                        " WHERE nitsubempresa = '"+nitsubem+"'"+
+                        " group by practica_deporte "
+                );
+                rs = consulta.ejecutar(sql);
+                while (rs.next()) {
+                    Empleado empleado=new Empleado(rs.getInt("count"), 0.0f, rs.getString("practica_deporte"),rs.getInt("total"));
+                    empleado.setPorcentaje((empleado.getCantidad()/rs.getFloat("total"))*100);
+                    listaDistribucionPracticaDeporte.add(empleado);
+                }
+            }           
+            
+            return listaDistribucionPracticaDeporte;
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+         
+    }
+
+
     
     
     public Integer validarEmpleadoActualizacionEPS() throws SQLException {
@@ -579,7 +1500,7 @@ public class EmpleadoDAO {
             consulta = new Consulta(getConexion());        
 
                 sql = "UPDATE empleado "
-                        + " SET cod_det_lista_num_personas_cargo='"+empleado.getNumPersonas().getCodigo()+"', cod_det_lista_tendencia_vivienda='"+empleado.getTendenciaVivienda().getCodigo()+"', cod_det_lista_uso_tiempo_libre='"+empleado.getUsoTiempoLibre().getCodigo()+"', "
+                        + " SET cod_det_lista_nescolar='"+empleado.getNescolar().getCodigo()+"', cod_det_lista_num_personas_cargo='"+empleado.getNumPersonas().getCodigo()+"', cod_det_lista_tendencia_vivienda='"+empleado.getTendenciaVivienda().getCodigo()+"', cod_det_lista_uso_tiempo_libre='"+empleado.getUsoTiempoLibre().getCodigo()+"', "
                         + " cod_det_lista_promedio_ingresos='"+empleado.getPromedioIngreso().getCodigo()+"', cod_det_lista_antiguedad_empresa='"+empleado.getAntiguedadEmpresa().getCodigo()+"', cod_det_lista_antiguedad_cargo='"+empleado.getAntiguedadCargo().getCodigo()+"', cod_det_lista_tipo_contrato='"+empleado.getTipoContratacion().getCodigo()+"', "
                         + " cod_det_lista_participacion_actividades='"+empleado.getParticipaActividades().getCodigo()+"', fuma='"+empleado.getFuma()+"', promedio_fuma_diario='"+empleado.getPromedioFuma()+"', diagonosticado_enfermedad='"+empleado.getDiagnosticadoEnfermidad()+"', enfermedad='"+empleado.getEnfermedad()+"', practica_deporte='"+empleado.getPracticaAlgunDeporte()+"', "
                         + " deporte='"+empleado.getDeportePractica()+"',consume_alcohol='"+empleado.isConsBebidasAlcoholicas()+"',cod_det_lista_frecuencia_alcohol='"+empleado.getConsumoBebidasAlcoholicas().getCodigo()+"', frecuencia_deporte='"+empleado.getFrecuenciaDeportePractica()+"' "

@@ -64,13 +64,12 @@ and open the template in the editor.
                             </p:fieldset>
                             <p:fieldset legend="Registro Datos"  style="margin-bottom:10px; margin-top:10px; width:500px" >                                                                     
                                 <table>                                    
-                                <p:panelGrid id="perfSocioDemografico" columns="6"  style="width:1030px; font-size: 90%;">
+                                    <p:panelGrid styleClass="perfSocioDemografico" columns="6"  style="width:1030px; font-size: 90%;">
                                     <f:facet name="header">
                                         <h:outputText value="" />
                                     </f:facet>
                                     Nivel Escolar:<p:selectOneMenu value="#{empleadoBean.empleado.nescolar.codigo}" id="nescolar">
                                     <f:selectItem itemLabel="Seleccione..." itemValue="" />
-
                                     <f:selectItems   value="#{listasBean.itemsNivelEscolar}"/>
                                     </p:selectOneMenu>
                                     Numero De Personas a Cargo:
@@ -114,28 +113,36 @@ and open the template in the editor.
                                     <f:selectItems   value="#{listasBean.itemsParticipaActividades}" />                                                                                                                        
                                     </p:selectOneMenu>                                        
                                     Consume Bebidas Alcoholicas:
-                                    <p:selectBooleanButton id="value3"  value="#{empleadoBean.empleado.consBebidasAlcoholicas}" onLabel="Si" offLabel="No" />                                                                            
-                                    <p:selectOneMenu value="#{empleadoBean.empleado.consumoBebidasAlcoholicas.codigo}" id="consumeAlcohol" style="width: 150px" >
+                                    <p:selectBooleanButton id="value3"  value="#{empleadoBean.empleado.consBebidasAlcoholicas}" onLabel="Si" offLabel="No" >
+                                        <p:ajax update="@(.perfSocioDemografico),@(.consumeAlcohol)" />
+                                    </p:selectBooleanButton>
+                                    <p:selectOneMenu value="#{empleadoBean.empleado.consumoBebidasAlcoholicas.codigo}" styleClass="consumeAlcohol" style="width: 150px" 
+                                                     disabled="#{empleadoBean.empleado.consBebidasAlcoholicas eq null or empleadoBean.empleado.consBebidasAlcoholicas eq false }"
+                                                     >
                                     <f:selectItem itemLabel="Frecuencia..." itemValue=""/>
                                     <f:selectItems   value="#{listasBean.itemsConsumeBebidasAlcoholicas}" />                                                                                                                        
                                     </p:selectOneMenu>
                                     Fuma:
-                                    <p:selectBooleanButton id="value1" value="#{empleadoBean.empleado.fuma}" onLabel="Si" offLabel="No"/>                                                                        
-                                    <p:inputText value="#{empleadoBean.empleado.promedioFuma}" placeholder="Promedio Diario" />
+                                    <p:selectBooleanButton id="value1" value="#{empleadoBean.empleado.fuma}" onLabel="Si" offLabel="No">
+                                        <p:ajax update="@(.perfSocioDemografico),@(.promedioFuma)" />
+                                    </p:selectBooleanButton>                                                                        
+                                    <p:inputText styleClass="promedioFuma" value="#{empleadoBean.empleado.promedioFuma}" placeholder="Promedio Diario" disabled="#{empleadoBean.empleado.fuma eq null or empleadoBean.empleado.fuma eq false }" />
                                     Le Han Diagnosticado Alguna Enfermedad:
-                                    <p:selectBooleanButton id="value2" value="#{empleadoBean.empleado.diagnosticadoEnfermidad}" onLabel="Si" offLabel="No"/>
-                                    
-                                    <p:inputText value="#{empleadoBean.empleado.enfermedad}" placeholder="Escriba Enfermedad" />
-                                    
+                                    <p:selectBooleanButton id="value2" value="#{empleadoBean.empleado.diagnosticadoEnfermidad}" onLabel="Si" offLabel="No">
+                                        <p:ajax update="@(.perfSocioDemografico),@(.enfermedad)" />
+                                    </p:selectBooleanButton>                                    
+                                    <p:inputText value="#{empleadoBean.empleado.enfermedad}" styleClass="enfermedad" placeholder="Escriba Enfermedad" disabled="#{empleadoBean.empleado.diagnosticadoEnfermidad eq null or empleadoBean.empleado.diagnosticadoEnfermidad eq false }" />                                    
                                     Practica Algun Deporte
-                                    <p:selectBooleanButton id="value4" value="#{empleadoBean.empleado.practicaAlgunDeporte}" onLabel="Si" offLabel="No" onchange=""/>                                    
-                                    <p:inputText value="#{empleadoBean.empleado.deportePractica}" placeholder="Escriba Deporte"  />                                        
+                                    <p:selectBooleanButton id="value4" value="#{empleadoBean.empleado.practicaAlgunDeporte}" onLabel="Si" offLabel="No" >
+                                        <p:ajax update="@(.perfSocioDemografico),@(.deporte)" />
+                                    </p:selectBooleanButton>                                    
+                                    <p:inputText value="#{empleadoBean.empleado.deportePractica}" id="deporte" placeholder="Escriba Deporte" disabled="#{empleadoBean.empleado.practicaAlgunDeporte eq null or empleadoBean.empleado.practicaAlgunDeporte eq false }" />                                        
                                     Con Que Frecuencia Practica
-                                    <p:inputText value="#{empleadoBean.empleado.frecuenciaDeportePractica}"/>
+                                    <p:inputText value="#{empleadoBean.empleado.frecuenciaDeportePractica}" disabled="#{empleadoBean.empleado.practicaAlgunDeporte eq null or empleadoBean.empleado.practicaAlgunDeporte eq false }"/>
                                     <p:outputLabel/>
                                     <p:outputLabel/>
-                                    <p:commandButton icon="ui-icon-trash"  type="submit" id="limpiar" value="Limpiar" actionListener="#{empleadoBean.limpiarPerfilsocioDemografico()}"/>
-                                    <p:commandButton icon="ui-icon-disk" update="aviso,@this"  type="submit" id="registrarincapacidad" value="Guardar" actionListener="#{empleadoBean.guardarPerfilSocioDemografico()}"/>
+                                    <p:commandButton icon="ui-icon-trash" update="@this" type="submit" id="limpiar" value="Limpiar" actionListener="#{empleadoBean.limpiarPerfilsocioDemografico()}"/>
+                                    <p:commandButton icon="ui-icon-disk" update="aviso,@this, @(.perfSocioDemografico)"  type="submit" id="registrarincapacidad" value="Guardar" actionListener="#{empleadoBean.guardarPerfilSocioDemografico()}"/>
                                 </p:panelGrid>
                                 </table>
                             </p:fieldset> 
