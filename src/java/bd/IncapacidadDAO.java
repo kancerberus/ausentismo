@@ -1135,7 +1135,7 @@ public class IncapacidadDAO {
             String sql
                     = " SELECT cod_motivo,nombre_motivo,tipo " +
                         "FROM motivopermiso " +
-                        "WHERE cod_motivo='2' or cod_motivo='1' " +
+                        "WHERE cod_motivo in ('1','2','5')" +
                         "ORDER BY cod_motivo";
 
             rs = consulta.ejecutar(sql);

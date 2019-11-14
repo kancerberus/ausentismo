@@ -141,6 +141,16 @@ public class GestorAusentismo extends Gestor implements Serializable{
         }
     } 
     
+    public List<Ausentismo> ausentismoanomesEmpleadoTotales(String cedula,String nitem, String selmesdesde, String selmeshasta,String selano, String motivos) throws Exception {
+       try {
+            abrirConexion();
+            AusentismoDAO ausentismoDAO = new AusentismoDAO(conexion);
+            return ausentismoDAO.ausentismoanomesEmpleadoTotales(cedula, nitem,selmesdesde, selmeshasta, selano, motivos);
+        } finally {
+            cerrarConexion();
+        }
+    } 
+    
     public List<Ausentismo> pieausentismoanomesEmpresa(String nitem,String nitsubem, String selmesdesde, String selmeshasta,String selano,String selmotivo) throws Exception {
        try {
             abrirConexion();

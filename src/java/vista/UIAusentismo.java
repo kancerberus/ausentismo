@@ -51,6 +51,8 @@ public class UIAusentismo implements Serializable {
     private Año ano;
     private Motivo motivo;
     private SubEmpresa subempresa;
+    private Integer[] selectedMotivos=new Integer[13];
+    
     
     DecimalFormat formato1 = new DecimalFormat("#,###.00");   
     private float totarl=0;
@@ -59,7 +61,7 @@ public class UIAusentismo implements Serializable {
     private float tottrabajador=0;
     private float total=0;
     private float totalhs=0;
-    private float totaleps=0;
+    private float totaleps=0;    
     private float totalarl=0;
     private float totaltrabajador=0;
     private float totalem=0;    
@@ -83,6 +85,7 @@ public class UIAusentismo implements Serializable {
     private List<Ausentismo> listaAusentismoanomes;
     private List<Ausentismo> listaausentismoEmpresa;
     private List<Ausentismo> listAusentismoEmpleado;
+    private List<Ausentismo> listAusentismoEmpleadoTotales;
     private List<Ausentismo> pieausentismoEmpresa;
     private List<Ausentismo> pieausentismoEmpleado;
     
@@ -122,9 +125,10 @@ public class UIAusentismo implements Serializable {
        gestorAusentismo = new GestorAusentismo();
        pieausentismoanomesEmpresa = new PieChartModel();
        pieSubempresa = new PieChartModel();
-       pieausentismoanomesEmpleado = new PieChartModel();
-       
+       pieausentismoanomesEmpleado = new PieChartModel();       
     }
+    
+
 
     public void BuscarEmpleado() throws Exception {
     
@@ -382,8 +386,69 @@ public class UIAusentismo implements Serializable {
         }
             
     }
+    
+    
+    public void ausentismoAnomesEmpleadoTotales() {
+        listAusentismoEmpleadoTotales=new ArrayList<>();
+        contextoJSF = FacesContext.getCurrentInstance();
+        contextoEL = contextoJSF.getELContext();
+        ef = contextoJSF.getApplication().getExpressionFactory();
+        String nitem = (String) ef.createValueExpression(contextoEL, "#{listasBean.empresa.nitempresa}", String.class).getValue(contextoEL);          
+        //revisar checkbox
+        String selmesdesde = null;
+        String selmeshasta = null;
+        String selano = null;         
+        
+        
+            
+        if(todos == true){
+            selano = ano.getAño();   
+        }else{
+           selmesdesde = (ano.getAño())+"/"+(mes.getDesde());
+           selmeshasta = (ano.getAño()+"/"+(mes.getHasta()));           
+        }        
+        
+        String motivos="";
+        try {
+            
+            if(selectedMotivos.length == 13 || selectedMotivos.length==0){
+                    motivos="'1','2','3','4','5','6','7','8','9','10','11','12','13',";
+                    selectedMotivos=new Integer[13];
+            }else{
+                for(int i=0; i<selectedMotivos.length;i++){                
+                    motivos+="'"+selectedMotivos[i]+"',";                    
+                }
+                selectedMotivos=new Integer[13];
+                    
+            }
+            
+            listAusentismoEmpleadoTotales = gestorAusentismo.ausentismoanomesEmpleadoTotales(cedula, nitem, selmesdesde, selmeshasta, selano, motivos);            
+            //pieausentismoEmpleado = gestorAusentismo.pieausentismoanomesEmpleado(cedula, nitem, selmesdesde, selmeshasta, selano, selmotivo);
+            setListAusentismoEmpleadoTotales(listAusentismoEmpleadoTotales);
+            
+            totaleps=0;totalarl=0;totalem=0; totaltrabajador=0; totalsubt=0; totalhs=0;
+            //calculo de totales eps,arl,empleador,trabajador y total 
+            
+            
+            for(int i=0; i < listAusentismoEmpleadoTotales.size(); i++){
+                totaleps += listAusentismoEmpleadoTotales.get(i).getEps();
+                totalarl += listAusentismoEmpleadoTotales.get(i).getArl();
+                totalem += listAusentismoEmpleadoTotales.get(i).getEmpleador();
+                totaltrabajador += listAusentismoEmpleadoTotales.get(i).getTrabajador();
+                totalsubt += listAusentismoEmpleadoTotales.get(i).getTotalsube();
+                totalhs+=listAusentismoEmpleadoTotales.get(i).getEmpleado().getThacum();
+                
+            }
+    
+        } catch (Exception ex) {
+            Logger.getLogger(UIAusentismo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    
     //muestra reporte de ausentismos por cedula de empleado
-    public void ausentismoAnomesEmpleado() {             
+    public void ausentismoAnomesEmpleado() {
         
         contextoJSF = FacesContext.getCurrentInstance();
         contextoEL = contextoJSF.getELContext();
@@ -410,7 +475,7 @@ public class UIAusentismo implements Serializable {
             pieausentismoEmpleado = gestorAusentismo.pieausentismoanomesEmpleado(cedula, nitem, selmesdesde, selmeshasta, selano, selmotivo);
             setListAusentismoEmpleado(listAusentismoEmpleado);
             
-            totaleps=0;totalarl=0;totalem=0; totaltrabajador=0; totalsubt=0;
+            totaleps=0;totalarl=0;totalem=0; totaltrabajador=0; totalsubt=0; totalhs=0;float ths=0.0f;
             //calculo de totales eps,arl,empleador,trabajador y total 
             
             
@@ -419,8 +484,9 @@ public class UIAusentismo implements Serializable {
                 totalarl += listAusentismoEmpleado.get(i).getArl();
                 totalem += listAusentismoEmpleado.get(i).getEmpleador();
                 totaltrabajador += listAusentismoEmpleado.get(i).getTrabajador();
-                totalsubt += listAusentismoEmpleado.get(i).getTotalsube();
-                
+                totalsubt += listAusentismoEmpleado.get(i).getTotalsube();                
+                ths=Float.parseFloat(listAusentismoEmpleado.get(i).getTiempo_horas());                
+                totalhs += ths;
             }
             
             
@@ -721,6 +787,14 @@ public class UIAusentismo implements Serializable {
         }
     }
 
+    public Integer[] getSelectedMotivos() {
+        return selectedMotivos;
+    }
+
+    public void setSelectedMotivos(Integer[] selectedMotivos) {
+        this.selectedMotivos = selectedMotivos;
+    }
+
     public HorizontalBarChartModel getHorizontalBarCentrosTrabajo() {
         return horizontalBarCentrosTrabajo;
     }
@@ -888,6 +962,14 @@ public class UIAusentismo implements Serializable {
 
     public void setCedula(String cedula) {
         this.cedula = cedula;
+    }
+
+    public List<Ausentismo> getListAusentismoEmpleadoTotales() {
+        return listAusentismoEmpleadoTotales;
+    }
+
+    public void setListAusentismoEmpleadoTotales(List<Ausentismo> listAusentismoEmpleadoTotales) {
+        this.listAusentismoEmpleadoTotales = listAusentismoEmpleadoTotales;
     }
 
     public List<Ausentismo> getListAusentismoEmpleado() {
