@@ -114,7 +114,7 @@ and open the template in the editor.
                                     </p:selectOneMenu>                                        
                                     Consume Bebidas Alcoholicas:
                                     <p:selectBooleanButton id="value3"  value="#{empleadoBean.empleado.consBebidasAlcoholicas}" onLabel="Si" offLabel="No" >
-                                        <p:ajax update="@(.perfSocioDemografico),@(.consumeAlcohol)" />
+                                        <p:ajax update="@(.consumeAlcohol)" />
                                     </p:selectBooleanButton>
                                     <p:selectOneMenu value="#{empleadoBean.empleado.consumoBebidasAlcoholicas.codigo}" styleClass="consumeAlcohol" style="width: 150px" 
                                                      disabled="#{empleadoBean.empleado.consBebidasAlcoholicas eq null or empleadoBean.empleado.consBebidasAlcoholicas eq false }"
@@ -124,17 +124,17 @@ and open the template in the editor.
                                     </p:selectOneMenu>
                                     Fuma:
                                     <p:selectBooleanButton id="value1" value="#{empleadoBean.empleado.fuma}" onLabel="Si" offLabel="No">
-                                        <p:ajax update="@(.perfSocioDemografico),@(.promedioFuma)" />
+                                        <p:ajax update="@(.promedioFuma)" />
                                     </p:selectBooleanButton>                                                                        
                                     <p:inputText styleClass="promedioFuma" value="#{empleadoBean.empleado.promedioFuma}" placeholder="Promedio Diario" disabled="#{empleadoBean.empleado.fuma eq null or empleadoBean.empleado.fuma eq false }" />
                                     Le Han Diagnosticado Alguna Enfermedad:
                                     <p:selectBooleanButton id="value2" value="#{empleadoBean.empleado.diagnosticadoEnfermidad}" onLabel="Si" offLabel="No">
-                                        <p:ajax update="@(.perfSocioDemografico),@(.enfermedad)" />
+                                        <p:ajax update="@(.enfermedad)" />
                                     </p:selectBooleanButton>                                    
                                     <p:inputText value="#{empleadoBean.empleado.enfermedad}" styleClass="enfermedad" placeholder="Escriba Enfermedad" disabled="#{empleadoBean.empleado.diagnosticadoEnfermidad eq null or empleadoBean.empleado.diagnosticadoEnfermidad eq false }" />                                    
                                     Practica Algun Deporte
                                     <p:selectBooleanButton id="value4" value="#{empleadoBean.empleado.practicaAlgunDeporte}" onLabel="Si" offLabel="No" >
-                                        <p:ajax update="@(.perfSocioDemografico),@(.deporte)" />
+                                        <p:ajax update="@(.deporte)" />
                                     </p:selectBooleanButton>                                    
                                     <p:inputText value="#{empleadoBean.empleado.deportePractica}" id="deporte" placeholder="Escriba Deporte" disabled="#{empleadoBean.empleado.practicaAlgunDeporte eq null or empleadoBean.empleado.practicaAlgunDeporte eq false }" />                                        
                                     Con Que Frecuencia Practica
