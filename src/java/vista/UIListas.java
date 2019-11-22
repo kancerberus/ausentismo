@@ -106,8 +106,10 @@ public class UIListas implements Serializable {
     private ArrayList<SelectItem> itemsCausaBasicas = new ArrayList<>();
     private ArrayList<SelectItem> itemsCausaInmediatas = new ArrayList<>();
     private ArrayList<SelectItem> itemsTipoAccidente = new ArrayList<>();
-    private ArrayList<SelectItem> itemsEmpresas = new ArrayList<>();
+    private ArrayList<SelectItem> itemsEmpresas = new ArrayList<>();    
     private ArrayList<SelectItem> itemsMeses = new ArrayList<>();
+    
+    private ExpressionFactory ef;    
     
 
     public UIListas()  throws Exception {
@@ -122,6 +124,7 @@ public class UIListas implements Serializable {
        empresa = new Empresa();
        subempresa = new SubEmpresa();
        itemsTipoIncapacidades=new ArrayList<>();
+       itemsSubempresas=new ArrayList<>();
        
     }
   
@@ -643,15 +646,23 @@ public class UIListas implements Serializable {
     }
     
         public ArrayList<SelectItem> getItemsSubEmpresas() throws Exception{
+            itemsSubempresas.clear();
+            contextoJSF = FacesContext.getCurrentInstance();
+            contextoEL = contextoJSF.getELContext();
+            ef = contextoJSF.getApplication().getExpressionFactory();
             
             String nitempresa = empresa.getNitempresa();
             
+            
+            
             if ( nitempresa == null) {
+                
+                nitempresa = (String) ef.createValueExpression(contextoEL, "#{listasBean.empresa.nitempresa}", String.class).getValue(contextoEL);          
                 
                 try {
                     gestorListas = new GestorListas();
                     ArrayList<SubEmpresa> listaSubEmpresa;
-                    listaSubEmpresa = gestorListas.listarSubempresas();
+                    listaSubEmpresa = gestorListas.listarSubempresas(nitempresa);
                     itemsSubempresas.clear();
                     for (int i = 0; i < listaSubEmpresa.size(); i++) {                    
                             itemsSubempresas.add(new SelectItem(listaSubEmpresa.get(i).getNitsubempresa(), listaSubEmpresa.get(i).getNombre()));

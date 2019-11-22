@@ -575,7 +575,8 @@ public class UIEmpleado implements Serializable {
         empleado = gestorEmpleado.validarEmpleado(cedula,nitsesion);
 
         if(empleado == null){
-            util.mostrarMensaje("La cedula no Existe.");                
+            util.mostrarMensaje("La Cedula No Corresponde al Establecimiento.");
+            
             empleado=new Empleado();
         }                
         
