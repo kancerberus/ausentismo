@@ -134,11 +134,11 @@ and open the template in the editor.
                                     <p:inputText value="#{empleadoBean.empleado.enfermedad}" styleClass="enfermedad" placeholder="Escriba Enfermedad" disabled="#{empleadoBean.empleado.diagnosticadoEnfermidad eq null or empleadoBean.empleado.diagnosticadoEnfermidad eq false }" />                                    
                                     Practica Algun Deporte
                                     <p:selectBooleanButton id="value4" value="#{empleadoBean.empleado.practicaAlgunDeporte}" onLabel="Si" offLabel="No" >
-                                        <p:ajax update="@(.deporte)" />
+                                        <p:ajax update="@(.deporte),@(.deporteDesc)" />
                                     </p:selectBooleanButton>                                    
-                                    <p:inputText value="#{empleadoBean.empleado.deportePractica}" id="deporte" placeholder="Escriba Deporte" disabled="#{empleadoBean.empleado.practicaAlgunDeporte eq null or empleadoBean.empleado.practicaAlgunDeporte eq false }" />                                        
+                                    <p:inputText value="#{empleadoBean.empleado.deportePractica}" styleClass="deporte" placeholder="Escriba Deporte" disabled="#{empleadoBean.empleado.practicaAlgunDeporte eq null or empleadoBean.empleado.practicaAlgunDeporte eq false }" />                                        
                                     Con Que Frecuencia Practica
-                                    <p:inputText value="#{empleadoBean.empleado.frecuenciaDeportePractica}" disabled="#{empleadoBean.empleado.practicaAlgunDeporte eq null or empleadoBean.empleado.practicaAlgunDeporte eq false }"/>
+                                    <p:inputText value="#{empleadoBean.empleado.frecuenciaDeportePractica}" styleClass="deporteDesc" disabled="#{empleadoBean.empleado.practicaAlgunDeporte eq null or empleadoBean.empleado.practicaAlgunDeporte eq false }"/>
                                     <p:outputLabel/>
                                     <p:outputLabel/>
                                     <p:commandButton icon="ui-icon-trash" update="@this" type="submit" id="limpiar" value="Limpiar" actionListener="#{empleadoBean.limpiarPerfilsocioDemografico()}"/>
