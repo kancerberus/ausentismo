@@ -51,7 +51,7 @@ public class UILogin implements Serializable {
             throw new RuntimeException("No se pudo registrar la sesión");
         }
         try {            
-            GestorUsuario gestorUsuario = new GestorUsuario();
+            gestorUsuario = new GestorUsuario();
             Usuario u = gestorUsuario.validarUsuario(usuario, clave);
             sesion.setUsuario(u);            
             if(u!=null && u.isEstado()== true){            
