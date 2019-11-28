@@ -56,34 +56,25 @@ and open the template in the editor.
                                                                 forceSelection="true" />                                                                                                 
 
                                                 EPS:<p:selectOneMenu value="#{empleadoBean.empleado.eps.codigo}" id="epss">}
-                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />
-                                                
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
                                                 <f:selectItems   value="#{listasBean.itemsEpss}"/>
                                                 </p:selectOneMenu>
 
                                                 Cargo:<p:selectOneMenu value="#{empleadoBean.empleado.cargo.codigo}" id="cargos">}
-                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />
-                                                
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
                                                 <f:selectItems   value="#{listasBean.itemsCargos}"/>
                                                 </p:selectOneMenu>
 
                                                 Estado Civil:<p:selectOneMenu value="#{empleadoBean.empleado.ecivil.codigo}" id="eciviles">}
-                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />
-                                                
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
                                                 <f:selectItems   value="#{listasBean.itemsEciviles}"/>
                                                 </p:selectOneMenu>
 
                                                 Genero:<p:selectOneMenu value="#{empleadoBean.empleado.sexo.codigo}" id="sexos">
-                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />
-                                                
+                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
                                                 <f:selectItems   value="#{listasBean.itemsSexos}"/>
                                                 </p:selectOneMenu>                                     
                                                 
-                                                Nivel Escolar:<p:selectOneMenu value="#{empleadoBean.empleado.nescolar.codigo}" id="nescolar">
-                                                <f:selectItem itemLabel="Seleccione..." itemValue="" />
-                                                
-                                                <f:selectItems   value="#{listasBean.itemsNivelEscolar}}"/>
-                                                </p:selectOneMenu>
                                                 
                                                 
                                                 Fecha Ingreso<p:calendar id="fecI" value="#{empleadoBean.empleado.fechaIngreso}" pattern="dd-MM-yyyy" mask="true"/>
