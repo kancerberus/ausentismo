@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import modelo.Empresa;
 import modelo.Menu;
 import modelo.Perfil;
 import modelo.SubMenu;
@@ -36,10 +37,10 @@ public class UsuarioDAO {
         String sql;
         Usuario u = null;
         Perfil p = null;   
-        SubEmpresa e = null;
+        SubEmpresa e = null;        
         try {
             consulta = new Consulta(getConexion());
-            sql = "select u.usuario,u.nombre,u.cod_perfil,p.nombre perfil,e.nombre nom_empresa,u.fk_nitsubempresa, u.estado as estado ,(select sal_min from configuracion ) as salmin,(select to_char(fecha_actualizado,'yyyy') from configuracion ) as fecActualizado"
+            sql = "select u.usuario,u.nombre,u.cod_perfil,p.nombre perfil,e.fk_nitempresa nitem,e.nombre nom_empresa,u.fk_nitsubempresa, u.estado as estado ,(select sal_min from configuracion ) as salmin,(select to_char(fecha_actualizado,'yyyy') from configuracion ) as fecActualizado"
                     + " from usuario u "
                     + " inner join perfil p using (cod_perfil) "  
                     + " inner join subempresa e on (nitsubempresa=fk_nitsubempresa) "                    
@@ -53,6 +54,8 @@ public class UsuarioDAO {
                 u.setSalarioMin(rs.getFloat("salmin"));
                 u.setFechaActualizado(rs.getString("fecActualizado"));
                 
+                
+                
                 p = new Perfil();
                 p.setCodigo(rs.getInt("cod_perfil"));
                 p.setNombre(rs.getString("perfil"));                
@@ -61,6 +64,7 @@ public class UsuarioDAO {
                 e = new SubEmpresa();
                 e.setNombre(rs.getString("nom_empresa"));  
                 e.setNitsubempresa(rs.getString("fk_nitsubempresa"));
+                e.getEmpresa().setNitempresa(rs.getString("nitem"));
                 u.setSubEmpresa(e);                
                 
             }
@@ -82,11 +86,12 @@ public class UsuarioDAO {
         try {
             consulta = new Consulta(getConexion());
             
-            sql = "select us.usuario as nomusuario, us.nombre as nombre, pe.cod_perfil as cod_perfil, su.nitsubempresa as nitsubem, us.estado as estado " +
-                "from usuario us " +
-                "inner join perfil pe on (pe.cod_perfil=us.cod_perfil) " +
-                "inner join subempresa su on (su.nitsubempresa=us.fk_nitsubempresa) " +
-                "where us.usuario = '"+nomusuario.trim()+"' ";
+            sql = " select em.nitempresa nitempresa,us.usuario as nomusuario, us.nombre as nombre, pe.cod_perfil as cod_perfil, su.nitsubempresa as nitsubem,su.nombre nomsub, us.estado as estado " +
+                " from usuario us " +
+                " inner join perfil pe on (pe.cod_perfil=us.cod_perfil) " +
+                " inner join subempresa su on (su.nitsubempresa=us.fk_nitsubempresa) "+
+                " join empresa em on (em.nitempresa=su.fk_nitempresa )" +
+                " where us.usuario = '"+nomusuario.trim()+"' ";
                     
                       
             rs = consulta.ejecutar(sql);
@@ -97,6 +102,8 @@ public class UsuarioDAO {
                 us.setNombre(rs.getString("nombre"));
                 us.getPerfil().setCodigo(rs.getInt("cod_perfil"));
                 us.getSubEmpresa().setNitsubempresa(rs.getString("nitsubem"));
+                us.getSubEmpresa().setNombre(rs.getString("nomsub"));
+                us.getSubEmpresa().getEmpresa().setNitempresa(rs.getString("nitempresa"));
                 us.setEstado(rs.getBoolean("estado"));
             }
             return us;

@@ -19,7 +19,7 @@
                                     <p:outputLabel value="Nombre de usuario" for="usuario" />
                                     <p:inputText id="usuario" value="#{UsuarioBean.usuario.nomusuario}" required="true" label="usuario"/>                                      
                                     <p:commandButton icon="ui-icon-search" value="Consultar" actionListener="#{UsuarioBean.buscarUsuario}" 
-                                                     update="aviso,tblDatosUsuario" />
+                                                     update="aviso,tblDatosUsuario, subE" />
                                 </h:panelGrid>                                
                             </p:fieldset>
                                 
@@ -40,10 +40,10 @@
                                                 <f:selectItems   value="#{loginBean.itemsPerfiles}"/>
                                                 </p:selectOneMenu> 
                                                 
-                                                Empresa:<p:selectOneMenu value="#{UsuarioBean.usuario.subEmpresa.nitsubempresa}" id="subE"
+                                                Empresa:<p:selectOneMenu value="#{UsuarioBean.usuario.subEmpresa.nombre}" id="subE"
                                                                          style="width: 200px;">
                                                 <f:selectItem itemLabel="Seleccione..." itemValue="" />
-                                                <f:selectItems   value="#{listasBean.itemsSubEmpresas}"/>
+                                                <f:selectItems   value="#{UsuarioBean.itemsSubEmpresas}"/>
                                                 </p:selectOneMenu> 
                                                 
                                                 <p:outputLabel for="@next" value="Activo: " />

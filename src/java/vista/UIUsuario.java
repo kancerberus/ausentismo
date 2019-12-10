@@ -5,12 +5,18 @@
  */
 package vista;
 
+import controlador.GestorListas;
 import controlador.GestorUsuario;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.el.ELContext;
 import javax.faces.context.FacesContext;
 import modelo.Usuario;
 import javax.el.ExpressionFactory;
+import javax.faces.model.SelectItem;
+import modelo.SubEmpresa;
 import util.Utilidades;
 
 
@@ -26,8 +32,10 @@ public class UIUsuario implements Serializable{
     private ELContext contextoEL;
     private ExpressionFactory reg;
     private GestorUsuario gestorUsuario;
+    private ExpressionFactory ef; 
     
     public Utilidades util = new Utilidades();
+    private ArrayList<SelectItem> itemsSubempresas = new ArrayList<>();
 
 
 
@@ -51,6 +59,53 @@ public class UIUsuario implements Serializable{
             util.mostrarMensaje("El usuario no existe");
             usuario = new Usuario();
         }
+    }
+    
+    public ArrayList<SelectItem> getItemsSubEmpresas() throws Exception{
+            GestorListas gestorListas=new GestorListas();
+            itemsSubempresas.clear();
+            contextoJSF = FacesContext.getCurrentInstance();
+            contextoEL = contextoJSF.getELContext();
+            ef = contextoJSF.getApplication().getExpressionFactory();
+            
+            String nitempresa = usuario.getSubEmpresa().getEmpresa().getNitempresa();
+            
+            
+            
+            if ( nitempresa == null) {
+                
+                nitempresa = (String) ef.createValueExpression(contextoEL, "#{listasBean.empresa.nitempresa}", String.class).getValue(contextoEL);  
+                
+                try {
+                    gestorListas = new GestorListas();
+                    ArrayList<SubEmpresa> listaSubEmpresa;
+                    listaSubEmpresa = gestorListas.listarSubempresas(nitempresa);
+                    itemsSubempresas.clear();
+                    for (int i = 0; i < listaSubEmpresa.size(); i++) {                    
+                            itemsSubempresas.add(new SelectItem(listaSubEmpresa.get(i).getNitsubempresa(), listaSubEmpresa.get(i).getNombre()));
+                        }                        
+                    }
+                catch (Exception ex) {
+                            Logger.getLogger(UIAusentismo.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+            }else{
+                
+                try {
+                    gestorListas = new GestorListas();
+                    ArrayList<SubEmpresa> listaSubEmpresa;
+                    listaSubEmpresa = gestorListas.listarSubempresas(nitempresa);
+                    itemsSubempresas.clear();
+                    for (int i = 0; i < listaSubEmpresa.size(); i++) {                    
+                            itemsSubempresas.add(new SelectItem(listaSubEmpresa.get(i).getNitsubempresa(), listaSubEmpresa.get(i).getNombre()));
+                        }                        
+                    }
+                catch (Exception ex) {
+                            Logger.getLogger(UIAusentismo.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+            }
+            
+                return itemsSubempresas;    
     }
     
     public void modificarUsuario() throws Exception{    

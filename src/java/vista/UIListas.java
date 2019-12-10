@@ -657,7 +657,7 @@ public class UIListas implements Serializable {
             
             if ( nitempresa == null) {
                 
-                nitempresa = (String) ef.createValueExpression(contextoEL, "#{listasBean.empresa.nitempresa}", String.class).getValue(contextoEL);          
+                nitempresa = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.empresa.nitempresa}", String.class).getValue(contextoEL);  
                 
                 try {
                     gestorListas = new GestorListas();
