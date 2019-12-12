@@ -40,7 +40,7 @@ public class UsuarioDAO {
         SubEmpresa e = null;        
         try {
             consulta = new Consulta(getConexion());
-            sql = "select u.usuario,u.nombre,u.cod_perfil,p.nombre perfil,e.fk_nitempresa nitem,e.nombre nom_empresa,u.fk_nitsubempresa, u.estado as estado ,(select sal_min from configuracion ) as salmin,(select to_char(fecha_actualizado,'yyyy') from configuracion ) as fecActualizado"
+            sql = "select u.usuario,u.nombre,u.cod_perfil,p.nombre perfil,e.nombre nomem, e.fk_nitempresa nitem,e.nombre nom_empresa,u.fk_nitsubempresa, u.estado as estado ,(select sal_min from configuracion ) as salmin,(select to_char(fecha_actualizado,'yyyy') from configuracion ) as fecActualizado"
                     + " from usuario u "
                     + " inner join perfil p using (cod_perfil) "  
                     + " inner join subempresa e on (nitsubempresa=fk_nitsubempresa) "                    
@@ -55,7 +55,6 @@ public class UsuarioDAO {
                 u.setFechaActualizado(rs.getString("fecActualizado"));
                 
                 
-                
                 p = new Perfil();
                 p.setCodigo(rs.getInt("cod_perfil"));
                 p.setNombre(rs.getString("perfil"));                
@@ -65,6 +64,7 @@ public class UsuarioDAO {
                 e.setNombre(rs.getString("nom_empresa"));  
                 e.setNitsubempresa(rs.getString("fk_nitsubempresa"));
                 e.getEmpresa().setNitempresa(rs.getString("nitem"));
+                e.getEmpresa().setNombre(rs.getString("nomem"));
                 u.setSubEmpresa(e);                
                 
             }
@@ -125,8 +125,11 @@ public class UsuarioDAO {
             consulta = new Consulta(getConexion());
             
                 sql = "UPDATE usuario "                         
-                    +"set estado = "+usuario.isEstado()+" " 
-                    +"where usuario = '"+usuario.getNomusuario()+"'";
+                    +" set estado = "+usuario.isEstado()+", "
+                    + " clave= (select md5('" + usuario.getClave()+ "')), "
+                    + " cod_perfil='"+usuario.getPerfil().getCodigo()+"',"
+                    + " fk_nitsubempresa='"+usuario.getSubEmpresa().getNitsubempresa()+"' "                    
+                    +" where usuario = '"+usuario.getNomusuario()+"'";
 
             resultado = consulta.actualizar(sql);
             return resultado;

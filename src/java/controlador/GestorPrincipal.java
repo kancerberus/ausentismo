@@ -41,6 +41,7 @@ public class GestorPrincipal implements Serializable {
     private boolean modificarMinimo=false;
     private boolean reporteEmpleadoAdmin=false;
     private boolean perfilSociodemografico=false;
+    private boolean indicadorPerfilSocioDemografico=false;
     private boolean reportePerfilSocioDemografico=false;
     
     
@@ -79,6 +80,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;
                 
@@ -112,6 +114,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;                
 
@@ -145,6 +148,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;                 
             
@@ -178,6 +182,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;  
                 
@@ -211,6 +216,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;  
                 
@@ -244,6 +250,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;  
                 
@@ -277,6 +284,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;  
                 
@@ -310,6 +318,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;  
                 
@@ -343,6 +352,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;
                 
@@ -376,6 +386,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;
                 
@@ -409,6 +420,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;
                 
@@ -442,6 +454,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;
                 
@@ -475,6 +488,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;                
 
@@ -509,6 +523,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;
                 
@@ -543,6 +558,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;
                 
@@ -577,6 +593,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;
                 
@@ -610,6 +627,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;
                 
@@ -643,6 +661,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;
                 
@@ -676,6 +695,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;
                 
@@ -709,6 +729,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;
                 
@@ -742,6 +763,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 
                 break;
@@ -776,6 +798,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;
                 
@@ -809,6 +832,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;
                 
@@ -842,6 +866,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;
                 
@@ -875,6 +900,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;
                 
@@ -908,6 +934,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;
                 
@@ -941,6 +968,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(true);
                 setReporteEmpleadoAdmin(false);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;
                 
@@ -975,6 +1003,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(true);
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(false);
                 break;
                 
@@ -1008,6 +1037,41 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);         
                 setPerfilSociodemografico(true);
+                setIndicadorPerfilSocioDemografico(false);
+                setReportePerfilSocioDemografico(false);
+                break;
+                
+                case "indicadores_perfil_socio":
+                setRegAusentismo(false);
+                setConsultaAusentismo(false); 
+                setFinAusentismo(false);                
+                setNuevoEmpleado(false);
+                setListarEmpleado(false);
+                setNuevaEmpresa(false);
+                setNuevoUsuario(false);
+                setCargosyEpsbd(false);
+                setNuevaSubEmpresa(false);
+                setInformeAusentismo(false);
+                setInformeausentismoEmpresa(false);
+                setReporteEmpleado(false);
+                setModificarEmpleado(false);                
+                setMoverEmpleado(false);
+                setReporteGrafica(false);
+                setActualizarRegistros(false);                
+                setAusentismoEmpleado(false);
+                setModificarUsuario(false);
+                setRegIncapacidad(false);
+                setRegAccidente(false);                
+                setIndAccidente(false);
+                setCrearConcurso(false); 
+                setConcursos(false);
+                setEquipos(false);
+                setJueces(false);
+                setIndAusentismo(false);
+                setModificarMinimo(false);
+                setReporteEmpleadoAdmin(false);         
+                setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(true);
                 setReportePerfilSocioDemografico(false);
                 break;
                 
@@ -1041,6 +1105,7 @@ public class GestorPrincipal implements Serializable {
                 setModificarMinimo(false);
                 setReporteEmpleadoAdmin(false);         
                 setPerfilSociodemografico(false);
+                setIndicadorPerfilSocioDemografico(false);
                 setReportePerfilSocioDemografico(true);
                 break;
                 
@@ -1056,6 +1121,14 @@ public class GestorPrincipal implements Serializable {
     public void setReportePerfilSocioDemografico(boolean reportePerfilSocioDemografico) {
         this.reportePerfilSocioDemografico = reportePerfilSocioDemografico;
     }
+
+    public boolean isIndicadorPerfilSocioDemografico() {
+        return indicadorPerfilSocioDemografico;
+    }
+
+    public void setIndicadorPerfilSocioDemografico(boolean indicadorPerfilSocioDemografico) {
+        this.indicadorPerfilSocioDemografico = indicadorPerfilSocioDemografico;
+    }    
 
     public boolean isPerfilSociodemografico() {
         return perfilSociodemografico;

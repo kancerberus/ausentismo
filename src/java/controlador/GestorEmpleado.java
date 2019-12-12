@@ -295,4 +295,14 @@ public class GestorEmpleado extends Gestor {
             cerrarConexion();
         }
     }
+
+    public Collection<? extends Empleado> cargarPerfilSocioList(String nitsub,String nitem) throws Exception {
+        try {
+            abrirConexion();
+            EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
+            return empleadoDAO.cargarPerfilSocioList(nitsub, nitem);
+        } finally {
+            cerrarConexion();
+        }
+    }
 }

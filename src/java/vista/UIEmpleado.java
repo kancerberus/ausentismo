@@ -61,6 +61,7 @@ public class UIEmpleado implements Serializable {
     private Integer totalPracticaDeporte;
     
     
+    
     private List<Empleado> distribucionEdad=new ArrayList<>();
     private List<Empleado> distribucionECivil=new ArrayList<>();
     private List<Empleado> distribucionSexo=new ArrayList<>();
@@ -77,6 +78,8 @@ public class UIEmpleado implements Serializable {
     private List<Empleado> distribucionDiagnosticadoEnfermedad=new ArrayList<>();
     private List<Empleado> distribucionConsumoAlcohol=new ArrayList<>();
     private List<Empleado> distribucionPracticaDeporte=new ArrayList<>();
+    private List<Empleado> perfilSocioList=new ArrayList<>();
+    
     private PieChartModel pieEdades=new PieChartModel();
     private PieChartModel pieNumPerCargo=new PieChartModel();
     private PieChartModel pieECivil=new PieChartModel();
@@ -93,6 +96,7 @@ public class UIEmpleado implements Serializable {
     private PieChartModel pieDiagnosticadoEnfermedad=new PieChartModel();
     private PieChartModel pieConsumoAlcohol=new PieChartModel();
     private PieChartModel piePracticaDeporte=new PieChartModel();
+    
     
     
 
@@ -716,6 +720,33 @@ public class UIEmpleado implements Serializable {
             Logger.getLogger(UIEmpleado.class.getName()).log(Level.SEVERE, null, ex);
         }        
         return listaEmpleadoAdmin;
+    }
+    
+    public void cargarPerfilSocioDemograficoList(){
+        try {
+            perfilSocioList=new ArrayList<>();
+            contextoJSF = FacesContext.getCurrentInstance();
+            contextoEL = contextoJSF.getELContext();
+            ef = contextoJSF.getApplication().getExpressionFactory();
+            String nitsub = (String) ef.createValueExpression(contextoEL, "#{listasBean.subempresa.nitsubempresa}", String.class).getValue(contextoEL);
+            String nitem = (String) ef.createValueExpression(contextoEL, "#{listasBean.empresa.nitempresa}", String.class).getValue(contextoEL);              
+            
+            
+
+            gestorEmpleado=new GestorEmpleado();
+            perfilSocioList.addAll(gestorEmpleado.cargarPerfilSocioList(nitsub, nitem));
+
+        } catch (Exception e) {
+            Logger.getLogger(UIEmpleado.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+    public List<Empleado> getPerfilSocioList() {
+        return perfilSocioList;
+    }
+
+    public void setPerfilSocioList(List<Empleado> perfilSocioList) {
+        this.perfilSocioList = perfilSocioList;
     }
 
     public Integer getTotalConsumoAlcohol() {

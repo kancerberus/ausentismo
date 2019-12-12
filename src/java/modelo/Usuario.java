@@ -15,6 +15,7 @@ public class Usuario {
     private String nomusuario;
     private String nombre;
     private String clave;
+    private String clave2;
     private Perfil perfil;
     private SubEmpresa subempresa;
     private boolean estado;
@@ -48,6 +49,14 @@ public class Usuario {
 
     public void setFechaActualizado(String fechaActualizado) {
         this.fechaActualizado = fechaActualizado;
+    }
+
+    public String getClave2() {
+        return clave2;
+    }
+
+    public void setClave2(String clave2) {
+        this.clave2 = clave2;
     }
 
     

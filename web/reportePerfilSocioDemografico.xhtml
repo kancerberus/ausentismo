@@ -1,3 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
@@ -8,579 +14,131 @@
     
     <h:body>
         <ui:composition>
-            <h:form id="reportPerfilSocio">
-                <p:growl id="avisoreportPerfilSocio" showDetail="true" life="50000" />
-                <p:panel header="INDICADORES ACCIDENTES" id="pnlreportPerfilSocio"
+            <h:form id="reportePerfilSocio">
+               <p:growl id="aviso" showDetail="true" life="5000" />
+                <p:panel header="REPORTE PERFIL SOCIODEMOGRAFICO" id="pnlPerfilSocio"  
                          style="width:auto;">
                     <table>
-                        <tr><td>
-                            <p:fieldset legend="DATOS AUSENTISMOS" style="margin-bottom:10px; margin-top:10px; width:auto; font-size: 90%; " >
-                                <table cellpadding="5">
+                        <tr><td>                            
+                                <table cellpadding="5">                        
                                     <tr>
                                         <td align="center">
-                                            <p:panelGrid id="tblInformeaccidentesEmpresa" columns="4" style="width:1030px; font-size: 90%;">
+                                            <p:panelGrid id="tblPerfilSocio" columns="10" style="width:1030px; font-size: 90%;">
                                                 <f:facet name="header">
                                                     <h:outputText value="" />
-                                                </f:facet>
-                                                Empresa:<p:selectOneMenu value="#{listasBean.empresa.nitempresa}" >}
+                                                </f:facet>     
+                                                <h:outputText value="Empresa:" style="font-weight: bold;" /><h:outputText value="#{loginBean.sesion.usuario.subEmpresa.empresa.nombre}" />                                                         
+                                                
+                                                
+                                                Empresa:<p:selectOneMenu value="#{listasBean.empresa.nitempresa}" id="empresas">}
                                                 <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
                                                 <f:selectItems   value="#{listasBean.itemsEmpresas}"/>  
                                                 <p:ajax update="subempresas"/>
                                                 </p:selectOneMenu>
-                                                
-                                                SubEmpresa:<p:selectOneMenu id="subempresas" value="#{listasBean.subempresa.nitsubempresa}" >}
+                                                                                  
+                                                SubEmpresa:<p:selectOneMenu value="#{listasBean.subempresa.nitsubempresa}" id="subempresas">}
                                                 <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                  	
                                                 <f:selectItems   value="#{listasBean.itemsSubEmpresas}"/>
                                                 </p:selectOneMenu>
                                                 
                                             </p:panelGrid>
+                                            
                                         </td>
                                     </tr>
                                 </table>
-                            </p:fieldset> 
-                            <p:fieldset style= "margin-top:10px;" >                                    
-                                <p:commandButton icon="ui-icon-newwin" type="submit" value="Generar"  actionListener="#{empleadoBean.generarReportePerfil()}"
-                                    update="piePracticaDeporte,xPracticaAlgunDeporte,pieConsumoAlcohol,xConsumo,pieDiagnosticadoEnfermedad,xDiagnosticado,pieFuma,xFuma,pieActivEmpresa,xActivEmpresa,pieTipoContrato,xTipoContrato,pieAntiguedadCargo,xAntiguedadCargo,xAntiguedadEmpresa,pieAntiguedadEmpresa,xPromedioIngresos,piePromedioIngreso,xPromedioIngresos,piePromedioIngreso,pieUsoTiempoLibre,xusoTiempoLibre,pieTendenciaVivienda,xTendenciaVivienda,pieNivelEscolaridad,xNivelEscolaridad,xNumpercargo,pieNumPerCargo,xedad,avisoreportPerfilSocio,pieEdades,xeCivil,pieECivil,pieSexo,xSexo"/>
-                            </p:fieldset>
-                                <br/>
-                            <p:panel header="ESTADISTICAS GENERALES">
-                                <p:panel header="DISTRIBUCIÓN POR EDAD" id="edad" >
-                                <h:panelGrid columns="2" cellpadding="10" >                                    
-                                    <p:column width="50%">
-                                        <p:dataTable id="xedad" var="varEdad" value="#{empleadoBean.distribucionEdad}"
-                                         rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
-                                           <p:column headerText="Descripcion">
-                                               <h:outputText value="#{varEdad.descDistribucion}" />
-                                           </p:column>
-
-                                            <p:column headerText="Cantidad" >
-                                                <h:outputText value="#{varEdad.cantidad}" />
-                                           </p:column>
-
-                                            <p:column headerText="Porcentaje" >
-                                                <h:outputText value="#{varEdad.porcentaje} %" >                                                    
-                                                </h:outputText>
-                                           </p:column>
-
-                                            <p:columnGroup type="footer">
-                                               <p:row>
-                                                   <p:column style="text-align:left" footerText="TOTALES" />
-                                                   <p:column style="text-align:center" footerText="#{empleadoBean.total}"/>
-                                                   <p:column style="text-align:left" footerText="100%" />
-                                               </p:row>
-                                           </p:columnGroup>
-
-                                        </p:dataTable>
-                                    </p:column>                                    
-                                    <p:column>
-                                        <p:chart id="pieEdades" type="pie" model="#{empleadoBean.pieEdades}" style="width:600px;height:400px"/>
-                                    </p:column>
-                                    </h:panelGrid>                             
-                                    </p:panel>
-                                
-                                
-                                <p:panel header="DISTRIBUCIÓN POR ESTADO CIVIL" id="eCivil">
-                                <h:panelGrid columns="2" cellpadding="10" >                                    
-                                    <p:column width="50%">
-                                        <p:dataTable id="xeCivil" var="varECivil" value="#{empleadoBean.distribucionECivil}"
-                                         rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
-                                           <p:column headerText="Descripcion">
-                                               <h:outputText value="#{varECivil.descDistribucion}" />
-                                           </p:column>
-
-                                            <p:column headerText="Cantidad" >
-                                                <h:outputText value="#{varECivil.cantidad}" />
-                                           </p:column>
-
-                                            <p:column headerText="Porcentaje" >
-                                                <h:outputText value="#{varECivil.porcentaje} %">
-                                                    
-                                                </h:outputText>
-                                           </p:column>
-
-                                            <p:columnGroup type="footer">
-                                               <p:row>
-                                                   <p:column style="text-align:left" footerText="TOTALES" />
-                                                   <p:column style="text-align:center" footerText="#{empleadoBean.total}"/>
-                                                   <p:column style="text-align:left" footerText="100%" />
-                                               </p:row>
-                                           </p:columnGroup>
-
-                                        </p:dataTable>
-                                    </p:column>                                    
-                                    <p:column>
-                                        <p:chart id="pieECivil" type="pie" model="#{empleadoBean.pieECivil}" style="width:600px;height:400px"/>
-                                    </p:column>
-                                    </h:panelGrid>                             
-                                    </p:panel>
-                                
-                                <p:panel header="DISTRIBUCIÓN POR SEXO" id="sexo">
-                                <h:panelGrid columns="2" cellpadding="10" >                                    
-                                    <p:column width="50%">
-                                        <p:dataTable id="xSexo" var="varSexo" value="#{empleadoBean.distribucionSexo}"
-                                         rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
-                                           <p:column headerText="Descripcion">
-                                               <h:outputText value="#{varSexo.descDistribucion}" />
-                                           </p:column>
-
-                                            <p:column headerText="Cantidad" >
-                                                <h:outputText value="#{varSexo.cantidad}" />
-                                           </p:column>
-
-                                            <p:column headerText="Porcentaje" >
-                                                <h:outputText value="#{varSexo.porcentaje} %" >                                                    
-                                                </h:outputText>
-                                                    
-                                           </p:column>
-
-                                            <p:columnGroup type="footer">
-                                               <p:row>
-                                                   <p:column style="text-align:left" footerText="TOTALES" />
-                                                   <p:column style="text-align:center" footerText="#{empleadoBean.total}"/>
-                                                   <p:column style="text-align:left" footerText="100%" />
-                                               </p:row>
-                                           </p:columnGroup>
-
-                                        </p:dataTable>
-                                    </p:column>                                    
-                                    <p:column>
-                                        <p:chart id="pieSexo" type="pie" model="#{empleadoBean.pieSexo}" style="width:600px;height:400px"/>
-                                    </p:column>
-                                    </h:panelGrid>                             
-                                </p:panel>   
-                                
-                                <p:panel header="DISTRIBUCIÓN POR NUMERO DE PERSONAS A CARGO" id="numpercargo">
-                                <h:panelGrid columns="2" cellpadding="10" >                                    
-                                    <p:column width="50%">
-                                        <p:dataTable id="xNumpercargo" var="varNumPerCargo" value="#{empleadoBean.distribucionNumPerCargo}"
-                                         rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
-                                           <p:column headerText="Descripcion">
-                                               <h:outputText value="#{varNumPerCargo.descDistribucion}" />
-                                           </p:column>
-
-                                            <p:column headerText="Cantidad" >
-                                                <h:outputText value="#{varNumPerCargo.cantidad}" />
-                                           </p:column>
-
-                                            <p:column headerText="Porcentaje" >
-                                                <h:outputText value="#{varNumPerCargo.porcentaje} %" />
-                                           </p:column>
-
-                                            <p:columnGroup type="footer">
-                                               <p:row>
-                                                   <p:column style="text-align:left" footerText="TOTALES" />
-                                                   <p:column style="text-align:center" footerText="#{empleadoBean.totalCargos}"/>
-                                                   <p:column style="text-align:left" footerText="100%" />
-                                               </p:row>
-                                           </p:columnGroup>
-
-                                        </p:dataTable>
-                                    </p:column>                                    
-                                    <p:column>
-                                        <p:chart id="pieNumPerCargo" type="pie" model="#{empleadoBean.pieNumPerCargo}" style="width:600px;height:400px"/>
-                                    </p:column>
-                                    </h:panelGrid>                             
-                                </p:panel>
-                                
-                                
-                                <p:panel header="DISTRIBUCIÓN POR NIVEL DE ESCOLARIDAD" id="nivelEscolaridad">
-                                <h:panelGrid columns="2" cellpadding="10" >                                    
-                                    <p:column width="50%">
-                                        <p:dataTable id="xNivelEscolaridad" var="varNivelEscolaridad" value="#{empleadoBean.distribucionNivelEscolaridad}"
-                                         rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
-                                           <p:column headerText="Descripcion">
-                                               <h:outputText value="#{varNivelEscolaridad.descDistribucion}" />
-                                           </p:column>
-
-                                            <p:column headerText="Cantidad" >
-                                                <h:outputText value="#{varNivelEscolaridad.cantidad}" />
-                                           </p:column>
-
-                                            <p:column headerText="Porcentaje" >
-                                                <h:outputText value="#{varNivelEscolaridad.porcentaje} %" />
-                                           </p:column>
-
-                                            <p:columnGroup type="footer">
-                                               <p:row>
-                                                   <p:column style="text-align:left" footerText="TOTALES" />
-                                                   <p:column style="text-align:center" footerText="#{empleadoBean.totalNescolar}"/>
-                                                   <p:column style="text-align:left" footerText="100%" />
-                                               </p:row>
-                                           </p:columnGroup>
-
-                                        </p:dataTable>
-                                    </p:column>                                    
-                                    <p:column>
-                                        <p:chart id="pieNivelEscolaridad" type="pie" model="#{empleadoBean.pieNivelEscolaridad}" style="width:600px;height:400px"/>
-                                    </p:column>
-                                    </h:panelGrid>                             
-                                </p:panel>
-                                
-                                
-                                <p:panel header="DISTRIBUCIÓN POR TENDENCIA DE VIVIENDA" id="tendenciaVivienda">
-                                <h:panelGrid columns="2" cellpadding="10" >                                    
-                                    <p:column width="50%">
-                                        <p:dataTable id="xTendenciaVivienda" var="varTendenciaVivienda" value="#{empleadoBean.distribucionTendenciaVivienda}"
-                                         rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
-                                           <p:column headerText="Descripcion">
-                                               <h:outputText value="#{varTendenciaVivienda.descDistribucion}" />
-                                           </p:column>
-
-                                            <p:column headerText="Cantidad" >
-                                                <h:outputText value="#{varTendenciaVivienda.cantidad}" />
-                                           </p:column>
-
-                                            <p:column headerText="Porcentaje" >
-                                                <h:outputText value="#{varTendenciaVivienda.porcentaje} %" />
-                                           </p:column>
-
-                                            <p:columnGroup type="footer">
-                                               <p:row>
-                                                   <p:column style="text-align:left" footerText="TOTALES" />
-                                                   <p:column style="text-align:center" footerText="#{empleadoBean.totalTvivienda}"/>
-                                                   <p:column style="text-align:left" footerText="100%" />
-                                               </p:row>
-                                           </p:columnGroup>
-
-                                        </p:dataTable>
-                                    </p:column>                                    
-                                    <p:column>
-                                        <p:chart id="pieTendenciaVivienda" type="pie" model="#{empleadoBean.pieTendenciaVivienda}" style="width:600px;height:400px"/>
-                                    </p:column>
-                                    </h:panelGrid>                             
-                                </p:panel>
-                                
-                                <p:panel header="DISTRIBUCIÓN POR USO DE TIEMPO LIBRE" id="usoTiempoLibre">
-                                <h:panelGrid columns="2" cellpadding="10" >                                    
-                                    <p:column width="50%">
-                                        <p:dataTable id="xusoTiempoLibre" var="varUsoTiempoLibre" value="#{empleadoBean.distribucionUsoTiempoLibre}"
-                                         rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
-                                           <p:column headerText="Descripcion">
-                                               <h:outputText value="#{varUsoTiempoLibre.descDistribucion}" />
-                                           </p:column>
-
-                                            <p:column headerText="Cantidad" >
-                                                <h:outputText value="#{varUsoTiempoLibre.cantidad}" />
-                                           </p:column>
-
-                                            <p:column headerText="Porcentaje" >
-                                                <h:outputText value="#{varUsoTiempoLibre.porcentaje} %" />
-                                           </p:column>
-
-                                            <p:columnGroup type="footer">
-                                               <p:row>
-                                                   <p:column style="text-align:left" footerText="TOTALES" />
-                                                   <p:column style="text-align:center" footerText="#{empleadoBean.totalUsoTlibre}"/>
-                                                   <p:column style="text-align:left" footerText="100%" />
-                                               </p:row>
-                                           </p:columnGroup>
-
-                                        </p:dataTable>
-                                    </p:column>                                    
-                                    <p:column>
-                                        <p:chart id="pieUsoTiempoLibre" type="pie" model="#{empleadoBean.pieTendenciaVivienda}" style="width:600px;height:400px"/>
-                                    </p:column>
-                                    </h:panelGrid>                             
-                                </p:panel>
-                                
-                                
-                                <p:panel header="DISTRIBUCIÓN POR PROMEDIO DE INGRESOS" id="promedioIngresos">
-                                <h:panelGrid columns="2" cellpadding="10" >                                    
-                                    <p:column width="50%">
-                                        <p:dataTable id="xPromedioIngresos" var="varPromedioIngresos" value="#{empleadoBean.distribucionPromedioIngreso}"
-                                         rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
-                                           <p:column headerText="Descripcion">
-                                               <h:outputText value="#{varPromedioIngresos.descDistribucion}" />
-                                           </p:column>
-
-                                            <p:column headerText="Cantidad" >
-                                                <h:outputText value="#{varPromedioIngresos.cantidad}" />
-                                           </p:column>
-
-                                            <p:column headerText="Porcentaje" >
-                                                <h:outputText value="#{varPromedioIngresos.porcentaje} %" />
-                                           </p:column>
-
-                                            <p:columnGroup type="footer">
-                                               <p:row>
-                                                   <p:column style="text-align:left" footerText="TOTALES" />
-                                                   <p:column style="text-align:center" footerText="#{empleadoBean.totalPromedioIngreso}"/>
-                                                   <p:column style="text-align:left" footerText="100%" />
-                                               </p:row>
-                                           </p:columnGroup>
-                                        </p:dataTable>
-                                    </p:column>                                    
-                                    <p:column>
-                                        <p:chart id="piePromedioIngreso" type="pie" model="#{empleadoBean.piePromedioIngreso}" style="width:600px;height:400px"/>
-                                    </p:column>
-                                    </h:panelGrid>                             
-                                </p:panel>
-                                
-                                <p:panel header="DISTRIBUCIÓN POR ANTIGUEDAD EN LA EMPRESA" id="antiguedadEmpresa">
-                                <h:panelGrid columns="2" cellpadding="10" >                                    
-                                    <p:column width="50%">
-                                        <p:dataTable id="xAntiguedadEmpresa" var="varAntiguedadEmpresa" value="#{empleadoBean.distribucionAntiguedadEmpresa}"
-                                         rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
-                                           <p:column headerText="Descripcion">
-                                               <h:outputText value="#{varAntiguedadEmpresa.descDistribucion}" />
-                                           </p:column>
-
-                                            <p:column headerText="Cantidad" >
-                                                <h:outputText value="#{varAntiguedadEmpresa.cantidad}" />
-                                           </p:column>
-
-                                            <p:column headerText="Porcentaje" >
-                                                <h:outputText value="#{varAntiguedadEmpresa.porcentaje} %" />
-                                           </p:column>
-
-                                            <p:columnGroup type="footer">
-                                               <p:row>
-                                                   <p:column style="text-align:left" footerText="TOTALES" />
-                                                   <p:column style="text-align:center" footerText="#{empleadoBean.totalAntiguedadEmpresa}"/>
-                                                   <p:column style="text-align:left" footerText="100%" />
-                                               </p:row>
-                                           </p:columnGroup>
-                                        </p:dataTable>
-                                    </p:column>                                    
-                                    <p:column>
-                                        <p:chart id="pieAntiguedadEmpresa" type="pie" model="#{empleadoBean.pieAntiguedadEmpresa}" style="width:600px;height:400px"/>
-                                    </p:column>
-                                    </h:panelGrid>                             
-                                </p:panel>
-                                
-                                <p:panel header="DISTRIBUCIÓN POR ANTIGUEDAD EN EL CARGO ACTUAL" id="antiguedadCargo">
-                                <h:panelGrid columns="2" cellpadding="10" >                                    
-                                    <p:column width="50%">
-                                        <p:dataTable id="xAntiguedadCargo" var="varAntiguedadCargo" value="#{empleadoBean.distribucionAntiguedadCargo}"
-                                         rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
-                                           <p:column headerText="Descripcion">
-                                               <h:outputText value="#{varAntiguedadCargo.descDistribucion}" />
-                                           </p:column>
-
-                                            <p:column headerText="Cantidad" >
-                                                <h:outputText value="#{varAntiguedadCargo.cantidad}" />
-                                           </p:column>
-
-                                            <p:column headerText="Porcentaje" >
-                                                <h:outputText value="#{varAntiguedadCargo.porcentaje} %" />
-                                           </p:column>
-
-                                            <p:columnGroup type="footer">
-                                               <p:row>
-                                                   <p:column style="text-align:left" footerText="TOTALES" />
-                                                   <p:column style="text-align:center" footerText="#{empleadoBean.totalAntiguedadCargo}"/>
-                                                   <p:column style="text-align:left" footerText="100%" />
-                                               </p:row>
-                                           </p:columnGroup>
-                                        </p:dataTable>
-                                    </p:column>                                    
-                                    <p:column>
-                                        <p:chart id="pieAntiguedadCargo" type="pie" model="#{empleadoBean.pieAntiguedadCargo}" style="width:600px;height:400px"/>
-                                    </p:column>
-                                    </h:panelGrid>                             
-                                </p:panel>
-                                
-                                                                
-                                <p:panel header="DISTRIBUCIÓN POR TIPO CONTRATACION" id="tipoContrato">
-                                <h:panelGrid columns="2" cellpadding="10" >                                    
-                                    <p:column width="50%">
-                                        <p:dataTable id="xTipoContrato" var="varTipoContrato" value="#{empleadoBean.distribucionTipoContrato}"
-                                         rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
-                                           <p:column headerText="Descripcion">
-                                               <h:outputText value="#{varTipoContrato.descDistribucion}" />
-                                           </p:column>
-
-                                            <p:column headerText="Cantidad" >
-                                                <h:outputText value="#{varTipoContrato.cantidad}" />
-                                           </p:column>
-
-                                            <p:column headerText="Porcentaje" >
-                                                <h:outputText value="#{varTipoContrato.porcentaje} %" />
-                                           </p:column>
-
-                                            <p:columnGroup type="footer">
-                                               <p:row>
-                                                   <p:column style="text-align:left" footerText="TOTALES" />
-                                                   <p:column style="text-align:center" footerText="#{empleadoBean.totalTipoContrato}"/>
-                                                   <p:column style="text-align:left" footerText="100%" />
-                                               </p:row>
-                                           </p:columnGroup>
-                                        </p:dataTable>
-                                    </p:column>                                    
-                                    <p:column>
-                                        <p:chart id="pieTipoContrato" type="pie" model="#{empleadoBean.pieTipoContrato}" style="width:600px;height:400px"/>
-                                    </p:column>
-                                    </h:panelGrid>                             
-                                </p:panel>
-                                
-                                <p:panel header="DISTRIBUCIÓN PARTICIPA EN ACTIVIDADES DE SALUD DE LA EMPRESA" id="activEmpresa">
-                                <h:panelGrid columns="2" cellpadding="10" >                                    
-                                    <p:column width="50%">
-                                        <p:dataTable id="xActivEmpresa" var="varActivEmpresa" value="#{empleadoBean.distribucionActivEmpresa}"
-                                         rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
-                                           <p:column headerText="Descripcion">
-                                               <h:outputText value="#{varActivEmpresa.descDistribucion}" />
-                                           </p:column>
-
-                                            <p:column headerText="Cantidad" >
-                                                <h:outputText value="#{varActivEmpresa.cantidad}" />
-                                           </p:column>
-
-                                            <p:column headerText="Porcentaje" >
-                                                <h:outputText value="#{varActivEmpresa.porcentaje} %" />
-                                           </p:column>
-
-                                            <p:columnGroup type="footer">
-                                               <p:row>
-                                                   <p:column style="text-align:left" footerText="TOTALES" />
-                                                   <p:column style="text-align:center" footerText="#{empleadoBean.totalActivEmpresa}"/>
-                                                   <p:column style="text-align:left" footerText="100%" />
-                                               </p:row>
-                                           </p:columnGroup>
-                                        </p:dataTable>
-                                    </p:column>                                    
-                                    <p:column>
-                                        <p:chart id="pieActivEmpresa" type="pie" model="#{empleadoBean.pieActivEmpresa}" style="width:600px;height:400px"/>
-                                    </p:column>
-                                    </h:panelGrid>                                                             
-                                </p:panel>
-                                
-                                <p:panel header="DISTRIBUCIÓN FUMA" id="fuma">
-                                <h:panelGrid columns="2" cellpadding="10" >                                    
-                                    <p:column width="50%">
-                                        <p:dataTable id="xFuma" var="varFuma" value="#{empleadoBean.distribucionFuma}"
-                                         rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
-                                           <p:column headerText="Descripcion">
-                                               <h:outputText value="#{varFuma.descDistribucion}" />
-                                           </p:column>
-
-                                            <p:column headerText="Cantidad" >
-                                                <h:outputText value="#{varFuma.cantidad}" />
-                                           </p:column>
-
-                                            <p:column headerText="Porcentaje" >
-                                                <h:outputText value="#{varFuma.porcentaje} %" />
-                                           </p:column>
-
-                                            <p:columnGroup type="footer">
-                                               <p:row>
-                                                   <p:column style="text-align:left" footerText="TOTALES" />
-                                                   <p:column style="text-align:center" footerText="#{empleadoBean.totalFuma}"/>
-                                                   <p:column style="text-align:left" footerText="100%" />
-                                               </p:row>
-                                           </p:columnGroup>
-                                        </p:dataTable>
-                                    </p:column>                                    
-                                    <p:column>
-                                        <p:chart id="pieFuma" type="pie" model="#{empleadoBean.pieFuma}" style="width:600px;height:400px"/>
-                                    </p:column>
-                                    </h:panelGrid>                             
-                                </p:panel>
-                                
-                                
-                                <p:panel header="DISTRIBUCIÓN DIAGNOSTICADO ALGUNA ENFERMEDAD" id="diagnosticadoEnfermedad">
-                                <h:panelGrid columns="2" cellpadding="10" >                                    
-                                    <p:column width="50%">
-                                        <p:dataTable id="xDiagnosticado" var="varDiagnosticado" value="#{empleadoBean.distribucionDiagnosticadoEnfermedad}"
-                                         rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
-                                           <p:column headerText="Descripcion">
-                                               <h:outputText value="#{varDiagnosticado.descDistribucion}" />
-                                           </p:column>
-
-                                            <p:column headerText="Cantidad" >
-                                                <h:outputText value="#{varDiagnosticado.cantidad}" />
-                                           </p:column>
-
-                                            <p:column headerText="Porcentaje" >
-                                                <h:outputText value="#{varDiagnosticado.porcentaje} %" />
-                                           </p:column>
-
-                                            <p:columnGroup type="footer">
-                                               <p:row>
-                                                   <p:column style="text-align:left" footerText="TOTALES" />
-                                                   <p:column style="text-align:center" footerText="#{empleadoBean.totalDiagnosticado}"/>
-                                                   <p:column style="text-align:left" footerText="100%" />
-                                               </p:row>
-                                           </p:columnGroup>
-                                        </p:dataTable>
-                                    </p:column>                                    
-                                    <p:column>
-                                        <p:chart id="pieDiagnosticadoEnfermedad" type="pie" model="#{empleadoBean.pieDiagnosticadoEnfermedad}" style="width:600px;height:400px"/>
-                                    </p:column>
-                                    </h:panelGrid>                             
-                                </p:panel>
-                                
-                                <p:panel header="DISTRIBUCIÓN POR CONSUMO BEBIDAS ALCOHOLICAS" id="consumoAlcohol">
-                                <h:panelGrid columns="2" cellpadding="10" >                                    
-                                    <p:column width="50%">
-                                        <p:dataTable id="xConsumo" var="varConsumoAlcohol" value="#{empleadoBean.distribucionConsumoAlcohol}"
-                                         rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
-                                           <p:column headerText="Descripcion">
-                                               <h:outputText value="#{varConsumoAlcohol.descDistribucion}" />
-                                           </p:column>
-
-                                            <p:column headerText="Cantidad" >
-                                                <h:outputText value="#{varConsumoAlcohol.cantidad}" />
-                                           </p:column>
-
-                                            <p:column headerText="Porcentaje" >
-                                                <h:outputText value="#{varConsumoAlcohol.porcentaje} %" />
-                                           </p:column>
-
-                                            <p:columnGroup type="footer">
-                                               <p:row>
-                                                   <p:column style="text-align:left" footerText="TOTALES" />
-                                                   <p:column style="text-align:center" footerText="#{empleadoBean.totalConsumoAlcohol}"/>
-                                                   <p:column style="text-align:left" footerText="100%" />
-                                               </p:row>
-                                           </p:columnGroup>
-                                        </p:dataTable>
-                                    </p:column>                                    
-                                    <p:column>
-                                        <p:chart id="pieConsumoAlcohol" type="pie" model="#{empleadoBean.pieConsumoAlcohol}" style="width:600px;height:400px"/>
-                                    </p:column>
-                                    </h:panelGrid>                             
-                                </p:panel>
-                                
-                                
-                                <p:panel header="DISTRIBUCIÓN PRACTICA ALGUN DEPORTE" id="practicaAlgunDeporte">
-                                <h:panelGrid columns="2" cellpadding="10" >                                    
-                                    <p:column width="50%">
-                                        <p:dataTable id="xPracticaAlgunDeporte" var="varPracticaDeporte" value="#{empleadoBean.distribucionPracticaDeporte}"
-                                         rowStyleClass="letra-xx-small-centro" style="font-size: 10px;width: 100%">
-                                           <p:column headerText="Descripcion">
-                                               <h:outputText value="#{varPracticaDeporte.descDistribucion}" />
-                                           </p:column>
-
-                                            <p:column headerText="Cantidad" >
-                                                <h:outputText value="#{varPracticaDeporte.cantidad}" />
-                                           </p:column>
-
-                                            <p:column headerText="Porcentaje" >
-                                                <h:outputText value="#{varPracticaDeporte.porcentaje} %" />
-                                           </p:column>
-
-                                            <p:columnGroup type="footer">
-                                               <p:row>
-                                                   <p:column style="text-align:left" footerText="TOTALES" />
-                                                   <p:column style="text-align:center" footerText="#{empleadoBean.totalPracticaDeporte}"/>
-                                                   <p:column style="text-align:left" footerText="100%" />
-                                               </p:row>
-                                           </p:columnGroup>
-                                        </p:dataTable>
-                                    </p:column>                                    
-                                    <p:column>
-                                        <p:chart id="piePracticaDeporte" type="pie" model="#{empleadoBean.piePracticaDeporte}" style="width:600px;height:400px"/>
-                                    </p:column>
-                                    </h:panelGrid>                             
-                                </p:panel>
-                            </p:panel>
                             
-                            </td>
-                        </tr>                        
+                            <p:fieldset style= "margin-top:10px;" >    
+                                <p:dataTable id="tblPerfilSocioDemografico" var="varPerfil" value="#{empleadoBean.perfilSocioList}"  style ="width: 1200px;font-size: 12px"                                              
+                                             paginator="true" rows="10" scrollWidth="100%" scrollable="true" >                       
+                                    <p:column headerText="Cedula" style="width: 50px; font-size: 10px" >
+                                        <h:outputText value="#{varPerfil.cedula}" style="width: 50px; font-size: 10px" />
+                                    </p:column>
+                                    <p:column headerText="Nombres" style="width: 50px; font-size: 10px">
+                                        <h:outputText value="#{varPerfil.nombres}" style="width: 50px; font-size: 10px" />
+                                    </p:column>
+                                    <p:column headerText="Apellidos" style="width: 50px; font-size: 10px">
+                                        <h:outputText value="#{varPerfil.apellidos}" style="width: 50px; font-size: 10px" />
+                                    </p:column>
+                                    <p:column headerText="Nivel Escolar" style="width: 50px; font-size: 10px">
+                                        <h:outputText value="#{varPerfil.nescolar.nombre}" style="width: 50px; font-size: 10px" />
+                                    </p:column>
+                                    <p:column headerText="Numero Personas a Cargo" style="width: 80px">
+                                        <h:outputText value="#{varPerfil.numPersonas.nombre}" style="width: 50px; font-size: 10px" />
+                                    </p:column>
+                                    <p:column headerText="Tendencia Vivienda" style="width: 50px; font-size: 10px">
+                                        <h:outputText value="#{varPerfil.tendenciaVivienda.nombre}" style="width: 50px; font-size: 10px" />
+                                    </p:column>  
+                                    <p:column headerText="Uso Tiempo Libre" style="width: 50px; font-size: 10px">
+                                        <h:outputText value="#{varPerfil.usoTiempoLibre.nombre}" style="width: 50px; font-size: 10px" />
+                                    </p:column>                    
+                                    <p:column headerText="Promedio Ingresos" style="width: 50px; font-size: 10px" >
+                                        <h:outputText value="#{varPerfil.promedioIngreso.nombre}" style="width: 50px; font-size: 10px" />
+                                    </p:column>
+                                    <p:column headerText="Antiguedad Empresa" style="width: 50px; font-size: 10px">
+                                        <h:outputText value="#{varPerfil.antiguedadEmpresa.nombre}" />
+                                    </p:column>
+                                    <p:column id="tote" headerText="Antiguedad Cargo" style="width: 50px; font-size: 10px"   >
+                                        <h:outputText value="#{varPerfil.antiguedadCargo.nombre}" style="width: 50px; font-size: 10px" />                                        
+                                    </p:column>
+                                    <p:column headerText="Tipo Contrato" style="width: 50px; font-size: 10px" >
+                                        <h:outputText value="#{varPerfil.tipoContratacion.nombre}" style="width: 50px; font-size: 10px" />
+                                    </p:column>
+                                    <p:column headerText="Participacion Actividades" style="width: 50px; font-size: 10px" >
+                                        <h:outputText value="#{varPerfil.participaActividades.nombre}" style="width: 50px; font-size: 10px" />
+                                    </p:column> 
+                                    <p:column headerText="Fuma" style="width: 50px; font-size: 10px" >
+                                        <h:outputText value="#{varPerfil.fuma ? 'SI':'NO'}" style="width: 5px; font-size: 10px"/>
+                                    </p:column> 
+                                    <p:column headerText="Promedio Fuma" style="width: 50px; font-size: 10px" >
+                                        <h:outputText value="#{varPerfil.promedioFuma != null ? varPerfil.promedioFuma : '-'}" style="width: 50px; font-size: 10px" />
+                                    </p:column> 
+                                    <p:column headerText="Diagnosticado Enfermedad" style="width: 50px; font-size: 10px" >
+                                        <h:outputText value="#{varPerfil.diagnosticadoEnfermidad ? 'SI':'NO'}" style="width: 50px; font-size: 10px" />
+                                    </p:column> 
+                                    <p:column headerText="Enfermedad" style="width: 50px; font-size: 10px" >
+                                        <h:outputText value="#{varPerfil.enfermedad}" style="width: 50px; font-size: 10px" />
+                                    </p:column> 
+                                    <p:column headerText="Practica Deporte" style="width: 50px; font-size: 10px" >
+                                        <h:outputText value="#{varPerfil.practicaAlgunDeporte ? 'SI':'NO'}" style="width: 50px; font-size: 10px" />
+                                    </p:column> 
+                                    <p:column headerText="Deporte" style="width: 50px; font-size: 10px" >
+                                        <h:outputText value="#{varPerfil.deportePractica}" style="width: 50px; font-size: 10px"  />
+                                    </p:column> 
+                                    <p:column headerText="Consume Alcohol" style="width: 50px; font-size: 10px" >
+                                        <h:outputText value="#{varPerfil.consumoBebidasAlcoholicas.nombre}" style="width: 50px; font-size: 10px"  />
+                                    </p:column> 
+                                    <p:column headerText="Frecuencia Alcohol" style="width: 50px; font-size: 10px" >
+                                        <h:outputText value="#{varPerfil.consumoBebidasAlcoholicas.nombre}" style="width: 50px; font-size: 10px" />
+                                    </p:column> 
+                                    <p:column headerText="Frecuencia Deporte" style="width: 50px; font-size: 10px" >
+                                        <h:outputText value="#{varPerfil.frecuenciaDeportePractica}" style="width: 50px; font-size: 10px" />
+                                    </p:column> 
+                                </p:dataTable>                              
+                            </p:fieldset>
+                                
+                                
+                            <p:fieldset style= "margin-top:10px;" >                                    
+                                <p:commandButton icon="ui-icon-newwin" update="aviso, tblPerfilSocioDemografico" type="submit" id="BtnInf" value="Generar" 
+                                                 actionListener="#{empleadoBean.cargarPerfilSocioDemograficoList()}"/>
+                                
+                                <h:commandButton value="CSV Export" image="resources/imagenes/csv.png" style="float:right;">
+                                    <p:dataExporter type="csv" target="tblPerfilSocioDemografico" fileName="PerfilSocioDemografico" />
+                                </h:commandButton>
+                                
+                            </p:fieldset>
+                           </td>
+                        </tr>
+                        
+                            <tr> 
+                                <td> 
+                                    
+                                </td>                                
+                            </tr>    
                     </table>                   
                 </p:panel>                                                
             </h:form>
         </ui:composition>
     </h:body>
+
+
 </html>

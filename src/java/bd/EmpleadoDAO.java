@@ -1570,4 +1570,90 @@ public Integer guardarEmpleado(Empleado empleado, String nitsesion) throws SQLEx
     public void setConexion(Connection conexion) {
         this.conexion = conexion;
     }
+
+    public Collection<? extends Empleado> cargarPerfilSocioList(String nitsub,String nitem) throws SQLException {
+        Empleado em;
+        ArrayList<Empleado> listaEmpleado = new ArrayList<>();
+        ResultSet rs;
+        String sql="";
+        Consulta consulta = null;           
+        
+        try {
+            
+            if(nitem!=null && nitsub.equals("")){
+                
+                consulta = new Consulta(getConexion());
+                    sql = "select cedula, nombres, apellidos, dlnes.nombre nomnes, dlnpc.nombre nomnpc, dltv.nombre nomtv,  dlutl.nombre nomtl, dlpi.nombre nompi, dlac.nombre nomac, dltc.nombre nomtc,pact.nombre nompact,  fuma, promedio_fuma_diario, diagonosticado_enfermedad, enfermedad, practica_deporte, deporte,  consume_alcohol, dlah.nombre nomah, frecuencia_deporte, dlae.nombre nomae  \n" +
+                    "from empleado emp  " +
+                    "join det_lista dltc on(dltc.cod_det_lista=emp.cod_det_lista_tipo_contrato)  " +
+                    "join det_lista dlae on(dlae.cod_det_lista=emp.cod_det_lista_antiguedad_empresa)  " +
+                    "join det_lista dlac on(dlac.cod_det_lista=emp.cod_det_lista_antiguedad_cargo)  " +
+                    "join det_lista dlpi on(dlpi.cod_det_lista=emp.cod_det_lista_promedio_ingresos)  " +
+                    "join det_lista dlutl on(dlutl.cod_det_lista=emp.cod_det_lista_uso_tiempo_libre)  " +
+                    "join det_lista dltv on(dltv.cod_det_lista=emp.cod_det_lista_tendencia_vivienda) " +
+                    "join det_lista dlnpc on(dlnpc.cod_det_lista=emp.cod_det_lista_num_personas_cargo)  " +
+                    "join det_lista dlnes on(dlnes.cod_det_lista=emp.cod_det_lista_nescolar)  " +
+                    "join det_lista dlah on(dlah.cod_det_lista=emp.cod_det_lista_frecuencia_alcohol)  " +
+                    "join det_lista pact on(pact.cod_det_lista=emp.cod_det_lista_participacion_actividades) " +
+                    "join subempresa sem on (sem.nitsubempresa=emp.nitsubempresa) " +
+                    "where emp.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')";      
+            }
+            
+            if(!nitsub.equals("")){
+                
+                consulta = new Consulta(getConexion());
+                    sql = "select cedula, nombres, apellidos, dlnes.nombre nomnes, dlnpc.nombre nomnpc, dltv.nombre nomtv, " +
+                    " dlutl.nombre nomtl, dlpi.nombre nompi, dlac.nombre nomac, dltc.nombre nomtc,pact.nombre nompact, " +
+                    " fuma, promedio_fuma_diario, diagonosticado_enfermedad, enfermedad, practica_deporte, deporte, " +
+                    " consume_alcohol, dlah.nombre nomah, frecuencia_deporte, dlae.nombre nomae " +
+                    " from empleado emp " +
+                    " join det_lista dltc on(dltc.cod_det_lista=emp.cod_det_lista_tipo_contrato) "+
+                    " join det_lista dlae on(dlae.cod_det_lista=emp.cod_det_lista_antiguedad_empresa) " +
+                    " join det_lista dlac on(dlac.cod_det_lista=emp.cod_det_lista_antiguedad_cargo) " +
+                    " join det_lista dlpi on(dlpi.cod_det_lista=emp.cod_det_lista_promedio_ingresos) " +
+                    " join det_lista dlutl on(dlutl.cod_det_lista=emp.cod_det_lista_uso_tiempo_libre) " +
+                    " join det_lista dltv on(dltv.cod_det_lista=emp.cod_det_lista_tendencia_vivienda) " +
+                    " join det_lista dlnpc on(dlnpc.cod_det_lista=emp.cod_det_lista_num_personas_cargo) " +
+                    " join det_lista dlnes on(dlnes.cod_det_lista=emp.cod_det_lista_nescolar) " +
+                    " join det_lista dlah on(dlah.cod_det_lista=emp.cod_det_lista_frecuencia_alcohol) " +
+                    " join det_lista pact on(pact.cod_det_lista=emp.cod_det_lista_participacion_actividades)"+
+                    " where nitsubempresa='"+nitsub+"'";  
+            }                   
+
+            rs = consulta.ejecutar(sql);
+
+            while (rs.next()) {
+                em = new Empleado();
+                em.setCedula(rs.getString("cedula"));
+                em.setNombres(rs.getString("nombres"));
+                em.setApellidos(rs.getString("apellidos"));
+                em.getNescolar().setNombre(rs.getString("nomnes"));
+                em.getNumPersonas().setNombre(rs.getString("nomnpc"));
+                em.getTendenciaVivienda().setNombre(rs.getString("nomtv"));
+                em.getUsoTiempoLibre().setNombre(rs.getString("nomtl"));
+                em.getPromedioIngreso().setNombre(rs.getString("nompi"));
+                em.getAntiguedadCargo().setNombre(rs.getString("nomac"));
+                em.getAntiguedadEmpresa().setNombre(rs.getString("nomae"));
+                em.getTipoContratacion().setNombre(rs.getString("nomtc"));
+                em.getParticipaActividades().setNombre(rs.getString("nompact"));
+                em.setFuma(rs.getBoolean("fuma"));
+                em.setPromedioFuma(rs.getString("promedio_fuma_diario"));
+                em.setDiagnosticadoEnfermidad(rs.getBoolean("diagonosticado_enfermedad"));
+                em.setEnfermedad(rs.getString("enfermedad"));
+                em.setPracticaAlgunDeporte(rs.getBoolean("practica_deporte"));
+                em.setDeportePractica(rs.getString("deporte"));
+                em.setConsBebidasAlcoholicas(rs.getBoolean("consume_alcohol"));
+                em.getConsumoBebidasAlcoholicas().setNombre("nomah");
+                em.setFrecuenciaDeportePractica(rs.getString("frecuencia_deporte"));                
+                
+                listaEmpleado.add(em);
+            }
+            return listaEmpleado;
+
+        } catch (SQLException ex) {
+            throw ex;
+        } finally {
+            consulta.desconectar();
+        }
+    }
 }

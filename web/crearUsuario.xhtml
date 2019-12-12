@@ -33,11 +33,11 @@ and open the template in the editor.
                                                 <p:outputLabel value="Nombre de Usuario:" for="nUs" />
                                                 <p:inputText id="nUs" value="#{UsuarioBean.usuario.nomusuario}" required="true" label="nUs"></p:inputText>
                                                 
-                                                <h:outputLabel for="pwd1" value="Clave: " />
+                                                <h:outputLabel for="pwd1" value="Contraseña " />
                                                 <p:password id="pwd1" value="#{UsuarioBean.usuario.clave}" match="pwd2" label="Password 1" 
                                                             validatorMessage="Las claves no coinciden!" required="true" />
 
-                                                <h:outputLabel for="pwd2" value="Repetir Clave: " />
+                                                <h:outputLabel for="pwd2" value="Repetir Contraseña " />
                                                 <p:password id="pwd2" value="#{UsuarioBean.usuario.clave}" label="Password 2" required="true" />
                                                 
                                                 Perfil:<p:selectOneMenu value="#{UsuarioBean.usuario.perfil.codigo}" id="perfiles">

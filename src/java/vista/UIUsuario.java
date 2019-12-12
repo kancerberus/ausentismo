@@ -119,9 +119,23 @@ public class UIUsuario implements Serializable{
         try {
             //verificar que todas las cajas este llenas
             if (usuario.getNombre() == null ) {
-                msg = "El nombre esta vacio!";
+                util.mostrarMensaje("El nombre esta vacio!");
                 invalido = true;                
             }
+            if (usuario.getClave().equals("") ) {
+                util.mostrarMensaje("Ingrese Nueva Contraseña!");                
+                invalido = true;                
+            }
+            if(usuario.getPerfil().getCodigo()==null){
+                util.mostrarMensaje("Seleccione Perfil");                
+                invalido = true;                
+            }
+            if(usuario.getSubEmpresa().getNitsubempresa()==null){
+                util.mostrarMensaje("Seleccione Empresa");                
+                invalido = true;                
+            }
+            
+            
 
             if (invalido == false) {
                 

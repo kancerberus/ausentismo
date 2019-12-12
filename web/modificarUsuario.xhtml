@@ -17,7 +17,7 @@
                             <p:fieldset legend="Modificación Usuario" style="margin-bottom:10px; margin-top:10px; width:auto" >                                       
                                 <h:panelGrid columns="4" cellpadding="5" style="width:auto; font-size: 90%;">                                    
                                     <p:outputLabel value="Nombre de usuario" for="usuario" />
-                                    <p:inputText id="usuario" value="#{UsuarioBean.usuario.nomusuario}" required="true" label="usuario"/>                                      
+                                    <p:inputText id="usuario" value="#{UsuarioBean.usuario.nomusuario}" label="usuario"/>                                      
                                     <p:commandButton icon="ui-icon-search" value="Consultar" actionListener="#{UsuarioBean.buscarUsuario}" 
                                                      update="aviso,tblDatosUsuario, subE" />
                                 </h:panelGrid>                                
@@ -32,8 +32,17 @@
                                                     <h:outputText value="" />
                                                 </f:facet>  
                                                 <p:outputLabel value="Nombre:" for="nUsuario" />
-                                                <p:inputText style="width: 250px" id="nUsuario" value="#{UsuarioBean.usuario.nombre}" label="nUsuario"></p:inputText>                                                
+                                                <p:inputText disabled="true" style="width: 250px" id="nUsuario" value="#{UsuarioBean.usuario.nombre}" label="nUsuario"></p:inputText>                                                
                                            
+                                                <p:outputLabel for="@next" value="Activo: " />
+                                                <p:selectBooleanCheckbox value="#{UsuarioBean.usuario.estado}" />
+                                                
+                                                <h:outputLabel for="pwd1" value="Contraseña " />
+                                                <p:password  value="#{UsuarioBean.usuario.clave}"  label="Password 1" 
+                                                            validatorMessage="Las claves no coinciden!" />
+
+                                                <h:outputLabel  value="Repetir Contraseña " />
+                                                <p:password  value="#{UsuarioBean.usuario.clave}" label="Password 2" />
                                                 
                                                 Perfil:<p:selectOneMenu value="#{UsuarioBean.usuario.perfil.codigo}" id="Perf">
                                                 <f:selectItem itemLabel="Seleccione..." itemValue="" />
@@ -44,11 +53,7 @@
                                                                          style="width: 200px;">
                                                 <f:selectItem itemLabel="Seleccione..." itemValue="" />
                                                 <f:selectItems   value="#{UsuarioBean.itemsSubEmpresas}"/>
-                                                </p:selectOneMenu> 
-                                                
-                                                <p:outputLabel for="@next" value="Activo: " />
-                                                <p:selectBooleanCheckbox value="#{UsuarioBean.usuario.estado}" />
-                                                
+                                                </p:selectOneMenu>                                                
                                                 
                                                 <p:commandButton icon="ui-icon-disk" update="pnlmodificarUsuario, aviso, tblDatosUsuario" type="submit" id="modificarUsuario" value="Guardar Cambios" actionListener="#{UsuarioBean.modificarUsuario()}"/>
                                                 <p:commandButton icon="ui-icon-refresh" value="Limpiar" update="pnlmodificarUsuario, aviso" actionListener="#{UsuarioBean.limpiarUsuario()}" />
