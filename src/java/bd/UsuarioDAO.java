@@ -116,13 +116,26 @@ public class UsuarioDAO {
     
     public Integer modificarUsuario(Usuario usuario) throws SQLException{
         Consulta consulta = null;
-        Integer resultado;  
+        Integer resultado = null;  
         //Sentencia SQL para guardar el registro
         String sql ;    
         
    
         try {
-            consulta = new Consulta(getConexion());
+            
+            if(usuario.getClave().equals("")){
+                consulta = new Consulta(getConexion());
+            
+                sql = "UPDATE usuario "                         
+                    +" set estado = "+usuario.isEstado()+", "                    
+                    + " cod_perfil='"+usuario.getPerfil().getCodigo()+"',"
+                    + " fk_nitsubempresa='"+usuario.getSubEmpresa().getNitsubempresa()+"' "                    
+                    +" where usuario = '"+usuario.getNomusuario()+"'";
+
+                resultado = consulta.actualizar(sql);
+            }
+            if(!usuario.getClave().equals("")){
+                consulta = new Consulta(getConexion());
             
                 sql = "UPDATE usuario "                         
                     +" set estado = "+usuario.isEstado()+", "
@@ -131,7 +144,10 @@ public class UsuarioDAO {
                     + " fk_nitsubempresa='"+usuario.getSubEmpresa().getNitsubempresa()+"' "                    
                     +" where usuario = '"+usuario.getNomusuario()+"'";
 
-            resultado = consulta.actualizar(sql);
+                resultado = consulta.actualizar(sql);
+            }
+            
+            
             return resultado;
         } catch (SQLException ex) {
             throw ex;

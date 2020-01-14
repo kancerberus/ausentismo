@@ -69,17 +69,19 @@ public class UIUsuario implements Serializable{
             ef = contextoJSF.getApplication().getExpressionFactory();
             
             String nitempresa = usuario.getSubEmpresa().getEmpresa().getNitempresa();
-            
+            String nomusuario = "";
             
             
             if ( nitempresa == null) {
                 
-                nitempresa = (String) ef.createValueExpression(contextoEL, "#{listasBean.empresa.nitempresa}", String.class).getValue(contextoEL);  
+                nitempresa = (String) ef.createValueExpression(contextoEL, "#{listasBean.empresa.nitempresa}", String.class).getValue(contextoEL);                  
+                nomusuario = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.nombre}", String.class).getValue(contextoEL);                
+
                 
                 try {
                     gestorListas = new GestorListas();
                     ArrayList<SubEmpresa> listaSubEmpresa;
-                    listaSubEmpresa = gestorListas.listarSubempresas(nitempresa);
+                    listaSubEmpresa = gestorListas.listarSubempresas(nitempresa,nomusuario);
                     itemsSubempresas.clear();
                     for (int i = 0; i < listaSubEmpresa.size(); i++) {                    
                             itemsSubempresas.add(new SelectItem(listaSubEmpresa.get(i).getNitsubempresa(), listaSubEmpresa.get(i).getNombre()));
@@ -94,7 +96,7 @@ public class UIUsuario implements Serializable{
                 try {
                     gestorListas = new GestorListas();
                     ArrayList<SubEmpresa> listaSubEmpresa;
-                    listaSubEmpresa = gestorListas.listarSubempresas(nitempresa);
+                    listaSubEmpresa = gestorListas.listarSubempresas(nitempresa,nomusuario);
                     itemsSubempresas.clear();
                     for (int i = 0; i < listaSubEmpresa.size(); i++) {                    
                             itemsSubempresas.add(new SelectItem(listaSubEmpresa.get(i).getNitsubempresa(), listaSubEmpresa.get(i).getNombre()));
@@ -121,11 +123,7 @@ public class UIUsuario implements Serializable{
             if (usuario.getNombre() == null ) {
                 util.mostrarMensaje("El nombre esta vacio!");
                 invalido = true;                
-            }
-            if (usuario.getClave().equals("") ) {
-                util.mostrarMensaje("Ingrese Nueva Contraseña!");                
-                invalido = true;                
-            }
+            }             
             if(usuario.getPerfil().getCodigo()==null){
                 util.mostrarMensaje("Seleccione Perfil");                
                 invalido = true;                

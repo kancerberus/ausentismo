@@ -372,11 +372,11 @@ public class GestorListas extends Gestor{
         }        
     }
     
-    public ArrayList<SubEmpresa> listarSubempresas(String nitempresa) throws Exception {
+    public ArrayList<SubEmpresa> listarSubempresas(String nitempresa, String nomusuario) throws Exception {
         try {
             abrirConexion();
             ListasDAO listasDAO = new ListasDAO(conexion);
-            return listasDAO.listarSubEmpresas(nitempresa);
+            return listasDAO.listarSubEmpresas(nitempresa, nomusuario);
         } finally {
             cerrarConexion();
         }        

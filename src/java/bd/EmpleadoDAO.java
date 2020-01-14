@@ -1583,7 +1583,9 @@ public Integer guardarEmpleado(Empleado empleado, String nitsesion) throws SQLEx
             if(nitem!=null && nitsub.equals("")){
                 
                 consulta = new Consulta(getConexion());
-                    sql = "select cedula, nombres, apellidos, dlnes.nombre nomnes, dlnpc.nombre nomnpc, dltv.nombre nomtv,  dlutl.nombre nomtl, dlpi.nombre nompi, dlac.nombre nomac, dltc.nombre nomtc,pact.nombre nompact,  fuma, promedio_fuma_diario, diagonosticado_enfermedad, enfermedad, practica_deporte, deporte,  consume_alcohol, dlah.nombre nomah, frecuencia_deporte, dlae.nombre nomae  \n" +
+                    sql = "select cedula, nombres, apellidos, dlnes.nombre nomnes, dlnpc.nombre nomnpc, dltv.nombre nomtv,  dlutl.nombre nomtl, dlpi.nombre nompi,"
+                    + " dlac.nombre nomac, dltc.nombre nomtc,pact.nombre nompact,  fuma, promedio_fuma_diario, diagonosticado_enfermedad, "
+                    + "enfermedad, practica_deporte, deporte,  consume_alcohol, dlah.nombre nomah, frecuencia_deporte, dlae.nombre nomae, sem.nombre nomsubem " +
                     "from empleado emp  " +
                     "join det_lista dltc on(dltc.cod_det_lista=emp.cod_det_lista_tipo_contrato)  " +
                     "join det_lista dlae on(dlae.cod_det_lista=emp.cod_det_lista_antiguedad_empresa)  " +
@@ -1605,7 +1607,7 @@ public Integer guardarEmpleado(Empleado empleado, String nitsesion) throws SQLEx
                     sql = "select cedula, nombres, apellidos, dlnes.nombre nomnes, dlnpc.nombre nomnpc, dltv.nombre nomtv, " +
                     " dlutl.nombre nomtl, dlpi.nombre nompi, dlac.nombre nomac, dltc.nombre nomtc,pact.nombre nompact, " +
                     " fuma, promedio_fuma_diario, diagonosticado_enfermedad, enfermedad, practica_deporte, deporte, " +
-                    " consume_alcohol, dlah.nombre nomah, frecuencia_deporte, dlae.nombre nomae " +
+                    " consume_alcohol, dlah.nombre nomah, frecuencia_deporte, dlae.nombre nomae,sem.nombre nomsubem " +
                     " from empleado emp " +
                     " join det_lista dltc on(dltc.cod_det_lista=emp.cod_det_lista_tipo_contrato) "+
                     " join det_lista dlae on(dlae.cod_det_lista=emp.cod_det_lista_antiguedad_empresa) " +
@@ -1617,7 +1619,8 @@ public Integer guardarEmpleado(Empleado empleado, String nitsesion) throws SQLEx
                     " join det_lista dlnes on(dlnes.cod_det_lista=emp.cod_det_lista_nescolar) " +
                     " join det_lista dlah on(dlah.cod_det_lista=emp.cod_det_lista_frecuencia_alcohol) " +
                     " join det_lista pact on(pact.cod_det_lista=emp.cod_det_lista_participacion_actividades)"+
-                    " where nitsubempresa='"+nitsub+"'";  
+                    " join subempresa sem on (sem.nitsubempresa=emp.nitsubempresa) " +
+                    " where sem.nitsubempresa='"+nitsub+"'";  
             }                   
 
             rs = consulta.ejecutar(sql);
@@ -1625,6 +1628,7 @@ public Integer guardarEmpleado(Empleado empleado, String nitsesion) throws SQLEx
             while (rs.next()) {
                 em = new Empleado();
                 em.setCedula(rs.getString("cedula"));
+                em.setSubempresa(new SubEmpresa(nitsub, rs.getString("nomsubem")));
                 em.setNombres(rs.getString("nombres"));
                 em.setApellidos(rs.getString("apellidos"));
                 em.getNescolar().setNombre(rs.getString("nomnes"));

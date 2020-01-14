@@ -49,6 +49,7 @@ public class Empleado {
     private Float porcentaje;
     private String descDistribucion;
     private Integer total;
+    private SubEmpresa subempresa;
     
     public Empleado() {
         this.municipio = new Municipio();
@@ -82,6 +83,14 @@ public class Empleado {
         this.porcentaje = porcentaje;
         this.descDistribucion = descDistribucion;
         this.total=total;
+    }
+
+    public SubEmpresa getSubempresa() {
+        return subempresa;
+    }
+
+    public void setSubempresa(SubEmpresa subempresa) {
+        this.subempresa = subempresa;
     }
 
     public Integer getTotal() {

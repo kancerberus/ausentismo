@@ -1024,20 +1024,34 @@ public class ListasDAO {
     }
     
     
-    public ArrayList<SubEmpresa> listarSubEmpresas(String nitempresa) throws SQLException {
+    public ArrayList<SubEmpresa> listarSubEmpresas(String nitempresa, String nomusuario) throws SQLException {
         SubEmpresa subempresa;
         ArrayList<SubEmpresa> listaSubempresas = new ArrayList<>();
-        ResultSet dt;
+        ResultSet dt=null;
         Consulta consulta = null;
         try {
-            consulta = new Consulta(getConexion());
-            String sql
-                    = " SELECT nitsubempresa, nombre"
-                    + " FROM subempresa "
-                    + " where fk_nitempresa = '" + nitempresa + "'"  
-                    + " order by nombre";
+            
+            if(nomusuario.equals("ADMINISTRADOR")){
+                consulta = new Consulta(getConexion());
+                String sql
+                        = " SELECT nitsubempresa, nombre"
+                        + " FROM subempresa "                        
+                        + " order by nombre";
+                dt = consulta.ejecutar(sql);    
+            }
+            
+            if(!nomusuario.equals("ADMINISTRADOR") || nomusuario.equals("")){
+                consulta = new Consulta(getConexion());
+                String sql
+                        = " SELECT nitsubempresa, nombre"
+                        + " FROM subempresa "
+                        + " where fk_nitempresa = '" + nitempresa + "'"  
+                        + " order by nombre";
 
-            dt = consulta.ejecutar(sql);
+                dt = consulta.ejecutar(sql);    
+            }
+            
+            
 
             while (dt.next()) {
                 subempresa = new SubEmpresa();

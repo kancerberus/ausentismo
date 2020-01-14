@@ -33,7 +33,7 @@ and open the template in the editor.
                                                 Empresa:<p:selectOneMenu value="#{listasBean.empresa.nitempresa}" id="empresas">}
                                                 <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
                                                 <f:selectItems   value="#{listasBean.itemsEmpresas}"/>  
-                                                <p:ajax update="subempresas"/>
+                                                <p:ajax update="subempresas" />
                                                 </p:selectOneMenu>
                                                                                   
                                                 SubEmpresa:<p:selectOneMenu value="#{listasBean.subempresa.nitsubempresa}" id="subempresas">}
@@ -53,6 +53,9 @@ and open the template in the editor.
                                     <p:column headerText="Cedula" style="width: 50px; font-size: 10px" >
                                         <h:outputText value="#{varPerfil.cedula}" style="width: 50px; font-size: 10px" />
                                     </p:column>
+                                    <p:column headerText="Empresa" style="width: 50px; font-size: 10px" >
+                                        <h:outputText value="#{varPerfil.subempresa.nombre}" style="width: 50px; font-size: 10px" />
+                                    </p:column>                                    
                                     <p:column headerText="Nombres" style="width: 50px; font-size: 10px">
                                         <h:outputText value="#{varPerfil.nombres}" style="width: 50px; font-size: 10px" />
                                     </p:column>
@@ -88,10 +91,10 @@ and open the template in the editor.
                                     </p:column> 
                                     <p:column headerText="Fuma" style="width: 50px; font-size: 10px" >
                                         <h:outputText value="#{varPerfil.fuma ? 'SI':'NO'}" style="width: 5px; font-size: 10px"/>
-                                    </p:column> 
+                                    </p:column>
                                     <p:column headerText="Promedio Fuma" style="width: 50px; font-size: 10px" >
                                         <h:outputText value="#{varPerfil.promedioFuma != null ? varPerfil.promedioFuma : '-'}" style="width: 50px; font-size: 10px" />
-                                    </p:column> 
+                                    </p:column>
                                     <p:column headerText="Diagnosticado Enfermedad" style="width: 50px; font-size: 10px" >
                                         <h:outputText value="#{varPerfil.diagnosticadoEnfermidad ? 'SI':'NO'}" style="width: 50px; font-size: 10px" />
                                     </p:column> 

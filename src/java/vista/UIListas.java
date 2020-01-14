@@ -652,17 +652,17 @@ public class UIListas implements Serializable {
             ef = contextoJSF.getApplication().getExpressionFactory();
             
             String nitempresa = empresa.getNitempresa();
-            
+            String nomusuario="";
             
             
             if ( nitempresa == null) {
                 
                 nitempresa = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.empresa.nitempresa}", String.class).getValue(contextoEL);  
-                
+                nomusuario = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.nombre}", String.class).getValue(contextoEL);
                 try {
                     gestorListas = new GestorListas();
                     ArrayList<SubEmpresa> listaSubEmpresa;
-                    listaSubEmpresa = gestorListas.listarSubempresas(nitempresa);
+                    listaSubEmpresa = gestorListas.listarSubempresas(nitempresa,nomusuario);
                     itemsSubempresas.clear();
                     for (int i = 0; i < listaSubEmpresa.size(); i++) {                    
                             itemsSubempresas.add(new SelectItem(listaSubEmpresa.get(i).getNitsubempresa(), listaSubEmpresa.get(i).getNombre()));
@@ -677,7 +677,7 @@ public class UIListas implements Serializable {
                 try {
                     gestorListas = new GestorListas();
                     ArrayList<SubEmpresa> listaSubEmpresa;
-                    listaSubEmpresa = gestorListas.listarSubempresas(nitempresa);
+                    listaSubEmpresa = gestorListas.listarSubempresas(nitempresa, nomusuario);
                     itemsSubempresas.clear();
                     for (int i = 0; i < listaSubEmpresa.size(); i++) {                    
                             itemsSubempresas.add(new SelectItem(listaSubEmpresa.get(i).getNitsubempresa(), listaSubEmpresa.get(i).getNombre()));
