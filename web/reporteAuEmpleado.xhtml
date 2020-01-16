@@ -209,9 +209,9 @@
                                                 </p:commandButton>
 
                                                 </f:facet>
-                                                Empresa:<p:selectOneMenu value="#{listasBean.empresa.nitempresa}" id="empresasTotales">}
+                                                    Subempresa:<p:selectOneMenu value="#{listasBean.subempresa.nitsubempresa}" id="empresasTotales">}
                                                 <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
-                                                <f:selectItems   value="#{listasBean.itemsEmpresas}"/>                                                  
+                                                <f:selectItems   value="#{listasBean.itemsSubEmpresas}"/>                                                  
                                                 <p:ajax update="@this"/>
                                                 </p:selectOneMenu>
                                                 

@@ -956,8 +956,8 @@ public class ListasDAO {
         ArrayList<Empresa> listaempresas = new ArrayList<>();
         ResultSet dt;
         Consulta consulta = null;
-        String sql;
-        String usuario = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.nomusuario}", String.class).getValue(contextoEL);       
+        String sql=null;
+        String usuario = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.nombre}", String.class).getValue(contextoEL);       
         String nitsesion = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);
         Integer cod_perfil = (Integer) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.perfil.codigo}", int.class).getValue(contextoEL);
         
@@ -970,7 +970,18 @@ public class ListasDAO {
                             sql = "SELECT e.nitempresa,e.nombre from subempresa sub "
                                     + "inner join empresa e on (e.nitempresa=sub.fk_nitempresa) "
                                     + "where nitsubempresa ='" + nitsesion + "'";                     
-                        }else{
+                        }
+                        if(cod_perfil.equals(1)){
+                            if(!usuario.equals("ADMINISTRADOR")){
+                                sql = " SELECT e.nitempresa nitempresa,e.nombre nombre"                                    
+                                    + " FROM subempresa sub"
+                                    + " inner join empresa e on (e.nitempresa=sub.fk_nitempresa) "
+                                    + " where nitsubempresa ='" + nitsesion + "'";                     
+                            }
+                            
+                        }
+                        if(cod_perfil.equals(1) && usuario.equals("ADMINISTRADOR"))
+                        {
                             sql
                                 = " SELECT nitempresa,nombre "
                                     + " FROM empresa";
@@ -1024,31 +1035,45 @@ public class ListasDAO {
     }
     
     
-    public ArrayList<SubEmpresa> listarSubEmpresas(String nitempresa, String nomusuario) throws SQLException {
+    public ArrayList<SubEmpresa> listarSubEmpresas(String nitempresa, String nomusuario, Integer perfil, String nitsubempresa) throws SQLException {
         SubEmpresa subempresa;
         ArrayList<SubEmpresa> listaSubempresas = new ArrayList<>();
         ResultSet dt=null;
         Consulta consulta = null;
         try {
             
-            if(nomusuario.equals("ADMINISTRADOR")){
+            if(nomusuario.equals("ADMINISTRADOR") && perfil==1){
                 consulta = new Consulta(getConexion());
                 String sql
                         = " SELECT nitsubempresa, nombre"
                         + " FROM subempresa "                        
                         + " order by nombre";
                 dt = consulta.ejecutar(sql);    
-            }
+            }          
             
-            if(!nomusuario.equals("ADMINISTRADOR") || nomusuario.equals("")){
+            if(perfil == 2 || perfil==3 || perfil==4 ){
                 consulta = new Consulta(getConexion());
                 String sql
                         = " SELECT nitsubempresa, nombre"
                         + " FROM subempresa "
-                        + " where fk_nitempresa = '" + nitempresa + "'"  
+                        + " where nitsubempresa = '" + nitsubempresa + "'"  
                         + " order by nombre";
 
-                dt = consulta.ejecutar(sql);    
+                dt = consulta.ejecutar(sql); 
+            }
+            
+            if(!nomusuario.equals("ADMINISTRADOR")){
+                if(perfil==1){
+                    consulta = new Consulta(getConexion());
+                    String sql
+                            = " SELECT nitsubempresa, nombre"
+                            + " FROM subempresa "
+                            + " where fk_nitempresa = '" + nitempresa + "'"  
+                            + " order by nombre";
+
+                    dt = consulta.ejecutar(sql); 
+                }
+                
             }
             
             

@@ -653,16 +653,23 @@ public class UIListas implements Serializable {
             
             String nitempresa = empresa.getNitempresa();
             String nomusuario="";
+            Integer perfil=null;
+            String nitsubempresa="";
+            
+            
+                nomusuario = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.nombre}", String.class).getValue(contextoEL);
+                perfil = (Integer) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.perfil.codigo}", Integer.class).getValue(contextoEL);
+                nitsubempresa = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);
             
             
             if ( nitempresa == null) {
                 
                 nitempresa = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.empresa.nitempresa}", String.class).getValue(contextoEL);  
-                nomusuario = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.nombre}", String.class).getValue(contextoEL);
+                
                 try {
                     gestorListas = new GestorListas();
                     ArrayList<SubEmpresa> listaSubEmpresa;
-                    listaSubEmpresa = gestorListas.listarSubempresas(nitempresa,nomusuario);
+                    listaSubEmpresa = gestorListas.listarSubempresas(nitempresa,nomusuario, perfil, nitsubempresa);
                     itemsSubempresas.clear();
                     for (int i = 0; i < listaSubEmpresa.size(); i++) {                    
                             itemsSubempresas.add(new SelectItem(listaSubEmpresa.get(i).getNitsubempresa(), listaSubEmpresa.get(i).getNombre()));
@@ -677,7 +684,7 @@ public class UIListas implements Serializable {
                 try {
                     gestorListas = new GestorListas();
                     ArrayList<SubEmpresa> listaSubEmpresa;
-                    listaSubEmpresa = gestorListas.listarSubempresas(nitempresa, nomusuario);
+                    listaSubEmpresa = gestorListas.listarSubempresas(nitempresa, nomusuario, perfil, nitsubempresa);
                     itemsSubempresas.clear();
                     for (int i = 0; i < listaSubEmpresa.size(); i++) {                    
                             itemsSubempresas.add(new SelectItem(listaSubEmpresa.get(i).getNitsubempresa(), listaSubEmpresa.get(i).getNombre()));
