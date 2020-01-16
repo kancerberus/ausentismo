@@ -70,7 +70,8 @@ public class UIUsuario implements Serializable{
             
             String nitempresa = usuario.getSubEmpresa().getEmpresa().getNitempresa();
             String nomusuario = "";
-            
+            Integer perfil = (Integer) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.perfl.codigo}", Integer.class).getValue(contextoEL);
+            String nitsubempresa = (String) ef.createValueExpression(contextoEL, "#{listasBean.empresa.subempresa.nitsubempresa}", String.class).getValue(contextoEL);
             
             if ( nitempresa == null) {
                 
@@ -81,7 +82,7 @@ public class UIUsuario implements Serializable{
                 try {
                     gestorListas = new GestorListas();
                     ArrayList<SubEmpresa> listaSubEmpresa;
-                    listaSubEmpresa = gestorListas.listarSubempresas(nitempresa,nomusuario);
+                    listaSubEmpresa = gestorListas.listarSubempresas(nitempresa,nomusuario,perfil, nitsubempresa);
                     itemsSubempresas.clear();
                     for (int i = 0; i < listaSubEmpresa.size(); i++) {                    
                             itemsSubempresas.add(new SelectItem(listaSubEmpresa.get(i).getNitsubempresa(), listaSubEmpresa.get(i).getNombre()));
@@ -96,7 +97,7 @@ public class UIUsuario implements Serializable{
                 try {
                     gestorListas = new GestorListas();
                     ArrayList<SubEmpresa> listaSubEmpresa;
-                    listaSubEmpresa = gestorListas.listarSubempresas(nitempresa,nomusuario);
+                    listaSubEmpresa = gestorListas.listarSubempresas(nitempresa,nomusuario,perfil, nitsubempresa);
                     itemsSubempresas.clear();
                     for (int i = 0; i < listaSubEmpresa.size(); i++) {                    
                             itemsSubempresas.add(new SelectItem(listaSubEmpresa.get(i).getNitsubempresa(), listaSubEmpresa.get(i).getNombre()));
