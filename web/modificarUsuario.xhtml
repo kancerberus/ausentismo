@@ -49,10 +49,10 @@
                                                 <f:selectItems   value="#{loginBean.itemsPerfiles}"/>
                                                 </p:selectOneMenu> 
                                                 
-                                                Empresa:<p:selectOneMenu value="#{UsuarioBean.usuario.subEmpresa.nombre}" id="subE"
+                                                Empresa:<p:selectOneMenu value="#{UsuarioBean.usuario.subEmpresa.nitsubempresa}" id="subE"
                                                                          style="width: 200px;">
                                                 <f:selectItem itemLabel="Seleccione..." itemValue="" />
-                                                <f:selectItems   value="#{UsuarioBean.itemsSubEmpresas}"/>
+                                                <f:selectItems   value="#{listasBean.itemsSubEmpresasAdminUsuario}"/>
                                                 </p:selectOneMenu>                                                
                                                 
                                                 <p:commandButton icon="ui-icon-disk" update="pnlmodificarUsuario, aviso, tblDatosUsuario" type="submit" id="modificarUsuario" value="Guardar Cambios" actionListener="#{UsuarioBean.modificarUsuario()}"/>

@@ -88,6 +88,7 @@ public class UIAusentismo implements Serializable {
     private List<Ausentismo> listAusentismoEmpleadoTotales;
     private List<Ausentismo> pieausentismoEmpresa;
     private List<Ausentismo> pieausentismoEmpleado;
+    private String nitsubempresa="";
     
     
     private List<Ausentismo> distribucionPorOrigen=new ArrayList<>();
@@ -126,6 +127,7 @@ public class UIAusentismo implements Serializable {
        pieausentismoanomesEmpresa = new PieChartModel();
        pieSubempresa = new PieChartModel();
        pieausentismoanomesEmpleado = new PieChartModel();       
+       subempresa=new SubEmpresa();
     }
     
 
@@ -393,7 +395,7 @@ public class UIAusentismo implements Serializable {
         contextoJSF = FacesContext.getCurrentInstance();
         contextoEL = contextoJSF.getELContext();
         ef = contextoJSF.getApplication().getExpressionFactory();
-        String nitem = subempresa.getNitsubempresa();
+        String nitem = nitsubempresa;
         //revisar checkbox
         String selmesdesde = null;
         String selmeshasta = null;
@@ -785,6 +787,14 @@ public class UIAusentismo implements Serializable {
         } catch (Exception e) {
             Logger.getLogger(UIAusentismo.class.getName()).log(Level.SEVERE, null, e);
         }
+    }
+
+    public String getNitsubempresa() {
+        return nitsubempresa;
+    }
+
+    public void setNitsubempresa(String nitsubempresa) {
+        this.nitsubempresa = nitsubempresa;
     }
 
     public Integer[] getSelectedMotivos() {

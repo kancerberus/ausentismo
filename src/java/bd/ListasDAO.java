@@ -1045,9 +1045,11 @@ public class ListasDAO {
             if(nomusuario.equals("ADMINISTRADOR") && perfil==1){
                 consulta = new Consulta(getConexion());
                 String sql
-                        = " SELECT nitsubempresa, nombre"
-                        + " FROM subempresa "                        
-                        + " order by nombre";
+                        = "  SELECT se.nitsubempresa, se.nombre  " +
+                        " FROM subempresa  se " +
+                        " join empresa e on(e.nitempresa=se.fk_nitempresa ) " +
+                        " where nitempresa ='"+nitempresa+"' " +
+                        " order by nombre";
                 dt = consulta.ejecutar(sql);    
             }          
             

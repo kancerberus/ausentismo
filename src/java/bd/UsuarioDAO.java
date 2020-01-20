@@ -86,7 +86,7 @@ public class UsuarioDAO {
         try {
             consulta = new Consulta(getConexion());
             
-            sql = " select em.nitempresa nitempresa,us.usuario as nomusuario, us.nombre as nombre, pe.cod_perfil as cod_perfil, su.nitsubempresa as nitsubem,su.nombre nomsub, us.estado as estado " +
+            sql = " select em.nitempresa nitempresa, em.nombre nomem,us.usuario as nomusuario, us.nombre as nombre, pe.cod_perfil as cod_perfil, su.nitsubempresa as nitsubem,su.nombre nomsub, us.estado as estado " +
                 " from usuario us " +
                 " inner join perfil pe on (pe.cod_perfil=us.cod_perfil) " +
                 " inner join subempresa su on (su.nitsubempresa=us.fk_nitsubempresa) "+
@@ -105,6 +105,7 @@ public class UsuarioDAO {
                 us.getSubEmpresa().setNombre(rs.getString("nomsub"));
                 us.getSubEmpresa().getEmpresa().setNitempresa(rs.getString("nitempresa"));
                 us.setEstado(rs.getBoolean("estado"));
+                us.getSubEmpresa().setEmpresa(new Empresa(null, rs.getString("nomem")));
             }
             return us;
         } catch (SQLException ex) {
@@ -227,7 +228,8 @@ public class UsuarioDAO {
             consulta = new Consulta(getConexion());
             String sql
                     = " SELECT cod_perfil,nombre "
-                    + " FROM perfil";
+                    + " FROM perfil"
+                    + " WHERE cod_perfil<>1";
 
             dt = consulta.ejecutar(sql);
 

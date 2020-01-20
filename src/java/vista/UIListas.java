@@ -108,6 +108,8 @@ public class UIListas implements Serializable {
     private ArrayList<SelectItem> itemsTipoAccidente = new ArrayList<>();
     private ArrayList<SelectItem> itemsEmpresas = new ArrayList<>();    
     private ArrayList<SelectItem> itemsMeses = new ArrayList<>();
+    private ArrayList<SelectItem> itemsSubEmpresasAdminUsuario=new ArrayList<>();
+    
     
     private ExpressionFactory ef;    
     
@@ -644,6 +646,23 @@ public class UIListas implements Serializable {
             
                 return itemsEmpresas;    
     }
+    
+    
+        public ArrayList<SelectItem> getItemsSubEmpresasAdminUsuario() throws Exception{
+            try {
+                    gestorListas = new GestorListas();
+                    ArrayList<SubEmpresa> listaSubEmpresa;
+                    listaSubEmpresa = gestorListas.listarSubempresas();
+                    itemsSubEmpresasAdminUsuario.clear();
+                    for (int i = 0; i < listaSubEmpresa.size(); i++) {                    
+                            itemsSubEmpresasAdminUsuario.add(new SelectItem(listaSubEmpresa.get(i).getNitsubempresa(), listaSubEmpresa.get(i).getNombre()));
+                        }                        
+                    }
+                catch (Exception ex) {
+                            Logger.getLogger(UIAusentismo.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+        return itemsSubEmpresasAdminUsuario;
+        }
     
         public ArrayList<SelectItem> getItemsSubEmpresas() throws Exception{
             itemsSubempresas.clear();

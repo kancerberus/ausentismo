@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import modelo.Ausentismo;
+import modelo.ConsumoBebidasAlcoholicas;
 import modelo.Empleado;
 import modelo.Municipio;
 import modelo.SubEmpresa;
@@ -1276,7 +1277,7 @@ public class EmpleadoDAO {
         }     
     }    
     
-    public Empleado buscarEmpleado(String cedula, String nitsesion) throws SQLException {
+    public Empleado buscarEmpleado(String cedula, String nitsesion, Integer codPerfil) throws SQLException {
         Consulta consulta = null;
         ResultSet rs;
         String sql;
@@ -1286,19 +1287,43 @@ public class EmpleadoDAO {
         try {
             consulta = new Consulta(getConexion());
             
-            sql = "select e.nombres,e.apellidos,m.municipio nom_municipio,ep.cod_eps eps,\n" +
-                    "e.cod_det_lista_ecivil,cod_det_lista_sexo,\n" +
-                    "e.fecha_nacimiento, c.cod_cargo ,e.sueldo_mes, e.aux_transporte, e.estado, fecha_ingreso\n" +
-                    "from empleado e " +
-                    "inner join municipio m on (m.cod_municipio=e.cod_municipio)\n" +
-                    "inner join eps ep on(ep.cod_eps=e.cod_eps)\n" +
-                    "inner join det_lista s on (s.cod_det_lista=e.cod_det_lista_sexo)\n" +
-                    "inner join det_lista ci on (ci.cod_det_lista=e.cod_det_lista_ecivil)\n" +
-                    "inner join cargo c on (c.cod_cargo=e.cargo)\n"+
-                    "where e.nitsubempresa='" + nitsesion +"' and cedula='" + cedula.trim() +"'";
+            if(codPerfil==1){
+                
+                sql = " select e.nombres,e.apellidos,m.municipio nom_municipio,ep.cod_eps eps, " +
+                    " e.cod_det_lista_ecivil,cod_det_lista_sexo, " +
+                    " e.fecha_nacimiento, c.cod_cargo ,e.sueldo_mes, e.aux_transporte, e.estado, fecha_ingreso " +
+                    " from empleado e " +
+                    " inner join municipio m on (m.cod_municipio=e.cod_municipio) " +
+                    " inner join eps ep on(ep.cod_eps=e.cod_eps) " +
+                    " inner join det_lista s on (s.cod_det_lista=e.cod_det_lista_sexo) " +
+                    " inner join det_lista ci on (ci.cod_det_lista=e.cod_det_lista_ecivil) " +
+                    " inner join cargo c on (c.cod_cargo=e.cargo) "+
+                    " where cedula='" + cedula.trim() +"'";
+                
+                rs = consulta.ejecutar(sql);
+                
+            }else{
+                
+                sql = " select e.nombres,e.apellidos,m.municipio nom_municipio,ep.cod_eps eps, " +
+                    " e.cod_det_lista_ecivil,cod_det_lista_sexo, " +
+                    " e.fecha_nacimiento, c.cod_cargo ,e.sueldo_mes, e.aux_transporte, e.estado, fecha_ingreso " +
+                    " from empleado e " +
+                    " inner join municipio m on (m.cod_municipio=e.cod_municipio) " +
+                    " inner join eps ep on(ep.cod_eps=e.cod_eps) " +
+                    " inner join det_lista s on (s.cod_det_lista=e.cod_det_lista_sexo) " +
+                    " inner join det_lista ci on (ci.cod_det_lista=e.cod_det_lista_ecivil) " +
+                    " inner join cargo c on (c.cod_cargo=e.cargo) "+
+                    " where e.nitsubempresa='" + nitsesion +"' and cedula='" + cedula.trim() +"'";
                     
                       
             rs = consulta.ejecutar(sql);
+                
+            }
+            
+            
+            
+            
+            
             
             if (rs.next()) {               
                     
@@ -1647,7 +1672,7 @@ public Integer guardarEmpleado(Empleado empleado, String nitsesion) throws SQLEx
                 em.setPracticaAlgunDeporte(rs.getBoolean("practica_deporte"));
                 em.setDeportePractica(rs.getString("deporte"));
                 em.setConsBebidasAlcoholicas(rs.getBoolean("consume_alcohol"));
-                em.getConsumoBebidasAlcoholicas().setNombre("nomah");
+                em.setConsumoBebidasAlcoholicas(new ConsumoBebidasAlcoholicas(null,rs.getString("nomah") ));
                 em.setFrecuenciaDeportePractica(rs.getString("frecuencia_deporte"));                
                 
                 listaEmpleado.add(em);

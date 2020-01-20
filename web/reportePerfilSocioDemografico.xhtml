@@ -93,7 +93,7 @@ and open the template in the editor.
                                         <h:outputText value="#{varPerfil.fuma ? 'SI':'NO'}" style="width: 5px; font-size: 10px"/>
                                     </p:column>
                                     <p:column headerText="Promedio Fuma" style="width: 50px; font-size: 10px" >
-                                        <h:outputText value="#{varPerfil.promedioFuma != null ? varPerfil.promedioFuma : '-'}" style="width: 50px; font-size: 10px" />
+                                        <h:outputText value="#{varPerfil.promedioFuma}" style="width: 50px; font-size: 10px" />
                                     </p:column>
                                     <p:column headerText="Diagnosticado Enfermedad" style="width: 50px; font-size: 10px" >
                                         <h:outputText value="#{varPerfil.diagnosticadoEnfermidad ? 'SI':'NO'}" style="width: 50px; font-size: 10px" />
@@ -108,7 +108,7 @@ and open the template in the editor.
                                         <h:outputText value="#{varPerfil.deportePractica}" style="width: 50px; font-size: 10px"  />
                                     </p:column> 
                                     <p:column headerText="Consume Alcohol" style="width: 50px; font-size: 10px" >
-                                        <h:outputText value="#{varPerfil.consumoBebidasAlcoholicas.nombre}" style="width: 50px; font-size: 10px"  />
+                                        <h:outputText value="#{varPerfil.consBebidasAlcoholicas ? 'SI':'NO'}" style="width: 50px; font-size: 10px"  />
                                     </p:column> 
                                     <p:column headerText="Frecuencia Alcohol" style="width: 50px; font-size: 10px" >
                                         <h:outputText value="#{varPerfil.consumoBebidasAlcoholicas.nombre}" style="width: 50px; font-size: 10px" />

@@ -42,11 +42,11 @@ public class GestorEmpleado extends Gestor {
     }
 
     
-    public Empleado buscarEmpleado(String cedula, String nitsesion) throws Exception {
+    public Empleado buscarEmpleado(String cedula, String nitsesion, Integer codPerfil) throws Exception {
         try {
             abrirConexion();
             EmpleadoDAO empleadoDAO = new EmpleadoDAO(conexion);
-            return empleadoDAO.buscarEmpleado(cedula, nitsesion);
+            return empleadoDAO.buscarEmpleado(cedula, nitsesion, codPerfil);
             } finally {
             cerrarConexion();
         }

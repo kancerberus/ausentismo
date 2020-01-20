@@ -269,8 +269,10 @@ public class UIEmpleado implements Serializable {
         contextoEL = contextoJSF.getELContext();
         ef = contextoJSF.getApplication().getExpressionFactory();
         String nitsesion = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);        
+        Integer perfil = (Integer) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.perfil.codigo}", Integer.class).getValue(contextoEL);
         
-        empleado = gestorEmpleado.buscarEmpleado(cedula, nitsesion); 
+        
+        empleado = gestorEmpleado.buscarEmpleado(cedula, nitsesion, perfil); 
         
         if(empleado == null){                                                
             util.mostrarMensaje("La cedula no existe");

@@ -70,8 +70,8 @@ public class UIUsuario implements Serializable{
             
             String nitempresa = usuario.getSubEmpresa().getEmpresa().getNitempresa();
             String nomusuario = "";
-            Integer perfil = (Integer) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.perfl.codigo}", Integer.class).getValue(contextoEL);
-            String nitsubempresa = (String) ef.createValueExpression(contextoEL, "#{listasBean.empresa.subempresa.nitsubempresa}", String.class).getValue(contextoEL);
+            Integer perfil = (Integer) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.perfil.codigo}", Integer.class).getValue(contextoEL);
+            String nitsubempresa = (String) ef.createValueExpression(contextoEL, "#{listasBean.subempresa.nitsubempresa}", String.class).getValue(contextoEL);
             
             if ( nitempresa == null) {
                 
