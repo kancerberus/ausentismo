@@ -184,7 +184,7 @@ public class UIUsuario implements Serializable{
                     Integer resultado = gestorUsuario.crearUsuario(usuario);
 
                     if (resultado > 0) {
-                        util.mostrarMensaje("!! El login fue creado de manera exitosa !!");
+                        util.mostrarMensaje("!! El Usuario fue creado de manera exitosa !!");
                         usuario = new Usuario();                   
                     } else {
                         util.mostrarMensaje("!! El registro no pudo ser almacenado !!");
