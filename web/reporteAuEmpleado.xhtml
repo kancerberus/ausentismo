@@ -58,8 +58,7 @@
                                                 </f:facet>
                                                 Empresa:<p:selectOneMenu value="#{listasBean.empresa.nitempresa}" id="empresas">}
                                                 <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
-                                                <f:selectItems   value="#{listasBean.itemsEmpresas}"/>                                                  
-                                                <p:ajax update="@this"/>
+                                                <f:selectItems   value="#{listasBean.itemsEmpresas}"/>                                                                                                  
                                                 </p:selectOneMenu>
 
                                                 Motivo:<p:selectOneMenu value="#{ausentismoBean.ausentismo.motivoausentismo}" id="motivos">}
@@ -211,7 +210,7 @@
                                                 </f:facet>
                                                 Subempresa:<p:selectOneMenu value="#{ausentismoBean.nitsubempresa}" id="empresasTotales">}
                                                 <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
-                                                <f:selectItems   value="#{listasBean.itemsSubEmpresas}"/>                                                  
+                                                <f:selectItems   value="#{listasBean.itemsSubEmpresas}"/>
                                                 <p:ajax update="@this"/>
                                                 </p:selectOneMenu>
                                                 

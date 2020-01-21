@@ -1383,7 +1383,7 @@ public class AusentismoDAO {
                     " inner join motivopermiso m on (cod_motivo=fk_cod_motivo) " +
                     " inner join empleado e on (e.cedula=re.fk_cedula) " +
                     " inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "+
-                    " where e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') and "+
+                    " where e.nitsubempresa in ('"+nitem+"') and "+
                     " "+queryfecha+"='"+selfecha+"'"+
                     " and m.cod_motivo in ("+motivos+"'0') " +                        
                     " group by e.nombres, e.cedula, e.apellidos " +                        
@@ -1393,7 +1393,7 @@ public class AusentismoDAO {
                     " inner join motivopermiso m on (cod_motivo=fk_cod_motivo) " +
                     " inner join empleado e on (e.cedula=re.fk_cedula) " +
                     " inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) " +
-                    " where e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') and"+
+                    " where e.nitsubempresa in ('"+nitem+"') and"+
                     " to_char(fecha_registro,'yyyy')='"+selfecha+"'" +                        
                     " and m.cod_motivo in ("+motivos+"'0') " +
                     " group by e.nombres, e.cedula, e.apellidos ";
@@ -1408,7 +1408,7 @@ public class AusentismoDAO {
                     " inner join motivopermiso m on (cod_motivo=fk_cod_motivo) " +
                     " inner join empleado e on (e.cedula=re.fk_cedula) " +
                     " inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) "+
-                    " where e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') "+
+                    " where e.nitsubempresa in ('"+nitem+"') "+
                     " and " + queryfecha + " between '" + selfecha + "' and '" + selfecha2 + "'"+
                     " and m.cod_motivo in ("+motivos+"'0') " +                        
                     " group by e.nombres, e.cedula, e.apellidos " +                        
@@ -1418,7 +1418,7 @@ public class AusentismoDAO {
                     " inner join motivopermiso m on (cod_motivo=fk_cod_motivo) " +
                     " inner join empleado e on (e.cedula=re.fk_cedula) " +
                     " inner join subempresa se on (se.nitsubempresa=e.nitsubempresa) " +
-                    " where e.nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"') "+
+                    " where e.nitsubempresa in ('"+nitem+"') "+
                     " and to_char(fecha_registro,'yyyy/mm') between '" + selfecha + "' and '" + selfecha2 + "'"+                    
                     " and m.cod_motivo in ("+motivos+"'0') " +
                     " group by e.nombres, e.cedula, e.apellidos ";

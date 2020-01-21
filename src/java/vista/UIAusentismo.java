@@ -396,6 +396,9 @@ public class UIAusentismo implements Serializable {
         contextoEL = contextoJSF.getELContext();
         ef = contextoJSF.getApplication().getExpressionFactory();
         String nitem = nitsubempresa;
+        if(nitem.equals("")){
+            nitem=subempresa.getNitsubempresa();
+        }
         //revisar checkbox
         String selmesdesde = null;
         String selmeshasta = null;
