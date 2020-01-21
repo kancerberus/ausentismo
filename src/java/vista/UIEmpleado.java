@@ -644,7 +644,20 @@ public class UIEmpleado implements Serializable {
             if (empleado.getParticipaActividades() == null){
                 invalido = true;
                 util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
-            }                   
+            }
+            if(empleado.getFuma()==null){
+                empleado.setFuma(false);
+            }
+            if(empleado.getDiagnosticadoEnfermidad()==null){
+                empleado.setDiagnosticadoEnfermidad(false);
+            }
+            if(empleado.getPracticaAlgunDeporte()==null){
+                empleado.setPracticaAlgunDeporte(false);
+                
+            }if(empleado.getConsBebidasAlcoholicas()==null){
+                empleado.setConsBebidasAlcoholicas(false);
+            }
+                
             
             
             if (!invalido) {

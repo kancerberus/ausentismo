@@ -29,7 +29,7 @@ public class Empleado {
     private Boolean diagnosticadoEnfermidad;
     private String enfermedad;    
     private ConsumoBebidasAlcoholicas consumoBebidasAlcoholicas;
-    private boolean consBebidasAlcoholicas;
+    private Boolean consBebidasAlcoholicas;
     private Boolean practicaAlgunDeporte;
     private String deportePractica;
     private String frecuenciaDeportePractica;
@@ -42,7 +42,7 @@ public class Empleado {
     private String anoacum;
     private Eps eps;    
     private Municipio Residencia;
-    private boolean estado;
+    private Boolean estado;
     private Date fechaIngreso;    
     
     private Integer cantidad;
@@ -127,13 +127,23 @@ public class Empleado {
         this.porcentaje = porcentaje;
     }
 
-    public boolean isConsBebidasAlcoholicas() {
+    public Boolean getConsBebidasAlcoholicas() {
         return consBebidasAlcoholicas;
     }
 
-    public void setConsBebidasAlcoholicas(boolean consBebidasAlcoholicas) {
+    public void setConsBebidasAlcoholicas(Boolean consBebidasAlcoholicas) {
         this.consBebidasAlcoholicas = consBebidasAlcoholicas;
     }
+
+    public Boolean getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Boolean estado) {
+        this.estado = estado;
+    }
+
+    
 
     public String getFrecuenciaDeportePractica() {
         return frecuenciaDeportePractica;
@@ -283,13 +293,6 @@ public class Empleado {
         return anoacum;
     }
 
-    public boolean isEstado() {
-        return estado;
-    }
-
-    public void setEstado(boolean estado) {
-        this.estado = estado;
-    }
 
     public void setAnoacum(String anoacum) {
         this.anoacum = anoacum;

@@ -893,7 +893,7 @@ public class EmpleadoDAO {
                         " then 'SI' " +
                         " when fuma=false " +
                         " then 'NO' end " +
-                        " fuma, count(*), (select count(fuma)from empleado) as total " +
+                        " fuma, count(*), (select count(e.fuma) from empleado e join subempresa s on(s.nitsubempresa=e.nitsubempresa) where s.fk_nitempresa='"+nitem+"') as total " +
                         " from empleado " +
                         " WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
                         " group by fuma ");
@@ -915,7 +915,7 @@ public class EmpleadoDAO {
                         " then 'SI' " +
                         " when fuma=false " +
                         " then 'NO' end " +
-                        " fuma, count(*), (select count(fuma)from empleado) as total " +
+                        " fuma, count(*), (select count(fuma)from empleado where nitsubempresa='"+nitsubem+"') as total " +
                         " from empleado " +
                         " WHERE nitsubempresa = '"+nitsubem+"'"+
                         " group by fuma "
@@ -953,7 +953,7 @@ public class EmpleadoDAO {
                         " then 'SI' " +
                         " when diagonosticado_enfermedad=false " +
                         " then 'NO' end " +
-                        " diagonosticado_enfermedad, count(*), (select count(diagonosticado_enfermedad)from empleado) as total " +
+                        " diagonosticado_enfermedad, count(*), (select count(e.diagonosticado_enfermedad) from empleado e join subempresa s on(s.nitsubempresa=e.nitsubempresa) where s.fk_nitempresa='"+nitem+"') as total " +
                         " from empleado " +
                         " WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
                         " group by diagonosticado_enfermedad ");
@@ -975,7 +975,7 @@ public class EmpleadoDAO {
                         " then 'SI' " +
                         " when diagonosticado_enfermedad=false " +
                         " then 'NO' end " +
-                        " diagonosticado_enfermedad, count(*), (select count(diagonosticado_enfermedad)from empleado) as total " +
+                        " diagonosticado_enfermedad, count(*), (select count(diagonosticado_enfermedad)from empleado where nitsubempresa='"+nitsubem+"') as total " +
                         " from empleado " +
                         " WHERE nitsubempresa = '"+nitsubem+"'"+
                         " group by diagonosticado_enfermedad "
@@ -1013,7 +1013,7 @@ public class EmpleadoDAO {
                         " then 'SI' " +
                         " when consume_alcohol=false " +
                         " then 'NO' end " +
-                        " consume_alcohol, count(*), (select count(consume_alcohol)from empleado) as total " +
+                        " consume_alcohol, count(*), (select count(e.consume_alcohol) from empleado e join subempresa s on(s.nitsubempresa=e.nitsubempresa) where s.fk_nitempresa='"+nitem+"') as total " +
                         " from empleado " +
                         " WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
                         " group by consume_alcohol ");
@@ -1035,7 +1035,7 @@ public class EmpleadoDAO {
                         " then 'SI' " +
                         " when consume_alcohol=false " +
                         " then 'NO' end " +
-                        " consume_alcohol, count(*), (select count(consume_alcohol)from empleado) as total " +
+                        " consume_alcohol, count(*), (select count(consume_alcohol)from empleado where nitsubempresa='"+nitsubem+"') as total " +
                         " from empleado " +
                         " WHERE nitsubempresa = '"+nitsubem+"'"+
                         " group by consume_alcohol "
@@ -1073,7 +1073,7 @@ public class EmpleadoDAO {
                         " then 'SI' " +
                         " when practica_deporte=false " +
                         " then 'NO' end " +
-                        " practica_deporte, count(*), (select count(practica_deporte)from empleado) as total " +
+                        " practica_deporte, count(*), (select count(e.practica_deporte) from empleado e	join subempresa s on(s.nitsubempresa=e.nitsubempresa) where s.fk_nitempresa='"+nitem+"') as total " +
                         " from empleado " +
                         " WHERE nitsubempresa in (select nitsubempresa from subempresa where fk_nitempresa = '"+nitem+"')"+
                         " group by practica_deporte ");
@@ -1095,7 +1095,7 @@ public class EmpleadoDAO {
                         " then 'SI' " +
                         " when practica_deporte=false " +
                         " then 'NO' end " +
-                        " practica_deporte, count(*), (select count(practica_deporte)from empleado) as total " +
+                        " practica_deporte, count(*), (select count(practica_deporte)from empleado where nitsubempresa='"+nitsubem+"') as total " +
                         " from empleado " +
                         " WHERE nitsubempresa = '"+nitsubem+"'"+
                         " group by practica_deporte "
@@ -1265,7 +1265,7 @@ public class EmpleadoDAO {
                 sql = "UPDATE empleado "
                         +" set nombres = '" + empleado.getNombres() + "', apellidos = '" + empleado.getApellidos() + "', cod_municipio = '" + empleado.getResidencia().getCodigo() + "', cod_eps = '" + empleado.getEps().getCodigo() + "',"
                         +" cod_det_lista_sexo='" + empleado.getSexo().getCodigo() + "',cod_det_lista_ecivil='" + empleado.getEcivil().getCodigo() + "',fecha_nacimiento='" + empleado.getFecha_nac() + "',"
-                        +" cargo = '" + empleado.getCargo().getCodigo() + "', sueldo_mes = '" + empleado.getSueldo_mes() + "',aux_transporte='" + empleado.getAux_transporte() + "', estado = "+empleado.isEstado()+", fecha_ingreso='"+empleado.getFechaIngreso()+"'  "
+                        +" cargo = '" + empleado.getCargo().getCodigo() + "', sueldo_mes = '" + empleado.getSueldo_mes() + "',aux_transporte='" + empleado.getAux_transporte() + "', estado = "+empleado.getEstado()+", fecha_ingreso='"+empleado.getFechaIngreso()+"'  "
                         +" where cedula = '" + empleado.getCedula() + "'";
 
             resultado = consulta.actualizar(sql);
@@ -1521,14 +1521,15 @@ public class EmpleadoDAO {
 
         //Sentencia SQL para guardar el registro
         String sql = "";
-        try {
+        try {            
+            
             consulta = new Consulta(getConexion());        
 
                 sql = "UPDATE empleado "
                         + " SET cod_det_lista_nescolar='"+empleado.getNescolar().getCodigo()+"', cod_det_lista_num_personas_cargo='"+empleado.getNumPersonas().getCodigo()+"', cod_det_lista_tendencia_vivienda='"+empleado.getTendenciaVivienda().getCodigo()+"', cod_det_lista_uso_tiempo_libre='"+empleado.getUsoTiempoLibre().getCodigo()+"', "
                         + " cod_det_lista_promedio_ingresos='"+empleado.getPromedioIngreso().getCodigo()+"', cod_det_lista_antiguedad_empresa='"+empleado.getAntiguedadEmpresa().getCodigo()+"', cod_det_lista_antiguedad_cargo='"+empleado.getAntiguedadCargo().getCodigo()+"', cod_det_lista_tipo_contrato='"+empleado.getTipoContratacion().getCodigo()+"', "
                         + " cod_det_lista_participacion_actividades='"+empleado.getParticipaActividades().getCodigo()+"', fuma='"+empleado.getFuma()+"', promedio_fuma_diario='"+empleado.getPromedioFuma()+"', diagonosticado_enfermedad='"+empleado.getDiagnosticadoEnfermidad()+"', enfermedad='"+empleado.getEnfermedad()+"', practica_deporte='"+empleado.getPracticaAlgunDeporte()+"', "
-                        + " deporte='"+empleado.getDeportePractica()+"',consume_alcohol='"+empleado.isConsBebidasAlcoholicas()+"',cod_det_lista_frecuencia_alcohol='"+empleado.getConsumoBebidasAlcoholicas().getCodigo()+"', frecuencia_deporte='"+empleado.getFrecuenciaDeportePractica()+"' "
+                        + " deporte='"+empleado.getDeportePractica()+"',consume_alcohol='"+empleado.getConsBebidasAlcoholicas()+"',cod_det_lista_frecuencia_alcohol='"+empleado.getConsumoBebidasAlcoholicas().getCodigo()+"', frecuencia_deporte='"+empleado.getFrecuenciaDeportePractica()+"' "
                         + " WHERE cedula='"+empleado.getCedula()+"'";
             resultado = consulta.actualizar(sql);
             return resultado;
