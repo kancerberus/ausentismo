@@ -142,7 +142,7 @@ public class UIAusentismo implements Serializable {
         Empleado em = gestorEmpleado.validarEmpleado(cedula,nitsesion);
         Integer thacum = gestorAusentismo.horasanoAcumuladas(cedula);        
         
-        if(em!=null && em.isEstado() == true){
+        if(em!=null && em.getEstado()== true){
            ausentismo.setEmpleado(em);
            ausentismo.getEmpleado().setThacum(thacum);        
         }else {

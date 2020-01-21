@@ -571,7 +571,7 @@ public class UIConcurso implements Serializable {
             Empleado em = gestorEmpleado.validarEmpleado(cedula,nitsesion);
 
 
-            if(em!=null && em.isEstado() == true){
+            if(em!=null && em.getEstado()== true){
                 empleado=em; 
                 grupoParticipantes.setGrupoConcurso(grupoConcurso);
             }

@@ -117,7 +117,7 @@ public class UIIncapacidad implements Serializable {
         GestorEmpleado gestorEmpleado = new GestorEmpleado();
         Empleado em = gestorEmpleado.validarEmpleado(cedula,nitsesion);        
         
-        if(em!=null && em.isEstado() == true){
+        if(em!=null && em.getEstado()== true){
            incapacidad.setEmpleado(em);           
         }
         else {
