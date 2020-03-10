@@ -1449,7 +1449,7 @@ public class EmpleadoDAO {
         
         try {
             consulta = new Consulta(getConexion());
-                    sql = "select e.cedula, e.nombres, e.apellidos,c.cargo cargo,ep.eps eps , e.sueldo_mes " +
+                    sql = "select e.cedula, e.nombres, e.apellidos,c.cargo cargo,ep.eps eps , e.sueldo_mes, e.aux_transporte " +
                       "from empleado e " +
                       "inner join eps ep on (ep.cod_eps=e.cod_eps)"+
                       "inner join cargo c on (c.cod_cargo=e.cargo)"+
@@ -1464,7 +1464,8 @@ public class EmpleadoDAO {
                 em.setApellidos(rs.getString("apellidos"));
                 em.getCargo().setNombre(rs.getString("cargo"));
                 em.getEps().setNombre(rs.getString("eps"));
-                em.setSueldo_mes(rs.getInt("sueldo_mes"));     
+                em.setSueldo_mes(rs.getInt("sueldo_mes")); 
+                em.setAux_transporte(rs.getInt("aux_transporte"));
 
                 listaEmpleado.add(em);
             }
