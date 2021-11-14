@@ -20,7 +20,7 @@ import modelo.Municipio;
 import modelo.Sexo;
 import modelo.SubEmpresa;
 import modelo.Mes;
-import modelo.Año;
+import modelo.Year;
 import modelo.CausaBasica;
 import modelo.CausaInmediata;
 import modelo.Clasificacion;
@@ -322,7 +322,7 @@ public class GestorListas extends Gestor{
         }        
     }
     
-    public ArrayList<Año> listarAños() throws Exception {
+    public ArrayList<Year> listarAños() throws Exception {
         try {
             abrirConexion();
             ListasDAO listasDAO = new ListasDAO(conexion);

@@ -117,8 +117,7 @@ and open the template in the editor.
                                         <p:ajax update="@(.consumeAlcohol)" />
                                     </p:selectBooleanButton>
                                     <p:selectOneMenu value="#{empleadoBean.empleado.consumoBebidasAlcoholicas.codigo}" styleClass="consumeAlcohol" style="width: 150px" 
-                                                     disabled="#{empleadoBean.empleado.consBebidasAlcoholicas eq null or empleadoBean.empleado.consBebidasAlcoholicas eq false }"
-                                                     >
+                                                     disabled="#{empleadoBean.empleado.consBebidasAlcoholicas eq null or empleadoBean.empleado.consBebidasAlcoholicas eq false }">
                                     <f:selectItem itemLabel="Frecuencia..." itemValue=""/>
                                     <f:selectItems   value="#{listasBean.itemsConsumeBebidasAlcoholicas}" />                                                                                                                        
                                     </p:selectOneMenu>

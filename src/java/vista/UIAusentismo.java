@@ -12,7 +12,6 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,8 +24,7 @@ import util.UtilJSF;
 import javax.el.ExpressionFactory;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import modelo.Accidente;
-import modelo.Año;
+import modelo.Year;
 import modelo.Incapacidad;
 import modelo.Mes;
 import modelo.SubEmpresa;
@@ -48,7 +46,7 @@ public class UIAusentismo implements Serializable {
     private Empleado empleado;
     private Ausentismo ausentismo; 
     private Mes mes;
-    private Año ano;
+    private Year year;
     private Motivo motivo;
     private SubEmpresa subempresa;
     private Integer[] selectedMotivos=new Integer[13];
@@ -67,11 +65,11 @@ public class UIAusentismo implements Serializable {
     private float totalem=0;    
     private float totalsubt=0;
     private String anoActualizador;
+    private String observaciones;
     private float totCasos;
     private float totDiasIncapacidad;
     private Integer totCasosGenero;
     private Integer totCasosTipoIncapacidad;
-    
     Boolean todos;
     Boolean selec;
     public Utilidades util = new Utilidades();
@@ -122,7 +120,7 @@ public class UIAusentismo implements Serializable {
        empleado = new Empleado();
        ausentismo = new Ausentismo();
        mes = new Mes();
-       ano = new Año();
+       year = new Year();
        gestorAusentismo = new GestorAusentismo();
        pieausentismoanomesEmpresa = new PieChartModel();
        pieSubempresa = new PieChartModel();
@@ -362,9 +360,9 @@ public class UIAusentismo implements Serializable {
         String selano = null;
         
         if(todos == true){
-           selano = ano.getAño();   
+           selano = year.getYear();   
         }else{            
-           selmesano = (ano.getAño())+"/"+(mes.getCodigo());            
+           selmesano = (year.getYear())+"/"+(mes.getCodigo());            
         }
 
         try {            
@@ -407,10 +405,10 @@ public class UIAusentismo implements Serializable {
         
             
         if(todos == true){
-            selano = ano.getAño();   
+            selano = year.getYear();   
         }else{
-           selmesdesde = (ano.getAño())+"/"+(mes.getDesde());
-           selmeshasta = (ano.getAño()+"/"+(mes.getHasta()));           
+           selmesdesde = (year.getYear())+"/"+(mes.getDesde());
+           selmeshasta = (year.getYear()+"/"+(mes.getHasta()));           
         }        
         
         String motivos="";
@@ -467,10 +465,10 @@ public class UIAusentismo implements Serializable {
         
             
         if(todos == true){
-            selano = ano.getAño();   
+            selano = year.getYear();   
         }else{
-           selmesdesde = (ano.getAño())+"/"+(mes.getDesde());
-           selmeshasta = (ano.getAño()+"/"+(mes.getHasta()));           
+           selmesdesde = (year.getYear())+"/"+(mes.getDesde());
+           selmeshasta = (year.getYear()+"/"+(mes.getHasta()));           
         }        
         selmotivo = ausentismo.getMotivoausentismo();
         
@@ -530,10 +528,10 @@ public class UIAusentismo implements Serializable {
         String selmotivo=null;
             
         if(todos == true){
-            selano = ano.getAño();   
+            selano = year.getYear();   
         }else{
-           selmesdesde = (ano.getAño())+"/"+(mes.getDesde());
-           selmeshasta = (ano.getAño()+"/"+(mes.getHasta()));           
+           selmesdesde = (year.getYear())+"/"+(mes.getDesde());
+           selmeshasta = (year.getYear()+"/"+(mes.getHasta()));           
         }        
         if(nitsubem == ""){
          nitsubem = null;         
@@ -626,10 +624,10 @@ public class UIAusentismo implements Serializable {
             totCasosTipoIncapacidad=0;
             
             if(todos == true){
-                selano = ano.getAño();   
+                selano = year.getYear();   
             }else{
-               selmesdesde = (ano.getAño())+"/"+(mes.getDesde());
-               selmeshasta = (ano.getAño()+"/"+(mes.getHasta()));           
+               selmesdesde = (year.getYear())+"/"+(mes.getDesde());
+               selmeshasta = (year.getYear()+"/"+(mes.getHasta()));           
             }        
             if(nitsubem == ""){
                 nitsubem = null;
@@ -1049,12 +1047,12 @@ public class UIAusentismo implements Serializable {
         this.mes = mes;
     }
 
-    public Año getAno() {
-        return ano;
+    public Year getYear() {
+        return year;
     }
 
-    public void setAno(Año ano) {
-        this.ano = ano;
+    public void setYear(Year year) {
+        this.year = year;
     } 
 
     public Boolean getTodos() {
@@ -1199,4 +1197,12 @@ public class UIAusentismo implements Serializable {
     public void setPieSubempresa(PieChartModel pieSubempresa) {
         this.pieSubempresa = pieSubempresa;
     }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }        
 }

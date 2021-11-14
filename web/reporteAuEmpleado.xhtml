@@ -15,7 +15,7 @@
                     <p:tab  title="REPORTE EMPLEADO">
                         
                         
-                                            <table>
+                  <table>
                         <tr><td>
                             <p:fieldset legend="Datos de Inicio de Sesión" style="margin-bottom:10px; margin-top:10px;" >
                                 <table cellpadding="5">                        
@@ -49,8 +49,7 @@
                                                 <p:inputText id="cedula" value="#{ausentismoBean.cedula}" required="true" label="cedula">                                                    
                                                     <p:ajax update="@this"/>
                                                 </p:inputText>                                                     
-                                                <p:commandButton icon="ui-icon-search"  type="submit" id="BtnInf" value="Consultar" 
-                                                                 >
+                                                <p:commandButton icon="ui-icon-search"  type="submit" id="BtnInf" value="Consultar" >
                                                     <p:ajax update="@this,tblausentismoEmpleado, chartAusentismoEmpleado" listener="#{ausentismoBean.ausentismoAnomesEmpleado()}"/>
                                                 </p:commandButton>
                                                 
@@ -58,37 +57,38 @@
                                                 </f:facet>
                                                 Empresa:<p:selectOneMenu value="#{listasBean.empresa.nitempresa}" id="empresas">}
                                                 <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
-                                                <f:selectItems   value="#{listasBean.itemsEmpresas}"/>                                                                                                  
+                                                <f:selectItems   value="#{listasBean.itemsEmpresas}"/>  
+                                                <p:ajax update="tblInformeausentismosEmpleadoTotales"/>                                                
                                                 </p:selectOneMenu>
 
                                                 Motivo:<p:selectOneMenu value="#{ausentismoBean.ausentismo.motivoausentismo}" id="motivos">}
                                                 <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
                                                 <f:selectItems   value="#{ausentismoBean.itemsMotivos}"/>
-                                                <p:ajax update="@this"/>
+                                                <p:ajax update="tblInformeausentismosEmpleadoTotales"/>
                                                 </p:selectOneMenu>
 
-                                                Año:<p:selectOneMenu value="#{ausentismoBean.ano.año}" id="año">}
+                                                Año:<p:selectOneMenu value="#{ausentismoBean.year.year}" id="año">}
                                                 <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
                                                 <f:selectItems   value="#{listasBean.itemsAños}"/>                                                   
-                                                <p:ajax update="@this"/>
+                                                <p:ajax update="tblInformeausentismosEmpleadoTotales"/>
                                                 </p:selectOneMenu>  
 
                                                 Mes Desde:<p:selectOneMenu value="#{ausentismoBean.mes.desde}" id="mesd">}
                                                 <f:selectItem itemLabel="Seleccione..." itemValue="" />
                                                 <f:selectItems   value="#{listasBean.itemsMeses}"/>
-                                                <p:ajax update="@this"/>
+                                                <p:ajax update="tblInformeausentismosEmpleadoTotales"/>
                                                 </p:selectOneMenu>
 
                                                 Mes Hasta:<p:selectOneMenu value="#{ausentismoBean.mes.hasta}" id="mesh">}
                                                 <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
                                                 <f:selectItems   value="#{listasBean.itemsMeses}"/>
-                                                <p:ajax update="@this"/>
+                                                <p:ajax update="tblInformeausentismosEmpleadoTotales"/>
                                                 </p:selectOneMenu>                                                
 
 
                                                 <h:outputText value="Anual: " />
                                                 <p:selectBooleanButton id="value2" value="#{ausentismoBean.todos}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:60px">                                                    
-                                                    <p:ajax update="@this"/>
+                                                <p:ajax update="tblInformeausentismosEmpleadoTotales"/>
                                                 </p:selectBooleanButton>  
 
 
@@ -145,11 +145,16 @@
                                             <f:convertNumber type="currency" maxFractionDigits="2" currencySymbol="$"/>
                                         </h:outputText>
                                     </p:column>
-                                        <p:column headerText="SubTotal" footerText="$#{ausentismoBean.totalsubt}">
-                                            <h:outputText value="#{informeAusentismoEmpleado.totalsube}" >
+                                    <p:column headerText="SubTotal" footerText="$#{ausentismoBean.totalsubt}">
+                                        <h:outputText value="#{informeAusentismoEmpleado.totalsube}" >
                                             <f:convertNumber type="currency" currencySymbol="$"/>
                                         </h:outputText>    
                                     </p:column> 
+                                        <p:column headerText="Observaciones" footerText="$#{ausentismoBean.observaciones}">
+                                        <h:outputText value="#{informeAusentismoEmpleado.observaciones}" >
+                                            <f:convertNumber type="currency" currencySymbol="$"/>
+                                        </h:outputText>    
+                                    </p:column>                                         
                                 </p:dataTable>   
                                 <p:fieldset style= "margin-top:10px; " >  
                                 <h:commandButton value="CSV Export" image="resources/imagenes/csv.png" style="float:right;">
@@ -223,7 +228,7 @@
 
                                                 
 
-                                                Año:<p:selectOneMenu value="#{ausentismoBean.ano.año}" id="añoTotales">}
+                                                Año:<p:selectOneMenu value="#{ausentismoBean.year.year}" id="añoTotales">}
                                                 <f:selectItem itemLabel="Seleccione..." itemValue="" />                                                
                                                 <f:selectItems   value="#{listasBean.itemsAños}"/>                                                   
                                                 <p:ajax update="@this"/>

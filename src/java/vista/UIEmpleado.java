@@ -20,7 +20,7 @@ import modelo.Municipio;
 import util.Utilidades;
 import javax.el.ExpressionFactory;
 import javax.faces.context.FacesContext;
-import modelo.Año;
+import modelo.Year;
 import modelo.Mes;
 import org.primefaces.model.chart.PieChartModel;
 /**
@@ -44,7 +44,7 @@ public class UIEmpleado implements Serializable {
     private String cedula;
     private Boolean todos;
     private Mes mes;
-    private Año ano;
+    private Year year;
     private Integer total;
     private Integer totalCargos;
     private Integer totalNescolar;
@@ -110,7 +110,7 @@ public class UIEmpleado implements Serializable {
        empleado.setResidencia(new Municipio()); 
        gestorEmpleado = new GestorEmpleado();
        mes = new Mes();
-       ano = new Año();
+       year = new Year();
        total=0;
        
     }
@@ -645,6 +645,12 @@ public class UIEmpleado implements Serializable {
                 invalido = true;
                 util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
             }
+            if (empleado.getConsBebidasAlcoholicas() == true) {
+                if (empleado.getConsumoBebidasAlcoholicas().getCodigo()==null){
+                    invalido = true;
+                    util.mostrarMensaje("Por favor elija la frecuencia de consumo de bebidas alcohólicas.");                   
+                }                
+            }
             if(empleado.getFuma()==null){
                 empleado.setFuma(false);
             }
@@ -1132,12 +1138,12 @@ public class UIEmpleado implements Serializable {
         this.mes = mes;
     }
 
-    public Año getAno() {
-        return ano;
+    public Year getYear() {
+        return year;
     }
 
-    public void setAno(Año ano) {
-        this.ano = ano;
+    public void setYear(Year year) {
+        this.year = year;
     }
 
     public Boolean getTodos() {

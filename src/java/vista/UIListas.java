@@ -36,7 +36,7 @@ import modelo.AntiguedadCargo;
 import modelo.AntiguedadEmpresa;
 import modelo.Empresa;
 import modelo.SubEmpresa;
-import modelo.Año;
+import modelo.Year;
 import modelo.CausaBasica;
 import modelo.CausaInmediata;
 import modelo.Clasificacion;
@@ -367,11 +367,11 @@ public class UIListas implements Serializable {
             
             try {
                 gestorListas = new GestorListas();
-                ArrayList<Año> listaAños;
+                ArrayList<Year> listaAños;
                 listaAños = gestorListas.listarAños();
                 itemsMeses.clear();
                 for (int i = 0; i < listaAños.size(); i++) {                    
-                        itemsMeses.add(new SelectItem(listaAños.get(i).getAño()));
+                        itemsMeses.add(new SelectItem(listaAños.get(i).getYear()));
                     }                        
                 }
             catch (Exception ex) {

@@ -16,8 +16,7 @@ public class Ausentismo {
     private Date fecha_registro;
     private Date hora_salida;
     private Date hora_llegada;
-    private String tiempo_horas;  
-    
+    private String tiempo_horas;      
     private String motivoausentismo; 
     private String tipo_permiso;
     private Motivo motivo;

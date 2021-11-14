@@ -6,22 +6,13 @@
 package controlador;
 import bd.AccidenteDAO;
 import bd.IncapacidadDAO;
-import bd.EmpleadoDAO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import javafx.scene.chart.PieChart;
 import modelo.Accidente;
 import modelo.Ausentismo;
-import modelo.Año;
 import modelo.Cie10;
-import modelo.Empleado;
-import modelo.Incapacidad;
-import modelo.Mes;
 import modelo.Motivo;
-import modelo.SubEmpresa;
-import org.primefaces.model.chart.PieChartModel;
 
 /**
  *

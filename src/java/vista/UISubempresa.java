@@ -10,15 +10,11 @@ import controlador.GestorSubempresa;
 import controlador.GestorAusentismo;
 import java.io.Serializable;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.el.ELContext;
 import modelo.SubEmpresa;
 import javax.el.ExpressionFactory;
 import javax.faces.context.FacesContext;
 import modelo.Ausentismo;
-import modelo.Año;
-import modelo.Empresa;
 import modelo.Mes;
 import util.Utilidades;
 
@@ -38,7 +34,6 @@ public class UISubempresa implements Serializable {
     private ExpressionFactory ef;
     Boolean todos;
     private Mes mes;
-    private Año ano;
     private List<Ausentismo> listaAusentismoanomes;
     
     private double totarl=0;

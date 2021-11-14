@@ -1519,6 +1519,11 @@ public class EmpleadoDAO {
     public Integer guardarPerfilSocioDemografico(Empleado empleado, String nitsesion) throws SQLException{
         Consulta consulta = null;
         Integer resultado;    
+        
+        //Si no consume bebidas alcoholicas pondrá la frecuencia de consumo en N/A
+        if (empleado.getConsBebidasAlcoholicas().equals(false)) {
+            empleado.getConsumoBebidasAlcoholicas().setCodigo("160");
+        }
 
         //Sentencia SQL para guardar el registro
         String sql = "";

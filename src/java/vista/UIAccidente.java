@@ -22,7 +22,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import modelo.Accidente;
 import modelo.AgenteAccidente;
-import modelo.Año;
+import modelo.Year;
 import modelo.CausaBasica;
 import modelo.CausaInmediata;
 import modelo.Clasificacion;
@@ -51,7 +51,7 @@ public class UIAccidente implements Serializable {
     private Empleado empleado;
     private Accidente accidente;    
     private Mes mes;
-    private Año ano;
+    private Year year;
     private Motivo motivo;
     private SubEmpresa subempresa;
     
@@ -172,7 +172,7 @@ public class UIAccidente implements Serializable {
        distribucionTipoLesion=new ArrayList<>();
        distribucionCargos=new ArrayList<>();
        mes = new Mes();
-       ano = new Año();
+       year = new Year();
        gestorAccidente = new GestorAccidente();       
        
     }
@@ -259,10 +259,10 @@ public class UIAccidente implements Serializable {
             
             
             if(todos == true){
-                selano = ano.getAño();   
+                selano = year.getYear();   
             }else{
-               selmesdesde = (ano.getAño())+"/"+(mes.getDesde());
-               selmeshasta = (ano.getAño()+"/"+(mes.getHasta()));           
+               selmesdesde = (year.getYear())+"/"+(mes.getDesde());
+               selmeshasta = (year.getYear()+"/"+(mes.getHasta()));           
             }        
             if(nitsubem == ""){
                 nitsubem = null;
@@ -1110,12 +1110,12 @@ public class UIAccidente implements Serializable {
         this.mes = mes;
     }
 
-    public Año getAno() {
-        return ano;
+    public Year getYear() {
+        return year;
     }
 
-    public void setAno(Año ano) {
-        this.ano = ano;
+    public void setYear(Year year) {
+        this.year = year;
     }
 
     public Motivo getMotivo() {

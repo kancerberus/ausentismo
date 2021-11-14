@@ -23,7 +23,7 @@ import modelo.Municipio;
 import modelo.Sexo;
 import modelo.SubEmpresa;
 import modelo.Mes;
-import modelo.Año;
+import modelo.Year;
 import modelo.CausaBasica;
 import modelo.CausaInmediata;
 import modelo.Clasificacion;
@@ -506,9 +506,9 @@ public class ListasDAO {
 
 
     
-    public ArrayList<Año> listarAños() throws SQLException {
-        Año año;
-        ArrayList<Año> listaAños = new ArrayList<>();
+    public ArrayList<Year> listarAños() throws SQLException {
+        Year year;
+        ArrayList<Year> listaAños = new ArrayList<>();
         ResultSet dt;
         Consulta consulta = null;
         try {
@@ -520,9 +520,9 @@ public class ListasDAO {
             dt = consulta.ejecutar(sql);
 
             while (dt.next()) {
-                año = new Año();                
-                año.setAño(dt.getString("año"));                
-                listaAños.add(año);
+                year = new Year();                
+                year.setYear(dt.getString("año"));                
+                listaAños.add(year);
             }
             return listaAños;
 
@@ -717,7 +717,8 @@ public class ListasDAO {
             String sql
                     = "select cod_det_lista,nombre "
                     + "from det_lista inner join lista on"
-                    + " (cod_lista = fk_cod_lista) where cod_lista='24'";
+                    + " (cod_lista = fk_cod_lista) where cod_lista='24'"
+                    + "and nombre <> 'N/A'";
 
             dt = consulta.ejecutar(sql);
 

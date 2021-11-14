@@ -7,15 +7,11 @@ package vista;
 import controlador.GestorAusentismo;
 import controlador.GestorEmpresa;
 import java.io.Serializable;
-import java.util.List;
 
 import javax.el.ELContext;
 import modelo.Empresa;
 import javax.el.ExpressionFactory;
 import javax.faces.context.FacesContext;
-import modelo.Ausentismo;
-import modelo.Año;
-import modelo.Mes;
 import util.Utilidades;
 
 

@@ -10,8 +10,6 @@ import controlador.GestorIncapacidad;
 import controlador.GestorListas;
 import java.io.Serializable;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,10 +20,8 @@ import modelo.Empleado;
 import modelo.Motivo;
 import util.Utilidades;
 import javax.el.ExpressionFactory;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import modelo.Año;
 import modelo.Cie10;
 import modelo.GrupoCie10;
 import modelo.Incapacidad;
@@ -48,7 +44,6 @@ public class UIIncapacidad implements Serializable {
     private Incapacidad incapacidad=new Incapacidad();
     private String codIncapacidad="";
     private Mes mes;
-    private Año ano;
     private Motivo motivo;
     private SubEmpresa subempresa;
     private String cie10;
@@ -100,7 +95,6 @@ public class UIIncapacidad implements Serializable {
        incapacidad.setTipoIncapacidad(new TipoIncapacidad());
        incapacidad.getTipoIncapacidad().setCodigo("");
        mes = new Mes();
-       ano = new Año();
        gestorIncapacidad = new GestorIncapacidad();
        pieincapacidadanomesEmpresa = new PieChartModel();
        pieSubempresa = new PieChartModel();
@@ -152,283 +146,12 @@ public class UIIncapacidad implements Serializable {
         }
         
     }
-
-    /*public void guardarRegistro() throws Exception{    
-
-        Boolean invalido = false;
-        String msg = null;
-
-        //ingreso de informacion al gestor
-        gestorIncapacidad = new GestorIncapacidad();
-
-        try {
-            //verificar que todas las cajas este llenas           
-            if (incapacidad.getEmpleado().getCedula() == null) {
-                msg = "La cédula esta vacía!";
-                invalido = true;              
-            }
-            if (incapacidad.getMotivoincapacidad().equals("Seleccione...")) {
-                msg = "Seleccione un Motivo";
-                invalido = true;
-            }            
-
-            if (invalido == false) {                
-                    float min=0;
-                    min=Float.parseFloat(minutos);
-                    float horas= Float.parseFloat(incapacidad.getTiempo_horas());
-                    horas+= min;
-                    incapacidad.setTiempo_horas(Float.toString(horas));
-                    Integer resultado = gestorIncapacidad.guardarIncapacidad(incapacidad);
-
-                    if (resultado > 0) {
-                        util.mostrarMensaje("!! El registro fue realizado de manera exitosa !!");
-                        incapacidad = new Incapacidad();                    
-                    } else {
-                        util.mostrarMensaje("!! El registro no pudo ser almacenado !!");
-                    }
-            } else {
-                
-                    util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
-                }
-            } catch (Exception ex) {
-                util.mostrarMensaje(ex.getMessage());
-                util.mostrarMensaje("!! El registro no pudo ser almacenado !!");               
-            }
-    }*/
-    
-    /*public void modificarIncapacidad() throws Exception{    
-
-        Boolean invalido = false;
-        String msg = null;
-
-        //ingreso de informacion al gestor
-        gestorIncapacidad = new GestorIncapacidad();               
-
-        try {
-            //verificar que todas las cajas este llenas
-            if (incapacidad.getEmpleado().getCedula() == null) {
-                msg = "La cédula esta vacía!";
-                invalido = true;                
-            }
-            if (incapacidad.getMotivoincapacidad().equals("Seleccione...")) {
-                msg = "Seleccione un Motivo";
-                invalido = true;
-            }
-
-            if (invalido == false) {
-                    Integer resultado = gestorIncapacidad.modificarIncapacidad(incapacidad);
-
-                    if (resultado > 0) {
-                        util.mostrarMensaje("!! El registro ha sido cerrado !!");
-                        incapacidad = new Incapacidad();                    
-                    } else {
-                        util.mostrarMensaje("!! El registro no pudo ser almacenado !!");
-                    }
-            } else {
-                    util.mostrarMensaje("Hay campos requeridos sin diligenciar.");                
-                }
-            } catch (Exception ex) {
-                util.mostrarMensaje(ex.getMessage());
-                util.mostrarMensaje("!! El registro no pudo ser almacenado !!");               
-            }
-    }*/
     
     public void limpiarIncapacidad() {       
         incapacidad = new Incapacidad(); 
         empleado = new Empleado();        
         itemsMotivos.clear();
     }
-    
-    /*public List<Incapacidad> getListaIncapacidad() {
-
-        contextoJSF = FacesContext.getCurrentInstance();
-        contextoEL = contextoJSF.getELContext();
-        ef = contextoJSF.getApplication().getExpressionFactory();
-        String nitsesion = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);          
-
-        try {
-            listaIncapacidad = gestorIncapacidad.listarIncapacidads(nitsesion);
-        } catch (Exception ex) {
-            Logger.getLogger(UIIncapacidad.class.getName()).log(Level.SEVERE, null, ex);
-        }        
-        return (listaIncapacidad);
-    }*/
-  
-    
-    /*public void incapacidadAnomes() { 
-        
-        contextoJSF = FacesContext.getCurrentInstance();
-        contextoEL = contextoJSF.getELContext();
-        ef = contextoJSF.getApplication().getExpressionFactory();
-        String nitsesion = (String) ef.createValueExpression(contextoEL, "#{loginBean.sesion.usuario.subEmpresa.nitsubempresa}", String.class).getValue(contextoEL);
-        
-        //revisar checkbox
-        String selmesano = null;
-        String selano = null;
-        
-        if(todos == true){
-           selano = ano.getAño();   
-        }else{            
-           selmesano = (ano.getAño())+"/"+(mes.getCodigo());            
-        }
-
-        try {            
-            listaIncapacidadanomes = gestorIncapacidad.incapacidadAnomes(nitsesion,selmesano,selano);
-            setListaIncapacidadanomes(listaIncapacidadanomes);                                  
-            totarl=0; toteps=0; totempleador=0; tottrabajador=0; total=0;
-            
-            
-            //Carga totales incapacidad ano y mes 
-            for(int i=0; i < listaIncapacidadanomes.size(); i++){
-                totarl +=  listaIncapacidadanomes.get(i).getArl();                
-                toteps += listaIncapacidadanomes.get(i).getEps();
-                totempleador += listaIncapacidadanomes.get(i).getEmpleador();
-                tottrabajador += listaIncapacidadanomes.get(i).getTrabajador();
-                total += listaIncapacidadanomes.get(i).getTotal();                               
-            }   
-
-            
-        } catch (Exception ex) {
-            Logger.getLogger(UIIncapacidad.class.getName()).log(Level.SEVERE, null, ex);
-        }
-            
-    }*/
-    //muestra reporte de incapacidads por cedula de empleado
-    /*public void incapacidadAnomesEmpleado() {             
-        
-        contextoJSF = FacesContext.getCurrentInstance();
-        contextoEL = contextoJSF.getELContext();
-        ef = contextoJSF.getApplication().getExpressionFactory();
-        String nitem = (String) ef.createValueExpression(contextoEL, "#{listasBean.empresa.nitempresa}", String.class).getValue(contextoEL);          
-        //revisar checkbox
-        String selmesdesde = null;
-        String selmeshasta = null;
-        String selano = null; 
-        String selmotivo=null;
-        
-            
-        if(todos == true){
-            selano = ano.getAño();   
-        }else{
-           selmesdesde = (ano.getAño())+"/"+(mes.getDesde());
-           selmeshasta = (ano.getAño()+"/"+(mes.getHasta()));           
-        }        
-        selmotivo = incapacidad.getMotivoincapacidad();
-        
-        try {       
-
-            listIncapacidadEmpleado = gestorIncapacidad.incapacidadanomesEmpleado(cedula, nitem, selmesdesde, selmeshasta, selano, selmotivo);
-            pieincapacidadEmpleado = gestorIncapacidad.pieincapacidadanomesEmpleado(cedula, nitem, selmesdesde, selmeshasta, selano, selmotivo);
-            setListIncapacidadEmpleado(listIncapacidadEmpleado);
-            
-            totaleps=0;totalarl=0;totalem=0; totaltrabajador=0; totalsubt=0;
-            //calculo de totales eps,arl,empleador,trabajador y total 
-            
-            
-            for(int i=0; i < listIncapacidadEmpleado.size(); i++){
-                totaleps += listIncapacidadEmpleado.get(i).getEps();
-                totalarl += listIncapacidadEmpleado.get(i).getArl();
-                totalem += listIncapacidadEmpleado.get(i).getEmpleador();
-                totaltrabajador += listIncapacidadEmpleado.get(i).getTrabajador();
-                totalsubt += listIncapacidadEmpleado.get(i).getTotalsube();
-                
-            }
-            
-            
-            
-            //Carga Pie Totales Incapacidad Vs Tipo
-            pieincapacidadanomesEmpleado.clear();
-            pieincapacidadanomesEmpleado.set("EPS", pieincapacidadEmpleado.get(0).getEps());
-            pieincapacidadanomesEmpleado.set("ARL", pieincapacidadEmpleado.get(0).getArl());
-            pieincapacidadanomesEmpleado.set("TRABAJADOR", pieincapacidadEmpleado.get(0).getTrabajador());
-            pieincapacidadanomesEmpleado.set("EMPLEADOR", pieincapacidadEmpleado.get(0).getEmpleador());
-            pieincapacidadanomesEmpleado.setTitle(pieincapacidadEmpleado.get(0).getEmpleado().getNombres()+" "+ pieincapacidadEmpleado.get(0).getEmpleado().getApellidos()+"   TOTAL AUSENTISMOS ");
-            pieincapacidadanomesEmpleado.setLegendPosition("w");
-            pieincapacidadanomesEmpleado.setShowDataLabels(true);
-            pieincapacidadanomesEmpleado.setDiameter(300);
-            
-    
-        } catch (Exception ex) {
-            Logger.getLogger(UIIncapacidad.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    
-    }*/
-
-    
-    /*public void incapacidadAnomesEmpresa() { 
-        
-        contextoJSF = FacesContext.getCurrentInstance();
-        contextoEL = contextoJSF.getELContext();
-        ef = contextoJSF.getApplication().getExpressionFactory();
-        String nitem = (String) ef.createValueExpression(contextoEL, "#{listasBean.empresa.nitempresa}", String.class).getValue(contextoEL);  
-        String nitsubem = (String) ef.createValueExpression(contextoEL, "#{listasBean.subempresa.nitsubempresa}", String.class).getValue(contextoEL);  
-        //revisar checkbox
-        String selmesdesde = null;
-        String selmeshasta = null;
-        String selano = null; 
-        DecimalFormat formato2 = new DecimalFormat("#.##");
-        String selmotivo=null;
-            
-        if(todos == true){
-            selano = ano.getAño();   
-        }else{
-           selmesdesde = (ano.getAño())+"/"+(mes.getDesde());
-           selmeshasta = (ano.getAño()+"/"+(mes.getHasta()));           
-        }        
-        if(nitsubem == ""){
-         nitsubem = null;         
-        }
-        
-        selmotivo = incapacidad.getMotivoincapacidad();
-        
-        try {       
-
-            listaincapacidadEmpresa = gestorIncapacidad.incapacidadanomesEmpresa(nitem, nitsubem, selmesdesde, selmeshasta, selano, selmotivo);
-            pieincapacidadEmpresa = gestorIncapacidad.pieincapacidadanomesEmpresa(nitem, nitsubem, selmesdesde, selmeshasta, selano, selmotivo);
-            pieporSubempresa = gestorIncapacidad.pieporSubempresa(nitem, nitsubem, selmesdesde, selmeshasta, selano, selmotivo);
-            setListaincapacidadEmpresa(listaincapacidadEmpresa); 
-            
-            
-            
-            totaleps=0;totalarl=0;totalem=0; totaltrabajador=0; totalsubt=0;
-            
-            for(int i=0; i < listaincapacidadEmpresa.size(); i++){                
-                totaleps += listaincapacidadEmpresa.get(i).getEps();
-                totalarl += listaincapacidadEmpresa.get(i).getArl();
-                totalem += listaincapacidadEmpresa.get(i).getEmpleador();
-                totaltrabajador += listaincapacidadEmpresa.get(i).getTrabajador();
-                totalsubt += listaincapacidadEmpresa.get(i).getTotalsube();                
-                
-            }            
-            
-            //Carga Pie Totales Incapacidad Vs Tipo
-            pieincapacidadanomesEmpresa.clear();
-            pieincapacidadanomesEmpresa.set("EPS", pieincapacidadEmpresa.get(0).getEps());
-            pieincapacidadanomesEmpresa.set("ARL", pieincapacidadEmpresa.get(0).getArl());
-            pieincapacidadanomesEmpresa.set("TRABAJADOR", pieincapacidadEmpresa.get(0).getTrabajador());
-            pieincapacidadanomesEmpresa.set("EMPLEADOR", pieincapacidadEmpresa.get(0).getEmpleador());
-            pieincapacidadanomesEmpresa.setTitle(pieincapacidadEmpresa.get(0).getEmpresa().getNombre()+"   TOTALES AUSENTISMO VS TIPO");
-            pieincapacidadanomesEmpresa.setLegendPosition("w");
-            pieincapacidadanomesEmpresa.setShowDataLabels(true);
-            pieincapacidadanomesEmpresa.setDiameter(300);
-            
-            
-            //Carga Totales Incapacidad vs Subemrpesa
-                pieSubempresa.clear();
-                for(int i=0; i < pieporSubempresa.size(); i++){    
-
-                    pieSubempresa.setTitle(pieporSubempresa.get(i).getEmpresa().getNombre()+"   TOTALES AUSENTISMO VS SUBEMPRESA");
-                    pieSubempresa.set(pieporSubempresa.get(i).getSubempresa().getNombre(),pieporSubempresa.get(i).getTotalsube());
-                    pieSubempresa.setDiameter(300);
-                    pieSubempresa.setLegendPosition("w");
-                    pieSubempresa.setShowDataLabels(true);
-                }
-            
-            
-        } catch (Exception ex) {
-            Logger.getLogger(UIIncapacidad.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }    */
     
     public void cargarDiferenciaDias() throws Exception{
         try {
@@ -689,14 +412,6 @@ public class UIIncapacidad implements Serializable {
     public void setMes(Mes mes) {
         this.mes = mes;
     }
-
-    public Año getAno() {
-        return ano;
-    }
-
-    public void setAno(Año ano) {
-        this.ano = ano;
-    } 
 
     public Boolean getTodos() {
         return todos;
